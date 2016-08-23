@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<script src="js/jquery-3.1.0.min.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-hover-dropdown.min.js"></script>
+	<script src="js/vue-scroll.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css"></link>
+	<link rel="stylesheet" href="css/mynavbar.css"></link>
+	<title>123</title>
+</head>
+<body >
+
+	
+	<img src="img/alwayslogo.png" height="80" alt="">
+
+	<nav class="navbar navbar-default" data-spy="affix" data-offset-top="500" data-offset-bottom="200">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html">
+					<img src="img/2016_1_logo.png"  height="40">
+				</a>
+			</div>
+			<ul class="nav navbar-nav"  id="navbar">
+				<li v-for="nav in nav_bar">
+					<a href="">{{nav}}</a>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
+						{{clubs}}<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu grid">
+						<li v-for="club in clubs_name">
+							<a href="#">{{club}}</a>
+						</li>
+						<!--
+						<li><a tabindex="-1" href="#">My Account</a></li>
+						<li class="divider"></li>-->
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<!--navbar end-->
+
+	<!-- course -->
+<style>
+.background-devide{
+	border-bottom: 1px dotted #ddd;
+    border-top: 1px solid #ddd;
+	height:21px;
+}
+.background-box{
+	height:42px;
+}
+.background-all{
+	position: relative;
+}
+.background-hour{
+	position: absolute;
+    width: 100%;
+}
+
+table{
+/*	empty-cells:show;
+    border: 1px solid black; */
+	margin: auto;
+	font-size: 20px;
+}
+tr td{
+	/*
+	width: 42px;
+  border: 1px solid black; 
+
+    display: table-cell; */
+}
+
+.coursetime{
+	height:42px;
+    text-align: right;
+    vertical-align: top;
+	padding: 1px 2px 0 0;
+    border: 0;
+	position: relative;
+	top: -10px;
+}
+.day{
+	border-right : 1px solid #ddd;
+	vertical-align: top;
+}
+.event{
+	vertical-align: top;
+	display: inline-block;
+	position: relative;
+	border: 1px solid green ;
+	margin: 0px;
+	background-color: #9f3;
+	width : 47px;
+	font-size: 15px;
+    word-wrap: break-word;
+	overflow: hidden;
+}
+</style>
+
+	<table id="course">
+		<tr>
+			<th></th>
+			<th v-for="wn in weekname" style="text-align:center">{{wn}}</th>
+		</tr>
+		<tr style="height:1px;">
+			<td style="width:60px;"></td>
+			<td colspan="7">
+				<div class="background-all">
+					<div class="background-hour">
+						<div class="background-box" v-for="i in 14">
+							<div class="background-devide"></div>
+						</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="coursetime" v-for="i in 14">{{i+8+":00"}}</td>
+			</td>
+			<td class="day" v-for="wevt in weekevents"> 
+				<div class="event"v-for="evt in wevt" v-bind:style="evt.style">
+					<span>{{evt.name}}</span>
+					<span style="font-size:small">{{"("+evt.title+")"}}</span>
+					</div>
+			</td>
+		</tr>
+	</table>
+
+	 <footer class="pull-right">
+		 <p>This web is made by linnil1 by bootstrap and vuejs </p>
+	</footer>
+
+	<script>
+var navbar = new Vue({
+	el : "#navbar",
+	data :{
+		clubs : '社團',
+		clubs_name : ['太極拳研究社', '少林拳社', '國術社', '男子國術校隊(國術校隊)', '楊氏廣法太極拳社', '八步螳螂拳社', '綜合格鬥社', '合氣太極社', '內家武學社', '跆拳道社', '劍道社', '楊太極武藝社', '椰林合氣道社', '居合道社', '截拳道社', '技擊散打社', '空手道社', '詠春拳社', '柔道社'],
+		
+		nav_bar : [ '課表', '攤位', '表演節目']
+	}
+})
+
+
+
+var weeknames = ['星期日','星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+
+
+weekGet = function(weekstr){
+	return weeknames.indexOf(weekstr.trim())
+}
+
+intervalGet = function(twotimes){
+	var arr =  twotimes.split('~')
+	console.log(arr)
+	var start = pxGet(arr[0])
+	var end   = pxGet(arr[1])
+	return {
+		top: start+"px",
+		height: end-start+"px"
+	}
+}
+
+
+pxGet = function(yourtime){
+	var arr = yourtime.split(':')
+	console.log(arr)
+	var hour = arr[0]|0
+	var mins = arr[1]|0
+	console.log(hour)
+	console.log(mins)
+	return (hour*60+mins-480)*42/60
+}
+
+var course= new Vue({
+	el : "#course",
+	data : {
+		weekname: weeknames,
+		weekevents: function(){
+			var events = [ [],[],[],[],[],[],[] ]
+			var data = {
+				楊氏廣法太極拳社:{
+					courses : [ { 
+						time :'星期六, 18:00~21:00',
+						title:'社課'},{
+						time:'星期三, 18:30~21:30',
+						title: '團練'}]
+				},
+				少林拳社:{
+					courses : [ { 
+						time :'星期六, 17:00~22:00',
+						title:'社課'}]
+				},
+				國術社:{
+					courses : [ { 
+						time :'星期六, 19:20~20:10',
+						title:'社課'}]
+				}}
+
+			datarr = Object.keys(data)
+			for(var dname in datarr) {
+				var courses = data[datarr[dname]].courses
+				for(var course in courses) {
+					var cour = courses[course]
+					var timearr = cour['time'].split(',')
+					events[ weekGet( timearr[0] ) ].push({
+							style : intervalGet(timearr[1]),
+							name  : datarr[dname],
+							title : cour.title,
+							time  : cour.time,
+
+					})
+				}
+			}
+
+			console.log(events)
+			return events
+		}()
+	},
+	methods:{
+	}
+})
+
+	</script>
+</body>
+</html>

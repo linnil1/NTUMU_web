@@ -1,0 +1,11 @@
+ul.grid{
+	width: 570px; !important
+}
+ul.grid li{
+	padding: 2px ;
+	float:left;
+}
+ul.grid li a{
+	display:block;
+	border:none;
+}
