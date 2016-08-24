@@ -6,79 +6,57 @@
 	<script src="js/vue.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/bootstrap-hover-dropdown.min.js"></script>
-	<script src="js/vue-scroll.js"></script>
 	<link rel="stylesheet" href="css/bootstrap.css"></link>
 	<link rel="stylesheet" href="css/mynavbar.css"></link>
 	<title>123</title>
 </head>
-<body >
+<body>
 
-	
 	<img src="img/alwayslogo.png" height="80" alt="">
 
-	<nav class="navbar navbar-default" data-spy="affix" data-offset-top="500" data-offset-bottom="200">
+	<nav class="navbar navbar-default ">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<img src="img/2016_1_logo.png"  height="40">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				  </button>
+				<a href="index.html">
+					<img src="img/2016_1_logo.png"  height="40">
+				</a>
 			</div>
-			<ul class="nav navbar-nav"  id="navbar">
-				<li v-for="nav in nav_bar">
-					<a href="">{{nav}}</a>
-				</li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
-						{{clubs}}<b class="caret"></b>
-					</a>
-					<ul class="dropdown-menu grid">
-						<li v-for="club in clubs_name">
-							<a href="#">{{club}}</a>
-						</li>
-						<!--
-						<li><a tabindex="-1" href="#">My Account</a></li>
-						<li class="divider"></li>-->
-					</ul>
-				</li>
-			</ul>
+			<div class="collapse navbar-collapse" id="nav-collapse">
+				<ul class="nav navbar-nav"  id="navbar">
+					<li v-for="nav in nav_bar">
+						<a href="">{{nav}}</a>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
+							{{clubs}}<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu grid">
+							<li v-for="club in clubs_name">
+								<a href="#">{{club}}</a>
+							</li>
+							<!--
+							<li><a tabindex="-1" href="#">My Account</a></li>
+							<li class="divider"></li>-->
+						</ul>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</nav>
-
 	<!--navbar end-->
 
-	<!-- Slide show -->
-	<div id="slideshow" class="carousel slide" data-ride="carousel">
-	  <style>
-#slideshow{
-	width:70%;	
-	height:500px;
-	margin:auto;
-}
-	  </style>
-	  <div class="carousel-inner" role="listbox" 
-			   style="display:block">
-		<div v-bind:class="['item',$index==0 ? 'active' : '']" 
-		 	 v-for="count in counts">
-			<img class="img-responsive" v-bind:src="count.imgsrc" alt="" 
-				 style="max-height:500px;margin:auto">
-		  <div class="carousel-caption">
-			  <h3>{{count.title}}</h3>
-			  <p> {{count.desp}} </p>
-		  </div>
-		</div>
-	  </div>
-	  <a class="left carousel-control" href="#slideshow" role="button" data-slide="prev">
-		  <span class="glyphicon glyphicon-chevron-left" aria-hidden=""></span>
-		  <span class="sr-only">Previous</span>
-	  </a>
-      <a class="right carousel-control" href="#slideshow" role="button" data-slide="next">
-		  <span class="glyphicon glyphicon-chevron-right" aria-hidden=""></span>
-		  <span class="sr-only">Next</span>
-	  </a>
-	 </div>
+	<div id="main"></div>
+	
+	<p id="test">{{href}}</p>
 
-	 <footer class="pull-right">
-		 <p>This web is made by linnil1 by bootstrap and vuejs </p>
-	</footer>
+</body>
 
+	<script src="all.js"></script>
 	<script>
 var navbar = new Vue({
 	el : "#navbar",
@@ -87,27 +65,57 @@ var navbar = new Vue({
 		clubs_name : ['太極拳研究社', '少林拳社', '國術社', '男子國術校隊(國術校隊)', '楊氏廣法太極拳社', '八步螳螂拳社', '綜合格鬥社', '合氣太極社', '內家武學社', '跆拳道社', '劍道社', '楊太極武藝社', '椰林合氣道社', '居合道社', '截拳道社', '技擊散打社', '空手道社', '詠春拳社', '柔道社'],
 		
 		nav_bar : [ '課表', '攤位', '表演節目']
-	}
+	},
 })
 
-var homepage = new Vue({
-	el : "#slideshow",
-	data : {
-		counts : [ {
-			imgsrc : "img/countdown/count1.jpg",
-			title  : "countdown #1 day",
-			desp   : "NTU YangTa is good"
-		}, {
-			imgsrc : "img/countdown/count2.jpg",
-			title  : "countdown #2 day",
-			desp   : "NTU YangTa is good"
-		}, {
-			imgsrc : "img/countdown/count3.jpg",
-			title  : "countdown #3 day",
-			desp   : "NTU YangTa is good"}]
+
+var paramGet = function(text){
+	if(text[0]!='?')
+		throw "?"
+	var text = text.slice(1,test.length)
+	var arr = text.split('&')
+	var dict ={}
+	for(var a in arr){
+		qa = arr[a].split('=')
+		if(qa.length!=2)
+			throw "length != 2"
+		dict[decodeURIComponent(qa[0])] = decodeURIComponent(qa[1])
+	}
+	return dict
+}
+
+
+var url = new Vue({
+	el : "#test",
+	data:{
+		href : window.location.href
+	} ,
+	computed: {
+		href : function(){
+			var parser = document.createElement('a')
+			parser.href = this.$data.href
+			try{
+				var dict = paramGet(parser.search)
+				console.log(dict)
+				if('app' in dict)
+					if(dict.app == 'home')
+					{
+						$('#main').empty()
+						$('#main').append(home_html)
+						mainvnew = new Vue(home_vue)
+					}
+			}
+			catch(err){}
+			return this.$data.href
+		}
+	},
+	ready:function(){
+		self = this
+		setInterval(function () {
+			 self.$data.href = window.location.href
+		  }, 1000)
 	}
 })
-
 	</script>
-</body>
+
 </html>
