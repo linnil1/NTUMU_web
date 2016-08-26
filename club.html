@@ -17,6 +17,7 @@
 
 	<nav class="navbar navbar-default ">
 		<div class="container-fluid">
+			 <!-- <button id="sidebar_collapse" class="btn" data-toggle="collapse" data-target="#sidebar_id">Collapsible</button> -->
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
 					<span class="icon-bar"></span>
@@ -52,6 +53,9 @@
 	<!--navbar end-->
 
 <style>
+#qa{
+	overflow: auto;
+}
 #qa div{
 	display: block;
 	width: 70%;
@@ -74,9 +78,8 @@
 }
 
 .sidebar{
-	position: absolute;
-	left: 60px;
-	width: 260px;
+	position: relative;
+	padding-left: 50px;
 }
 .sidebar ul{
 	line-height: 1.8em;
@@ -95,26 +98,54 @@
 	color :#42b983 !important;
 	font-size : 110%;
 }
-
+.connect p{
+	text-indent : 15px;
+}
+.connect h4{
+	text-indent : 7px;
+}
+.footer {
+	margin-top : 200px;
+    background-color:  #5f5f5f;
+    bottom: 0;
+    width: 100%;
+	text-align: center;
+	color: white;
+}
+@media (max-width:768px ) {
+.sidebar{
+	display: none;
+}
+}
+@media (min-width:768px ) {
+.mobile-title{
+	display: none;
+}
+#sidebar_collapse{
+	display: none;
+}
+}
 </style>
-	<div class="markdown" id="club">
+	<div class="markdown container-fluid" id="club">
 		<div class="row">
-			<div class="col-sm-3">
-				<div  v-bind:style="sidebar_style">
-					<div class="sidebar" id="sidebar_id">
-						<ul>
-							<li v-for="intro in main_intros">
-								<a v-bind:href="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''">{{intro.name}}</a>
-							</li>
-								
-						</ul>
-					</div>
+			<div class="col-sm-2">
+				<div  class="sidebar" v-bind:style="sidebar_style" id="sidebar_id">
+					<h1> {{name}} </h1>
+					<ul>
+						<li v-for="intro in main_intros">
+							<a v-bind:href="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''">{{intro.name}}</a>
+						</li>
+							
+					</ul>
 				</div>
-			
 			</div>
-			<div class="col-sm-5">
+
+			<div class="col-sm-6">
+				<h1 class='mobile-title'> {{name}} </h1>
 				<div v-for="intro in main_intros" v-bind:id="intro.id">
-					<h1>{{intro.name}}</h1>
+					<h2>{{intro.name}}
+						<a v-bind:href="('#'+intro.id)" class="glyphicon glyphicon-tags" style="font-size:20px"></a>
+					</h2>
 					<hr>
 					<template v-if="intro.id=='qa'">
 						<template v-for="qa in intro.content">
@@ -132,13 +163,44 @@
 					</template>
 					<br><br>
 				</div>
-
-				<br><br>
 			</div>
-			<div class="col-sm-4"></div>
+
+			<div class="col-sm-4">
+				<div class="connect" style="padding-left: 10px">
+					<h2>聯絡資訊</h2>
+					<h3>社長</h3>
+					<p>{{con.president}}</p>
+					<h3>email</h3>
+					<p>{{con.email}}</p>
+					<h3 v-if="con.blog">部落格</h3>
+					<p> <a v-bind:href="con.blog">{{con.blog}}</a> </p>
+					<h3 v-if="con.fb">FB</h3>
+					<p> <a v-bind:href="con.fb.link">{{con.fb.name}}</a> </p>
+					<h3>迎新</h3>
+					<div v-for="wel in welcomes">
+						<h4> {{wel.title}} </h4>
+						<p> 時間: {{wel.time}} </p>
+						<p> 地點: {{wel.location}} </p>
+					</div>
+					<h3>上課</h3>
+					<div v-for="wel in courses">
+						<h4> {{wel.title}} </h4>
+						<p> 時間: {{wel.time}} </p>
+						<p> 地點: {{wel.location}} </p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-	
+
+	<footer class="footer">
+      <div class="container">
+        <p >Author : linnil1</p>
+        <p >Email : linnil1.886@gmail.com</p>
+        <p >Tool : Vuejs, Bootstrap</p>
+        <p >Club : 楊氏廣法太極拳社</p>
+      </div>
+    </footer>
 
 </body>
 
@@ -182,6 +244,16 @@ var club = new Vue({
 				a: "藉由拳理的立身中正，延伸到做人處事的道理，並在練習鬆柔的過程中，培養對自身身體變化的感知，進而推展到日常生活，對周遭情勢的變化更為敏感。"
 			}]
 		}],
+		con : {
+			president: "范思晴",
+			email : "taida.taichi@gmail.com",
+			blog : "taida-taichi.blogspot.com",
+			fb : {
+				name : "台大太極拳社 NTU Taichi Club",
+				link : "https://www.facebook.com/台大劍道社-粉絲團-295543953792001/"
+			}
+		},
+		name : "台大太極拳社",
 		courses :[{
 			time: "星期五, 18:30~21:00",
 			location: "二活 503",
@@ -205,18 +277,19 @@ var club = new Vue({
 			{
 				this.sidebar_style = { 
 					position: "fixed" ,
-					top : "0"
+					top : "0",
+					width :$(".col-sm-2").width()+"px"
 				}
 			}
 			else{
 				this.sidebar_style = { 
-					position: "absolute",
+					position: "relative",
 					top : "0"
+
 				 }
 			}
 
 			// sidebar link active or not
-			this.activeid = ""
 			for(var i in this.main_intros){
 				var intro = this.main_intros[i]
 				if(intro.element.offsetTop+intro.element.offsetHeight > this.scroll ){
