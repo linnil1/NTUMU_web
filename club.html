@@ -2,34 +2,39 @@
 <html lang="en-US">
 <head>
 	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="js/jquery-3.1.0.js"></script>
 	<script src="js/vue.js"></script>
 	<script src="js/bootstrap.js"></script>
-	<script src="js/bootstrap-hover-dropdown.js"></script>
 	<link rel="stylesheet" href="css/bootstrap.css"></link>
-	<link rel="stylesheet" href="css/mynavbar.css"></link>
 	<link rel="stylesheet" href="css/markdown.css"></link>
-	<title>123</title>
+	<link rel="stylesheet" href="css/mynavbar.css"></link>
+	<title class="title-word">123</title>
 </head>
 <body>
+	<div id="LOGO" class="logo">
+		<img src="img/permanent_logo.png" height="100" alt="LOGO">
+		<h1>台大武術聯盟      </h1> 
+		<h2>NTU Martial Union </h2>			
+	</div>
 
-	<img src="img/alwayslogo.png" height="80" alt="">
-
-	<nav class="navbar navbar-default ">
+	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
 		<div class="container-fluid">
-			 <!-- <button id="sidebar_collapse" class="btn" data-toggle="collapse" data-target="#sidebar_id">Collapsible</button> -->
 			<div class="navbar-header">
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" d data-toggle="collapse" data-target="#sidebar_id">導覽</button>
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
-				  </button>
+				</button>
 				<a href="index.html">
-					<img src="img/2016_1_logo.png"  height="40">
+					<img src="img/105_1_logo.png"  height="50">
 				</a>
+				<h3 class="navbar-text mobile-hide title-word">text </h3>
 			</div>
 			<div class="collapse navbar-collapse" id="nav-collapse">
-				<ul class="nav navbar-nav"  id="navbar">
+				<ul class="nav navbar-nav"  >
 					<li v-for="nav in nav_bar">
 						<a href="">{{nav}}</a>
 					</li>
@@ -52,6 +57,7 @@
 	</nav>
 	<!--navbar end-->
 
+	<div class="markdown container-fluid" id="club">
 <style>
 #qa{
 	overflow: auto;
@@ -77,9 +83,33 @@
 	margin-bottom:15px !important;
 }
 
+.connect p{
+	text-indent : 15px;
+}
+.connect h4{
+	text-indent : 7px;
+}
+@media (min-width:768px ) {
+	.mobile-hide{
+		display: none;
+	}
+	#sidebar_collapse{
+		display: none;
+	}
+}
+h2 a{
+	padding-top:70px;
+}
+</style>
+<style>  /* sidebar */
+.active{
+	color :#42b983 !important;
+	font-size : 110%;
+}
 .sidebar{
 	position: relative;
-	padding-left: 50px;
+	padding-left: 20px;
+	padding-top: 20px;
 }
 .sidebar ul{
 	line-height: 1.8em;
@@ -93,58 +123,41 @@
 .sidebar ul li a{
 	color : #34495e;
 }
+#sidebar_collapse_btn{
+	float:left;
+}
 
-.active{
-	color :#42b983 !important;
-	font-size : 110%;
-}
-.connect p{
-	text-indent : 15px;
-}
-.connect h4{
-	text-indent : 7px;
-}
-.footer {
-	margin-top : 200px;
-    background-color:  #5f5f5f;
-    bottom: 0;
-    width: 100%;
-	text-align: center;
-	color: white;
-}
 @media (max-width:768px ) {
-.sidebar{
-	display: none;
+	.sidebar{
+		display: none;
+		width: 40%;
+		height: 100%;
+		background-color : #f9f9f9;
+		position: fixed;
+		z-index : 5;
+	}
 }
-}
-@media (min-width:768px ) {
-.mobile-title{
-	display: none;
-}
-#sidebar_collapse{
-	display: none;
-}
-}
+
 </style>
-	<div class="markdown container-fluid" id="club">
 		<div class="row">
-			<div class="col-sm-2">
-				<div  class="sidebar" v-bind:style="sidebar_style" id="sidebar_id">
+			<div class="col-sm-2 sidebar"  id="sidebar_id">
+				<div v-bind:style="sidebar_style">
+					<img class="img-responsive" src="img/LOGO_Taichi.png" alt="Chania"> 
 					<h1> {{name}} </h1>
 					<ul>
 						<li v-for="intro in main_intros">
 							<a v-bind:href="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''">{{intro.name}}</a>
 						</li>
+						<li><a href="#connect">聯絡資訊</a></li>
 							
 					</ul>
 				</div>
 			</div>
 
 			<div class="col-sm-6">
-				<h1 class='mobile-title'> {{name}} </h1>
 				<div v-for="intro in main_intros" v-bind:id="intro.id">
 					<h2>{{intro.name}}
-						<a v-bind:href="('#'+intro.id)" class="glyphicon glyphicon-tags" style="font-size:20px"></a>
+						<a v-bind:href="('#'+intro.id)" class="glyphicon glyphicon-tags" style="font-size:15px"></a>
 					</h2>
 					<hr>
 					<template v-if="intro.id=='qa'">
@@ -161,30 +174,32 @@
 						</ul>
 						<div v-else> {{{intro.content}}} </div>
 					</template>
-					<br><br>
+					<!-- <br><br> --> 
 				</div>
 			</div>
 
 			<div class="col-sm-4">
-				<div class="connect" style="padding-left: 10px">
-					<h2>聯絡資訊</h2>
+				<div class="connect" id='connect' style="padding-left: 10px">
+					<h2>聯絡資訊
+						<a href="#connect" class="glyphicon glyphicon-tags" style="font-size:15px"></a>
+					</h2>
 					<h3>社長</h3>
 					<p>{{con.president}}</p>
-					<h3>email</h3>
+					<h3>Email</h3>
 					<p>{{con.email}}</p>
 					<h3 v-if="con.blog">部落格</h3>
-					<p> <a v-bind:href="con.blog">{{con.blog}}</a> </p>
+					<p> <a v-bind:href="con.blog" target="_blank">{{con.blog}}</a> </p>
 					<h3 v-if="con.fb">FB</h3>
-					<p> <a v-bind:href="con.fb.link">{{con.fb.name}}</a> </p>
+					<p> <a v-bind:href="con.fb.link" target="_blank">{{con.fb.name}}</a> </p>
 					<h3>迎新</h3>
 					<div v-for="wel in welcomes">
-						<h4> {{wel.title}} </h4>
+						<h4 v-if="wel.title"> {{wel.title}} </h4>
 						<p> 時間: {{wel.time}} </p>
 						<p> 地點: {{wel.location}} </p>
 					</div>
 					<h3>上課</h3>
 					<div v-for="wel in courses">
-						<h4> {{wel.title}} </h4>
+						<h4 v-if="wel.title"> {{wel.title}} </h4>
 						<p> 時間: {{wel.time}} </p>
 						<p> 地點: {{wel.location}} </p>
 					</div>
@@ -195,16 +210,17 @@
 
 	<footer class="footer">
       <div class="container">
-        <p >Author : linnil1</p>
+        <p >Author : linnil1 (楊氏廣法太極拳社)</p>
         <p >Email : linnil1.886@gmail.com</p>
-        <p >Tool : Vuejs, Bootstrap</p>
-        <p >Club : 楊氏廣法太極拳社</p>
+		<p >Tool : <a href="http://vuejs.org/" target="_blank">Vuejs</a>, <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> </p>
       </div>
     </footer>
+
 
 </body>
 
 	<script>
+
 
 var club = new Vue({
 	el: "#club",
@@ -268,16 +284,28 @@ var club = new Vue({
 
 	methods: {
 		updatescroll : function(){
-			this.scroll = document.documentElement.scrollTop
+			this.scroll = document.documentElement.scrollTop || document.body.scrollTop
 
-			// side bar fix or not
-			var onsidebar = document.getElementsByClassName("navbar")[0].scrollHeight + document.getElementsByTagName("img")[0].scrollHeight
-			console.log(this.scroll)
-			if( this.scroll >= onsidebar)
+			// sidebar link active or not
+//			console.log(this.scroll)
+			for(var i in this.main_intros){
+				var intro = this.main_intros[i]
+				if(intro.element.offsetTop+intro.element.offsetHeight > this.scroll ){
+					this.activeid = intro.id;
+					break;
+				}
+			}
+
+			// sidebar fix or not
+			if( $("#sidebar_collapse_btn").is(":visible") )
+				return ;
+				
+			var onsidebar = document.getElementById("navbar").scrollHeight
+			if(this.scroll >= document.getElementById("LOGO").scrollHeight)
 			{
 				this.sidebar_style = { 
 					position: "fixed" ,
-					top : "0",
+					top : document.getElementById("navbar").scrollHeight+"px",
 					width :$(".col-sm-2").width()+"px"
 				}
 			}
@@ -288,25 +316,23 @@ var club = new Vue({
 
 				 }
 			}
-
-			// sidebar link active or not
-			for(var i in this.main_intros){
-				var intro = this.main_intros[i]
-				if(intro.element.offsetTop+intro.element.offsetHeight > this.scroll ){
-					this.activeid = intro.id;
-					break;
-				}
-			}
-		
 		}
 	},
 	ready: function(){
 		for(var i in this.main_intros){
 			var intro = this.main_intros[i]
 			intro['element'] = document.getElementById(intro.id)
-			console.log(intro)
+//			console.log(intro)
 		}
 		document.addEventListener('scroll',this.updatescroll)
+			/*
+		$("#club a").click(function(){
+			$('html,body').animate({
+				scrollTop: $(this.hash).offset().top - 70
+			}, 100);
+		})
+		*/
+		$(".title-word").html(this.name)
 	},
 	destroyed: function(){
 		document.removeEventListener('scroll',this.updatescroll)
@@ -322,8 +348,24 @@ var navbar = new Vue({
 		clubs : '社團',
 		clubs_name : ['太極拳研究社', '少林拳社', '國術社', '男子國術校隊(國術校隊)', '楊氏廣法太極拳社', '八步螳螂拳社', '綜合格鬥社', '合氣太極社', '內家武學社', '跆拳道社', '劍道社', '楊太極武藝社', '椰林合氣道社', '居合道社', '截拳道社', '技擊散打社', '空手道社', '詠春拳社', '柔道社'],
 		
-		nav_bar : [ '課表', '攤位', '表演節目']
+		nav_bar : [ '課表', '攤位', '表演節目'],
+		navbar_fix : ""
 	},
+	methods: {
+		navbarUpdate : function(){
+			var scroll = document.documentElement.scrollTop || document.body.scrollTop
+			var navbar_top = document.getElementById("LOGO").scrollHeight
+			this.navbar_fix= scroll >= navbar_top ? "navbar-fixed-top" : ""
+
+			$("body").css("padding-top",scroll >= navbar_top ? "70px":"0")
+		}
+	},
+	ready: function(){
+		document.addEventListener('scroll',this.navbarUpdate)
+	},
+	destroyed: function(){
+		document.removeEventListener('scroll',this.navbarUpdate)
+	}
 })
 	</script>
 
