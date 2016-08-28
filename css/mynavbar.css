@@ -28,6 +28,9 @@
     .dropdown:hover .dropdown-menu {
         display: block;
     }
+	.mobile-hide{
+		display: none;
+	}
 }
 
 .footer {

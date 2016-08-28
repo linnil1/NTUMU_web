@@ -2,46 +2,51 @@
 <html lang="en-US">
 <head>
 	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="js/jquery-3.1.0.min.js"></script>
 	<script src="js/vue.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<script src="js/bootstrap-hover-dropdown.min.js"></script>
 	<link rel="stylesheet" href="css/bootstrap.css"></link>
+	<link rel="stylesheet" href="css/markdown.css"></link>
 	<link rel="stylesheet" href="css/mynavbar.css"></link>
-	<title>123</title>
+	<title class="title-word">title</title>
 </head>
 <body>
+	<div id="LOGO" class="logo">
+		<img src="img/permanent_logo.png" height="100" alt="LOGO">
+		<h1>台大武術聯盟      </h1> 
+		<h2>NTU Martial Union </h2>			
+	</div>
 
-	<img src="img/alwayslogo.png" height="80" alt="">
-
-	<nav class="navbar navbar-default" id="navbar">
+	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
 		<div class="container-fluid">
 			<div class="navbar-header">
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" d data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
-				  </button>
-				<a href="" v-on:click="urlGo('app=home')">
-					<img src="img/2016_1_logo.png"  height="40">
+				</button>
+				<a href="index.html">
+					<img src="img/105_1_logo.png"  height="50" alt="logo">
 				</a>
+				<h3 class="navbar-text mobile-hide title-word">title</h3>
 			</div>
 			<div class="collapse navbar-collapse" id="nav-collapse">
-				<ul class="nav navbar-nav" >
+				<ul class="nav navbar-nav"  >
 					<li v-for="nav in nav_bar">
-						<a href="" v-on:click="urlGo(nav.dirurl)">{{nav.name}}</a>
+						<a href="#" v-on:click="urlGo(nav.url)">{{nav.name}}</a>
 					</li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
-							{{clubs}}<b class="caret"></b>
+							{{club}}<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu grid">
-							<li v-for="club in clubs_name">
-								<a href="#">{{club}}</a>
+							<li v-for="club in clubs">
+								<a href="#" v-on:click="urlGo(club.url)">{{club.name}}</a>
 							</li>
-							<!--
-							<li><a tabindex="-1" href="#">My Account</a></li>
-							<li class="divider"></li>-->
+							<!-- <li class="divider"></li>-->
 						</ul>
 					</li>
 				</ul>
@@ -50,102 +55,142 @@
 	</nav>
 	<!--navbar end-->
 
-	<p id="test">{{href}}</p>
 	<div id="main"></div>
 	
+	<footer class="footer">
+      <div class="container">
+        <p >Author : linnil1 (楊氏廣法太極拳社)</p>
+        <p >Email : linnil1.886@gmail.com</p>
+		<p >Tool : <a href="http://vuejs.org/" target="_blank">Vuejs</a>, <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> </p>
+      </div>
+    </footer>
 
 </body>
 
-	<script src="all.js"></script>
+<script src="js/all.js"></script>
 	<script>
+
+var jsondata = {},
+	clubname = "",
+	ts = "105_1",
+	appvue = null
+
+var vueDestroy = function(){
+	$('#main').empty()
+	if(appvue != null)
+		appvue.$destroy()
+	appvue = null
+}
+
+var vueBuildClub = function(c){
+	clubname = c
+	$('#main').append(club_html)
+	appvue = new Vue(club_vue)
+}
+
+
+
 var navbar = new Vue({
 	el : "#navbar",
 	data :{
-		clubs : '社團',
-		clubs_name : ['太極拳研究社', '少林拳社', '國術社', '男子國術校隊(國術校隊)', '楊氏廣法太極拳社', '八步螳螂拳社', '綜合格鬥社', '合氣太極社', '內家武學社', '跆拳道社', '劍道社', '楊太極武藝社', '椰林合氣道社', '居合道社', '截拳道社', '技擊散打社', '空手道社', '詠春拳社', '柔道社'],
+		club : '社團',
+		clubs: [],
+		clubhtml: false,
+		navbar_fix: "",
+		href : "",
+		title: "台大武術聯盟",
 		
 		nav_bar : [ { 
 			name: '課表',
-			dirurl: "app=course" 
+			url: "app=course" 
 		}, {
 			name: '攤位',
-			dirurl: ""
+			url: "app=location"
 		},{
 			name: '表演節目',
-			dirurl: ""
+			url: "app=showtime"
 		}],
 	},
-	methods : {
-		urlGo : function(text){
-			console.log("redirect")
-			window.history.pushState('', '', '/?'+text);
-		}
-	}
 
+	methods: {
+		urlGo : function(text,redirect=true){
+			if(redirect)
+				window.history.pushState('', '', '/?'+text);
+			console.log("go to "+window.location.href)
+
+			var parser = document.createElement('a')
+			parser.href = window.location.href
+			try{
+				var found = false
+				var dict = paramGet(parser.search)
+				console.log(dict)
+
+				this.clubhtml = false
+				for(var c in dict){
+					if(jsondata[ts].clubs.indexOf(c)!=-1 && dict[c] == true){
+						vueDestroy()
+						vueBuildClub(c)
+						this.clubhtml = true
+						found = true
+						break;
+					}
+				}
+				if( found == false)
+					throw ("not found")
+			}
+			catch(err){
+				vueDestroy()
+				console.log("not found")
+			}
+		},
+		navbarUpdate : function(){
+			var scroll = document.documentElement.scrollTop || document.body.scrollTop
+			var navbar_top = document.getElementById("LOGO").offsetHeight
+			this.navbar_fix= scroll >= navbar_top ? "navbar-fixed-top" : ""
+
+			$("body").css("padding-top",scroll >= navbar_top ? "70px":"0")
+		}
+	},
+	created: function(){ // readjson
+		var clubs = this.clubs
+		var urlgo = this.urlGo
+		$.getJSON("data/allclubs.json", function(json) {
+			jsondata = json
+			jsondata[ts].clubs.forEach(function(club){
+				clubs.push({
+					name: jsondata[club].chinese,
+					url : club
+				})
+			})
+			urlgo("",false)
+		});
+		$(".title-word").html(this.title)
+		document.addEventListener('scroll',this.navbarUpdate)
+
+	},
+	destroyed: function(){
+		document.removeEventListener('scroll',this.navbarUpdate)
+	}
 })
 
 
 var paramGet = function(text){
 	if(text[0]!='?')
-		throw "?"
-	var text = text.slice(1,test.length)
+		throw "lack ?"
+	var text = text.slice(1,text.length)
 	var arr = text.split('&')
 	var dict ={}
 	for(var a in arr){
 		qa = arr[a].split('=')
-		if(qa.length!=2)
+		if(qa.length>2)
 			throw "length != 2"
-		dict[decodeURIComponent(qa[0])] = decodeURIComponent(qa[1])
+		else if(qa.length==1)
+			dict[decodeURIComponent(qa[0])] = true
+		else
+			dict[decodeURIComponent(qa[0])] = decodeURIComponent(qa[1])
 	}
 	return dict
 }
-
-
-var url = new Vue({
-	el : "#test",
-	data:{
-		href : window.location.href
-	} ,
-	computed: {
-		href : function(){
-			var parser = document.createElement('a')
-			parser.href = this.$data.href
-			try{
-				var dict = paramGet(parser.search)
-				console.log(dict)
-				if('app' in dict)
-					if(dict.app == 'home')
-					{
-						$('#main').empty()
-						$('#main').append(home_html)
-						mainvnew = new Vue(home_vue)
-						return 
-					}
-					else if(dict.app == 'course')
-					{
-						$('#main').empty()
-						$('#main').append(course_html)
-						mainvnew = new Vue(course_vue)
-						return
-					}
-				throw("not found")
-				$('#main').empty()
-			}
-			catch(err){
-				console.log("strange url")
-				window.history.pushState('', '', '/');
-			}
-			console.log(123)
-			return this.$data.href
-		}
-	},
-	ready:function(){
-		self = this
-		setInterval(function () {
-			 self.$data.href = window.location.href
-		  }, 1000)
-	}
-})
 	</script>
 
 </html>

@@ -117,7 +117,7 @@ with open("105_1_club.csv",newline='') as f:
         if row[4]:
             clubdict['logo'] = [] #new
             logo= tsFind(clubdict['logo'])
-            logo['src'] = latest+"_logo_"+row[4]
+            logo['src'] = row[4]
 
         #time\nplace\ntitle\n, .... #for course
         row = cf.__next__()
@@ -195,6 +195,8 @@ with open("105_1_club.csv",newline='') as f:
             break;
 
         #pprint(clubdict)
+
+want[latest]['clubs'].sort()
 
 open("allclubs.json","w").write(json.dumps(want))
 
