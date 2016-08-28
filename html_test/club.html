@@ -29,7 +29,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a href="index.html">
-					<img src="img/105_1_logo.png"  height="50">
+					<img src="img/105_1_logo.png"  height="50" alt="logo">
 				</a>
 				<h3 class="navbar-text mobile-hide title-word">text </h3>
 			</div>
@@ -130,6 +130,7 @@ h2 a{
 @media (max-width:768px ) {
 	.sidebar{
 		display: none;
+		top: 150px;
 		width: 40%;
 		height: 100%;
 		background-color : #f9f9f9;
@@ -142,7 +143,7 @@ h2 a{
 		<div class="row">
 			<div class="col-sm-2 sidebar"  id="sidebar_id">
 				<div v-bind:style="sidebar_style">
-					<img class="img-responsive" src="img/LOGO_Taichi.png" alt="Chania"> 
+					<img class="img-responsive" v-bind:src="logo_src" alt="club_logo"> 
 					<h1> {{name}} </h1>
 					<ul>
 						<li v-for="intro in main_intros">
@@ -280,6 +281,13 @@ var club = new Vue({
 			location: "二活 503",
 			title: "社課"		
 		}],
+		imgs: {
+			logo: {
+				ts: "105-1",
+				src: "105_1_logo_YangTai.png"
+			}
+		},
+		logo_src: ""
 	},
 
 	methods: {
@@ -300,12 +308,12 @@ var club = new Vue({
 			if( $("#sidebar_collapse_btn").is(":visible") )
 				return ;
 				
-			var onsidebar = document.getElementById("navbar").scrollHeight
-			if(this.scroll >= document.getElementById("LOGO").scrollHeight)
+			var onsidebar = document.getElementById("navbar").offsetHeight
+			if(this.scroll >= document.getElementById("LOGO").offsetHeight)
 			{
 				this.sidebar_style = { 
 					position: "fixed" ,
-					top : document.getElementById("navbar").scrollHeight+"px",
+					top : document.getElementById("navbar").offsetHeight+"px",
 					width :$(".col-sm-2").width()+"px"
 				}
 			}
@@ -319,6 +327,7 @@ var club = new Vue({
 		}
 	},
 	ready: function(){
+		this.logo_src =  "img/"+this.imgs.logo.src
 		for(var i in this.main_intros){
 			var intro = this.main_intros[i]
 			intro['element'] = document.getElementById(intro.id)
@@ -354,7 +363,7 @@ var navbar = new Vue({
 	methods: {
 		navbarUpdate : function(){
 			var scroll = document.documentElement.scrollTop || document.body.scrollTop
-			var navbar_top = document.getElementById("LOGO").scrollHeight
+			var navbar_top = document.getElementById("LOGO").offsetHeight
 			this.navbar_fix= scroll >= navbar_top ? "navbar-fixed-top" : ""
 
 			$("body").css("padding-top",scroll >= navbar_top ? "70px":"0")
