@@ -86,6 +86,8 @@ def tsFind(allts,ts=latest):
 
 with open("105_1_club.csv",newline='') as f:
     cf = csv.reader(f)
+    for i in range(6):
+        cf.__next__()
     while True:
         #chinese english xxxx key
         row = cf.__next__()
