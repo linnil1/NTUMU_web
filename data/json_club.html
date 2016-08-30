@@ -175,7 +175,7 @@ h2 a{
 						</ul>
 						<template v-else> <!-- why not else if -->
 							<div v-if='intro.id=="short_intro"'>
-								<p v-for="p in intro.content">{{p}}</p>
+								<p v-for="p in intro.content" style="text-indent:20px">{{p}}</p>
 							</div>
 
 							<div v-else> {{{intro.content}}} </div>

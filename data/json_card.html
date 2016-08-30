@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="js/jquery-3.1.0.js"></script>
+	<script src="js/vue.js"></script>
+	<script src="js/bootstrap.js"></script> <link rel="stylesheet" href="css/bootstrap.css"></link>
+	<link rel="stylesheet" href="css/markdown.css"></link>
+	<link rel="stylesheet" href="css/mynavbar.css"></link>
+	<title class="title-word">title</title>
+</head>
+<body>
+	<div id="LOGO" class="logo">
+		<img src="img/permanent_logo.png" height="100" alt="LOGO">
+		<h1>台大武術聯盟      </h1> 
+		<h2>NTU Martial Union </h2>			
+	</div>
+
+	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" d data-toggle="collapse" data-target="#sidebar_id">導覽</button>
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="index.html">
+					<img src="img/105_1_logo.png"  height="50" alt="logo">
+				</a>
+				<h3 class="navbar-text mobile-hide title-word">title</h3>
+			</div>
+			<div class="collapse navbar-collapse" id="nav-collapse">
+				<ul class="nav navbar-nav"  >
+					<li v-for="nav in nav_bar">
+						<a href="">{{nav}}</a>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
+							{{clubs}}<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu grid">
+							<li v-for="club in clubs_name">
+								<a href="#">{{club}}</a>
+							</li>
+							<!--
+							<li><a tabindex="-1" href="#">My Account</a></li>
+							<li class="divider"></li>-->
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<!--navbar end-->
+
+	<div class="container-fluid" id="card">
+	<style>
+.card-horizon{
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.2);
+	float : left;
+    height: 75px;
+    width: 275px;
+    position: relative;
+	overflow: hidden;
+	margin: 10px;
+	background-color : white;
+	display : flex;
+	flex-direction: row
+}
+.card-horizon:hover {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
+}
+.card-img{
+	background-color: #fafafa;
+	height: 100%;
+	width: 25%;
+	display : flex;
+	justify-content:center;
+}
+.card-img img{
+	margin: auto;
+	padding : 5px;
+	max-height: 100%;
+	max-width: 100%;
+}
+.card-text{
+	width: 75%;
+	right: 0;
+	text-align: center;
+	height: 100%;
+	color: #222;
+	display : flex;
+	justify-content: center;
+	flex-direction: column; 
+}
+.card-title{
+	font-size : 1.2em;
+}
+.card-subtitle{
+	font-size : 0.8em;
+}
+@media only screen and (max-width : 630px) {
+	.card-horizon{
+		width: 180px;
+	}
+}
+@media only screen and (max-width : 460px) {
+	.card-horizon{
+		width: 140px;
+	}
+}
+
+	</style>
+		<div class="row" style=" background-color: #eee;">
+			<div class="col-sm-1"></div>
+			<div class="col-sm-10">
+				<div class="card-horizon" v-for="club in clubs" v-on:click="urlGo(club.name)">
+						<div class="card-img">
+							<img v-bind:src="club.logo_src" alt="club_logo">
+						</div>
+						<div class="card-text">
+							<div class="card-title">
+								{{club.chinese}}
+							</div>
+							<div class="card-subtitle">
+								{{club.english}}
+							</div>
+						</div>
+				</div>
+			</div>
+			<div class="col-sm-1"></div>
+		</div>
+	</div>
+
+
+</body>
+
+	<script>
+
+var urlGo = function(name){
+	console.log(name)
+}
+
+var ts ="105_1"
+var club = new Vue({
+	el: "#card",
+	data: {
+		clubs : []
+	},
+
+	created: function(){
+		var self = this.$data
+		var clubs = []
+//		$.getJSON("data/allclubs.json", function(jsondata) {
+
+		jsondata[ts].clubs.forEach( function(clubname){
+			var jdata = jsondata[clubname]
+			clubs.push({
+				chinese : jdata.chinese,
+				name    : clubname,
+				logo_src :  "img/clublogo/"+jdata.logo[0].src,
+				english : jdata.english
+			})
+//		})
+
+		self.clubs = clubs
+
+		$(".title-word").html("武聯-一覽")
+		})
+	},
+	methods:{
+		urlGo : function(name){
+			urlGo(name)
+		}
+	}
+	
+})
+
+
+var navbar = new Vue({
+	el : "#navbar",
+	data :{
+		clubs : '社團',
+		clubs_name : ['太極拳研究社', '少林拳社', '國術社', '男子國術校隊(國術校隊)', '楊氏廣法太極拳社', '八步螳螂拳社', '綜合格鬥社', '合氣太極社', '內家武學社', '跆拳道社', '劍道社', '楊太極武藝社', '椰林合氣道社', '居合道社', '截拳道社', '技擊散打社', '空手道社', '詠春拳社', '柔道社'],
+		
+		nav_bar : [ '課表', '攤位', '表演節目'],
+		navbar_fix : ""
+	},
+	methods: {
+		navbarUpdate : function(){
+			var scroll = document.documentElement.scrollTop || document.body.scrollTop
+			var navbar_top = document.getElementById("LOGO").offsetHeight
+			this.navbar_fix= scroll >= navbar_top ? "navbar-fixed-top" : ""
+
+			$("body").css("padding-top",scroll >= navbar_top ? "70px":"0")
+		}
+	},
+	ready: function(){
+		document.addEventListener('scroll',this.navbarUpdate)
+	},
+	destroyed: function(){
+		document.removeEventListener('scroll',this.navbarUpdate)
+	}
+})
+	</script>
+
+
+</html>

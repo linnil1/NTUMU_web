@@ -39,7 +39,7 @@
 						<a href="#" v-on:click="urlGo(nav.url)">{{nav.name}}</a>
 					</li>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
+						<a href="#" v-on:click="urlGo('app=card')" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
 							{{club}}<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu grid">
@@ -97,8 +97,24 @@ var vueBuild= function(text){
 		console.log("created")
 		appvue = new Vue(course_vue)
 	}
+	else if( text == "card" )
+	{
+		$('#main').append(card_html)
+		console.log("created")
+		appvue = new Vue(card_vue)
+	}
 }
 
+var urlGo = function(text){
+	var parser = document.createElement('a')
+	parser.href = window.location.href
+	if(parser.pathname.indexOf("~b04611017") != -1)
+		window.history.pushState('', '', '/~b04611017/?'+text);  // for ntu
+	else
+		window.history.pushState('', '', '/?'+text);  // for ntu
+	console.log("go to "+window.location.href)
+//	navbar.urlRealGo()  this put to urlUpdate
+}
 
 
 var navbar = new Vue({
@@ -108,7 +124,7 @@ var navbar = new Vue({
 		clubs: [],
 		clubhtml: false,
 		navbar_fix: "",
-		href : "",
+		search: "",
 		title: "台大武術聯盟",
 		
 		nav_bar : [{
@@ -124,12 +140,12 @@ var navbar = new Vue({
 	},
 
 	methods: {
-		urlGo : function(text){
-			//window.history.pushState('', '', '/~b04611017/?'+text);  // for ntu
-			window.history.pushState('', '', '/?'+text);  // for ntu
-			console.log("go to "+window.location.href)
-
-			var parser = document.createElement('a')
+		urlGo: function(text){
+			urlGo(text)
+		},
+		urlRealGo: function(){
+			window.scrollTo(0,0)
+			parser = document.createElement('a')
 			parser.href = window.location.href
 			try{
 				var found = false
@@ -147,9 +163,9 @@ var navbar = new Vue({
 					}
 				}
 				if(!found && 'app' in dict){
-					if(dict.app == "course"){
+					if(["course","card"].indexOf(dict.app)!= -1 ){
 						vueDestroy()
-						vueBuild('course')
+						vueBuild(dict.app)
 						found = true
 					}
 				}
@@ -163,6 +179,14 @@ var navbar = new Vue({
 				console.log("not found")
 			}
 		},
+		urlUpdate : function(){
+			parser = document.createElement('a')
+			parser.href = window.location.href
+			if(this.search !=  parser.search) {
+				this.search = parser.search
+				this.urlRealGo()
+			}
+		},
 		navbarUpdate : function(){
 			var scroll = document.documentElement.scrollTop || document.body.scrollTop
 			var navbar_top = document.getElementById("LOGO").offsetHeight
@@ -173,7 +197,6 @@ var navbar = new Vue({
 	},
 	created: function(){ // readjson
 		var clubs = this.clubs
-		var urlgo = this.urlGo
 		$.getJSON("data/allclubs.json", function(json) {
 			jsondata = json
 			jsondata[ts].clubs.forEach(function(club){
@@ -185,13 +208,16 @@ var navbar = new Vue({
 			var parser = document.createElement('a')
 			parser.href = window.location.href
 			if(parser.search.length)
-				urlgo(parser.search.slice(1))
+				urlGo(parser.search.slice(1))
 			else
-				urlgo("")
+				urlGo("")
 		});
+
+	},
+	ready: function(){
 		$(".title-word").html(this.title)
 		document.addEventListener('scroll',this.navbarUpdate)
-
+		setInterval( this.urlUpdate , 500)
 	},
 	destroyed: function(){
 		document.removeEventListener('scroll',this.navbarUpdate)
