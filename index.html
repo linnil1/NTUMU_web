@@ -67,7 +67,6 @@
 
 </body>
 
-<script src="js/all.js"></script>
 	<script>
 
 var jsondata = {},
@@ -125,10 +124,9 @@ var navbar = new Vue({
 	},
 
 	methods: {
-		urlGo : function(text,redirect=true){
-			if(redirect)
-				//window.history.pushState('', '', '/~b04611017/?'+text);  // for ntu
-				window.history.pushState('', '', '/?'+text);  // for ntu
+		urlGo : function(text){
+			//window.history.pushState('', '', '/~b04611017/?'+text);  // for ntu
+			window.history.pushState('', '', '/?'+text);  // for ntu
 			console.log("go to "+window.location.href)
 
 			var parser = document.createElement('a')
@@ -184,7 +182,12 @@ var navbar = new Vue({
 					url : club
 				})
 			})
-			urlgo("",false)
+			var parser = document.createElement('a')
+			parser.href = window.location.href
+			if(parser.search.length)
+				urlgo(parser.search.slice(1))
+			else
+				urlgo("")
 		});
 		$(".title-word").html(this.title)
 		document.addEventListener('scroll',this.navbarUpdate)
@@ -213,6 +216,38 @@ var paramGet = function(text){
 	}
 	return dict
 }
+
+// share function
+
+var weeknames = ['星期日','星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+
+weekGet = function(weekstr){
+	return weeknames.indexOf(weekstr.trim())
+}
+intervalGet = function(twotimes,timepx){
+	var arr =  twotimes.split('~')
+	var start = pxGet(arr[0],timepx)
+	if(arr.length==1)
+		arr.push("22:00")
+	var end   = pxGet(arr[1],timepx)
+	return {
+		top: start+"px",
+		height: end-start+"px"
+	}
+}
+
+pxGet = function(yourtime,timepx){
+	var arr = yourtime.split(':')
+	var hour = arr[0]|0
+	var mins = arr[1]|0
+	return (hour*60+mins-360)*timepx/60
+}
+
+pxRemove = function(text){
+	return text.slice(0,-2)|0
+}
+
 	</script>
+<script src="data/all.js"></script>
 
 </html>

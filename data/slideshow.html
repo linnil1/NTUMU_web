@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<script src="js/jquery-3.1.0.min.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-hover-dropdown.min.js"></script>
+	<script src="js/vue-scroll.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css"></link>
+	<link rel="stylesheet" href="css/mynavbar.css"></link>
+	<title>123</title>
+</head>
+<body >
+
+	
+	<img src="img/alwayslogo.png" height="80" alt="">
+
+	<nav class="navbar navbar-default" data-spy="affix" data-offset-top="500" data-offset-bottom="200">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<img src="img/2016_1_logo.png"  height="40">
+			</div>
+			<ul class="nav navbar-nav"  id="navbar">
+				<li v-for="nav in nav_bar">
+					<a href="">{{nav}}</a>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
+						{{clubs}}<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu grid">
+						<li v-for="club in clubs_name">
+							<a href="#">{{club}}</a>
+						</li>
+						<!--
+						<li><a tabindex="-1" href="#">My Account</a></li>
+						<li class="divider"></li>-->
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<!--navbar end-->
+
+	<!-- Slide show -->
+	<div id="slideshow" class="carousel slide" data-ride="carousel">
+		<style>
+#slideshow{
+	width:70%;	
+	height:500px;
+	margin:auto;
+}
+		</style>
+		<div class="carousel-inner" role="listbox" 
+			style="display:block">
+			<div v-bind:class="['item',$index==0 ? 'active' : '']" 
+				 v-for="count in counts">
+				<img class="img-responsive" v-bind:src="count.imgsrc" alt="" 
+					 style="max-height:500px;margin:auto">
+				<div class="carousel-caption">
+					<h3>{{count.title}}</h3>
+					<p> {{count.desp}} </p>
+				</div>
+			</div>
+		</div>
+		<a class="left carousel-control" href="#slideshow" role="button" data-slide="prev">
+			<span class="glyphicon glyphicon-chevron-left" aria-hidden=""></span>
+		</a>
+		<a class="right carousel-control" href="#slideshow" role="button" data-slide="next">
+			<span class="glyphicon glyphicon-chevron-right" aria-hidden=""></span>
+		</a>
+	 </div>
+
+	 <footer class="pull-right">
+		 <p>This web is made by linnil1 by bootstrap and vuejs </p>
+	</footer>
+
+	<script>
+var navbar = new Vue({
+	el : "#navbar",
+	data :{
+		clubs : '社團',
+		clubs_name : ['太極拳研究社', '少林拳社', '國術社', '男子國術校隊(國術校隊)', '楊氏廣法太極拳社', '八步螳螂拳社', '綜合格鬥社', '合氣太極社', '內家武學社', '跆拳道社', '劍道社', '楊太極武藝社', '椰林合氣道社', '居合道社', '截拳道社', '技擊散打社', '空手道社', '詠春拳社', '柔道社'],
+		
+		nav_bar : [ '課表', '攤位', '表演節目']
+	}
+})
+
+var homepage = new Vue({
+	el : "#slideshow",
+	data : {
+		counts : [ {
+			imgsrc : "img/countdown/count1.jpg",
+			title  : "countdown #1 day",
+			desp   : "NTU YangTa is good"
+		}, {
+			imgsrc : "img/countdown/count2.jpg",
+			title  : "countdown #2 day",
+			desp   : "NTU YangTa is good"
+		}, {
+			imgsrc : "img/countdown/count3.jpg",
+			title  : "countdown #3 day",
+			desp   : "NTU YangTa is good"}]
+	}
+})
+
+	</script>
+</body>
+</html>

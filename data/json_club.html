@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="js/jquery-3.1.0.js"></script>
+	<script src="js/vue.js"></script>
+	<script src="js/bootstrap.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css"></link>
+	<link rel="stylesheet" href="css/markdown.css"></link>
+	<link rel="stylesheet" href="css/mynavbar.css"></link>
+	<title class="title-word">title</title>
+</head>
+<body>
+	<div id="LOGO" class="logo">
+		<img src="img/permanent_logo.png" height="100" alt="LOGO">
+		<h1>台大武術聯盟      </h1> 
+		<h2>NTU Martial Union </h2>			
+	</div>
+
+	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" d data-toggle="collapse" data-target="#sidebar_id">導覽</button>
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="index.html">
+					<img src="img/105_1_logo.png"  height="50" alt="logo">
+				</a>
+				<h3 class="navbar-text mobile-hide title-word">title</h3>
+			</div>
+			<div class="collapse navbar-collapse" id="nav-collapse">
+				<ul class="nav navbar-nav"  >
+					<li v-for="nav in nav_bar">
+						<a href="">{{nav}}</a>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
+							{{clubs}}<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu grid">
+							<li v-for="club in clubs_name">
+								<a href="#">{{club}}</a>
+							</li>
+							<!--
+							<li><a tabindex="-1" href="#">My Account</a></li>
+							<li class="divider"></li>-->
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<!--navbar end-->
+
+	<div class="markdown container-fluid" id="club">
+<style>
+#qa{
+	overflow: auto;
+}
+#qa div{
+	display: block;
+	width: 70%;
+	padding :5px 8px 4px;
+	margin: 5px;
+	border-radius: 12px;
+}
+.question{
+	float:right;
+	background-color: #4080ff;
+	color: #fff;
+	border-top-right-radius: 2px !important;
+}
+.answer{
+	float:left;
+	background-color: #f1f0f0;
+	color: #4b4f56;
+	border-top-left-radius: 2px !important;
+	margin-bottom:15px !important;
+}
+
+.connect p{
+	text-indent : 15px;
+}
+.connect h4{
+	text-indent : 7px;
+}
+h2 a{
+	padding-top:70px;
+}
+</style>
+<style>  /* sidebar */
+@media (min-width:768px ) {
+	#sidebar_collapse{
+		display: none;
+	}
+}
+.active{
+	color :#42b983 !important;
+	font-size : 110%;
+}
+.sidebar{
+	position: relative;
+	padding-left: 20px;
+	padding-top: 20px;
+}
+.sidebar img{
+	padding-top:20px;
+}
+.sidebar ul{
+	line-height: 1.8em;
+    list-style-type: none;
+    margin: 0;
+	margin-right: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 2.2em 0;
+}
+.sidebar ul li a{
+	color : #34495e;
+}
+#sidebar_collapse_btn{
+	float:left;
+}
+
+@media (max-width:768px ) {
+	.sidebar{
+		display: none;
+		top: 150px;
+		width: 40%;
+		height: 100%;
+		background-color : #f9f9f9;
+		position: fixed;
+		z-index : 5;
+	}
+}
+
+</style>
+		<div class="row">
+			<div class="col-sm-2 sidebar"  id="sidebar_id">
+				<div v-bind:style="sidebar_style">
+					<img class="img-responsive" v-if="logo_src" v-bind:src="logo_src" alt="club_logo"> 
+					<h1> {{chinese}} </h1>
+					<ul>
+						<li v-for="intro in main_intros">
+							<a v-bind:href="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''">{{intro.name}}</a>
+						</li>
+						<li><a href="#connect">聯絡資訊</a></li>
+							
+					</ul>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div v-for="intro in main_intros" v-bind:id="intro.id">
+					<h2>{{intro.name}}
+						<a v-bind:href="('#'+intro.id)" class="glyphicon glyphicon-tags" style="font-size:15px"></a>
+					</h2>
+					<hr>
+					<template v-if="intro.id=='qa'">
+						<template v-for="qa in intro.content">
+							<div class="question"> {{qa.q}} </div>
+							<div class="answer">   {{qa.a}} </div>
+						</template>
+					</template>
+					<template v-else> <!-- why not else if -->
+						<ul v-if="intro.id=='course_intro'">
+							<li v-for="courselist in intro.content">
+								{{courselist}}
+							</li>
+						</ul>
+						<template v-else> <!-- why not else if -->
+							<div v-if='intro.id=="short_intro"'>
+								<p v-for="p in intro.content">{{p}}</p>
+							</div>
+
+							<div v-else> {{{intro.content}}} </div>
+						</template>
+					</template>
+					<!-- <br><br> --> 
+				</div>
+			</div>
+
+			<div class="col-sm-4">
+				<div class="connect" id='connect' style="padding-left: 10px">
+					<h2>聯絡資訊
+						<a href="#connect" class="glyphicon glyphicon-tags" style="font-size:15px"></a>
+					</h2>
+					<h3>社長</h3>
+					<p>{{info.president}}</p>
+					<h3>Email</h3>
+					<p>{{info.email}}</p>
+					<h3 v-if="info.blog">部落格</h3>
+					<p> <a v-bind:href="info.blog" target="_blank">{{info.blog}}</a> </p>
+					<h3 v-if="info.fb">FB</h3>
+					<p v-if="info.fb"> <a v-bind:href="info.fb.link" target="_blank">{{info.fb.name}}</a> </p>
+					<h3>迎新</h3>
+					<div v-for="wel in welcomes">
+						<h4 v-if="wel.title"> {{wel.title}} </h4>
+						<p> 時間: {{wel.time}} </p>
+						<p> 地點: {{wel.place}} </p>
+					</div>
+					<h3>上課</h3>
+					<div v-for="wel in courses">
+						<h4 v-if="wel.title"> {{wel.title}} </h4>
+						<p> 時間: {{wel.time}} </p>
+						<p> 地點: {{wel.place}} </p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="footer">
+      <div class="container">
+        <p >Author : linnil1 (楊氏廣法太極拳社)</p>
+        <p >Email : linnil1.886@gmail.com</p>
+		<p >Tool : <a href="http://vuejs.org/" target="_blank">Vuejs</a>, <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> </p>
+      </div>
+    </footer>
+
+
+</body>
+
+	<script>
+
+var clubname = "TaiChi"
+
+var club = new Vue({
+	el: "#club",
+	data: {
+		activeid : "",
+		sidebar_style : {},
+		info: {},
+		chinese : "",
+		courses : [],
+		welcomes: [],
+		main_intros : [],
+		logo_src : ""
+
+
+	},
+
+	methods: {
+		updatescroll : function(){
+			var scroll = document.documentElement.scrollTop || document.body.scrollTop
+
+			// sidebar link active or not
+//			console.log(scroll)
+			for(var i in this.main_intros){
+				var intro = this.main_intros[i]
+				if(intro.element.offsetTop+intro.element.offsetHeight > scroll ){
+					this.activeid = intro.id;
+					break;
+				}
+			}
+
+			// sidebar fix or not
+			if( $("#sidebar_collapse_btn").is(":visible") )
+				return ;
+				
+			var onsidebar = document.getElementById("navbar").offsetHeight
+			if(scroll >= document.getElementById("LOGO").offsetHeight)
+			{
+				this.sidebar_style = { 
+					position: "fixed" ,
+					top : document.getElementById("navbar").offsetHeight+"px",
+					width :$(".col-sm-2").width()+"px"
+				}
+			}
+			else{
+				this.sidebar_style = { 
+					position: "relative",
+					top : "0"
+
+				 }
+			}
+		}
+	},
+	ready: function(){
+		var data = this.$data
+//		$.getJSON("data/allclubs.json", function(jsondata) {
+			var club = jsondata[clubname]
+			data.info = club.info[0]
+			data.main_intros = club.intro[0].intro
+			data.chinese = club.chinese
+			data.courses = club.course[0].courses
+			data.welcomes= club.welcome[0].courses
+			data.logo_src =  "img/clublogo/"+club.logo[0].src
+			$(".title-word").html(data.chinese)
+			console.log(data.main_intros)
+			Vue.nextTick(function () {
+				for(var i in data.main_intros){
+					var intro = data.main_intros[i]
+					intro['element'] = document.getElementById(intro.id)
+//					console.log(intro.element)
+					
+				}
+			})
+//		})
+		document.addEventListener('scroll',this.updatescroll)
+		/*
+		$("#club a").click(function(){
+			$('html,body').animate({
+				scrollTop: $(this.hash).offset().top - 70
+			}, 100);
+		})
+		*/
+	},
+	destroyed: function(){
+		document.removeEventListener('scroll',this.updatescroll)
+	}
+
+	
+})
+
+
+var navbar = new Vue({
+	el : "#navbar",
+	data :{
+		clubs : '社團',
+		clubs_name : ['太極拳研究社', '少林拳社', '國術社', '男子國術校隊(國術校隊)', '楊氏廣法太極拳社', '八步螳螂拳社', '綜合格鬥社', '合氣太極社', '內家武學社', '跆拳道社', '劍道社', '楊太極武藝社', '椰林合氣道社', '居合道社', '截拳道社', '技擊散打社', '空手道社', '詠春拳社', '柔道社'],
+		
+		nav_bar : [ '課表', '攤位', '表演節目'],
+		navbar_fix : ""
+	},
+	methods: {
+		navbarUpdate : function(){
+			var scroll = document.documentElement.scrollTop || document.body.scrollTop
+			var navbar_top = document.getElementById("LOGO").offsetHeight
+			this.navbar_fix= scroll >= navbar_top ? "navbar-fixed-top" : ""
+
+			$("body").css("padding-top",scroll >= navbar_top ? "70px":"0")
+		}
+	},
+	ready: function(){
+		document.addEventListener('scroll',this.navbarUpdate)
+	},
+	destroyed: function(){
+		document.removeEventListener('scroll',this.navbarUpdate)
+	}
+})
+	</script>
+
+
+</html>
