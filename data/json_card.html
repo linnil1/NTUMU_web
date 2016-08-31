@@ -62,7 +62,7 @@
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.2);
 	float : left;
     height: 75px;
-    width: 275px;
+    width: 30%;
     position: relative;
 	overflow: hidden;
 	margin: 10px;
@@ -83,8 +83,8 @@
 .card-img img{
 	margin: auto;
 	padding : 5px;
-	max-height: 100%;
 	max-width: 100%;
+	max-height: 100%;
 }
 .card-text{
 	width: 75%;
@@ -102,14 +102,9 @@
 .card-subtitle{
 	font-size : 0.8em;
 }
-@media only screen and (max-width : 630px) {
+@media only screen and (max-width : 768px) {
 	.card-horizon{
-		width: 180px;
-	}
-}
-@media only screen and (max-width : 460px) {
-	.card-horizon{
-		width: 140px;
+		width: 40%;
 	}
 }
 
@@ -154,7 +149,7 @@ var club = new Vue({
 	created: function(){
 		var self = this.$data
 		var clubs = []
-//		$.getJSON("data/allclubs.json", function(jsondata) {
+		$.getJSON("data/allclubs.json", function(jsondata) {
 
 		jsondata[ts].clubs.forEach( function(clubname){
 			var jdata = jsondata[clubname]
@@ -164,7 +159,7 @@ var club = new Vue({
 				logo_src :  "img/clublogo/"+jdata.logo[0].src,
 				english : jdata.english
 			})
-//		})
+		})
 
 		self.clubs = clubs
 

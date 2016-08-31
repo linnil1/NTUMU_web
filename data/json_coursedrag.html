@@ -2,6 +2,8 @@
 <html lang="en-US">
 <head>
 	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="js/jquery-3.1.0.min.js"></script>
 	<script src="js/vue.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -57,7 +59,7 @@
 
 	<!-- course -->
 
-<div class="container-fluid" id="course" >
+<div class="container-fluid" id="coursedrag" >
 <style>
 .background-devide{
 	border-bottom: 1px dotted #ddd;
@@ -76,31 +78,29 @@
     width: 100%;
 }
 
-table{
+.course-table{
 /*	empty-cells:show;
     border: 1px solid black; */
 	font-size: 20px;
-	overflow: scroll;
 	position: relative;
 	margin: 10px;
 }
-tr td{
+.course-table tr td{
 	min-width : 48px;
 	/*
 	width: 42px;
-  border: 1px solid black; 
 
     display: table-cell; */
 }
 
 .coursetime{
 	height:42px;
-    text-align: right;
     vertical-align: top;
-	padding: 1px 2px 0 0;
+	padding: 1px 2px 0 2px;
     border: 0;
 	position: relative;
 	top: -10px;
+	z-index: 5;
 }
 .day{
 	border-right : 1px solid #ddd;
@@ -120,9 +120,10 @@ tr td{
 }
 
 .course-div{
+	border: 1px solid black; 
 	margin: 10px;
-	height: 80vh;
-	overflow: scroll;
+	width: 95vw;
+	overflow: hidden;
 }
 .course-div::-webkit-scrollbar { // this not show on firefox QQ
     width: 1em;
@@ -183,14 +184,18 @@ tr td{
 			<label v-bind:for="'day_'+name">{{name.slice(2,3)}}</label>
 		</template>
 
-		<button type="button" class="btn btn-default" v-on:click="urlGo('app=coursedrag')">
+		<!-- change -->
+		<button type="button" class="btn btn-default" v-on:click="urlGo('app=course')">
 			<span class="glyphicon glyphicon-retweet"></span> 
-			computer version</button>
+			mobile version</button>
 	</div>
 
 	<!-- table -->
 	<div class="course-div">
-		<table>
+		<div style="position:relative">
+			<div class="coursetime" style="position:absolute" v-bind:style="{top:(i*42+25)+'px'}" v-for="i in 16">{{i+6+":00"}}</div>
+		</div>
+		<table class="course-table" draggable="true" v-on:dragstart="dragstart($event)" v-on:dragover="mouseGet($event)" v-bind:style="tablestyle">
 			<tr>
 				<th></th>
 				<th v-for="sd in showday" style="text-align:center">{{weekname[sd].slice(2,3)}}</th>
@@ -209,7 +214,7 @@ tr td{
 			</tr>
 			<tr>
 				<td>
-					<div class="coursetime" v-for="i in 16">{{i+6+":00"}}</td>
+					<div class="coursetime" v-for="i in 16"> </div>
 				</td>
 				<td class="day" v-for="sd in showday"> 
 					<div style="position:relative" v-bind:style="daywidth[sd].style">
@@ -274,7 +279,7 @@ pxRemove = function(text){
 
 var ts = "105_1"
 var course= new Vue({
-	el : "#course",
+	el : "#coursedrag",
 	data : {
 		weekname: weeknames,
 		showday : [0,1,2,3,4,5,6],  //sorted
@@ -284,8 +289,11 @@ var course= new Vue({
 		widthpx : 48,
 		daywidth : [{style:{}},{style:{}},{style:{}},{style:{}},{style:{}},{style:{}},{style:{}}],  // bug
 		allevents: [],
-		wantevents : []
+		wantevents : [],
+		mouse : { x:0, y:0, t:0 },
+		tablestyle : {top:"0px",left:"0px"}
 	},
+
 	created: function(){
 		$(".title-word").html("武聯-課表")
 
@@ -320,6 +328,7 @@ var course= new Vue({
 			self.showclub = clubs
 		})
 	},
+
 	computed: {
 		showday: function(){
 			return this.$data.showday.sort()
@@ -373,9 +382,27 @@ var course= new Vue({
 			return events
 		}
 	},
+
 	methods:{
 		urlGo: function(text){
 			urlGo(text)
+		},
+		dragstart: function(e){
+			var img = document.createElement("span");
+			e.dataTransfer.setDragImage(img, 0, 0);
+			e.dataTransfer.setData('text/plain',null)
+		},
+		mouseGet: function(e){
+			if (Date.now() - this.mouse.t < 200){
+				this.tablestyle['left'] = pxRemove(this.tablestyle['left']) -this.mouse.x + e.screenX + "px"
+			}
+			this.mouse = {
+				x: e.screenX,
+				y: e.screenY,
+				t: Date.now()
+			}
+//			console.log(e.screenX)
+//			console.log(e.screenY)
 		},
 		hoverOnevent: function(evt,domevt){
 			dom = $(domevt.target)
