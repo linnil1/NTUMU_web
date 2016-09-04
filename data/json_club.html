@@ -22,7 +22,7 @@
 	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" d data-toggle="collapse" data-target="#sidebar_id">導覽</button>
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar_id">導覽</button>
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -39,7 +39,7 @@
 						<a href="">{{nav}}</a>
 					</li>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
+						<a href="#" class="dropdown-toggle">
 							{{clubs}}<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu grid">
@@ -106,7 +106,12 @@ h2 a{
 .sidebar{
 	position: relative;
 	padding-left: 20px;
+	padding-right: 10px;
 	padding-top: 20px;
+	padding-bottom: 50px;
+    bottom:0;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 .sidebar img{
 	padding-top:20px;
@@ -114,8 +119,7 @@ h2 a{
 .sidebar ul{
 	line-height: 1.8em;
     list-style-type: none;
-    margin: 0;
-	margin-right: 20px;
+	margin-left: 20px;
     overflow-x: hidden;
     overflow-y: auto;
     padding: 2.2em 0;
@@ -129,27 +133,37 @@ h2 a{
 
 @media (max-width:768px ) {
 	.sidebar{
+		margin: 0;
+		top: 50px;
+		left: 0;
 		display: none;
-		top: 150px;
-		width: 40%;
+		width: 100%;
 		height: 100%;
 		background-color : #f9f9f9;
 		position: fixed;
 		z-index : 5;
 	}
+	.sidebar img{
+		float : right;
+		max-height: 70%;
+		max-width: 40%;
+		padding: 10px;
+		padding-right: 30px;
+	}
 }
 
 </style>
 		<div class="row">
-			<div class="col-sm-2 sidebar"  id="sidebar_id">
-				<div v-bind:style="sidebar_style">
+			<div class="col-sm-2">
+				<div v-bind:style="sidebar_style" class="sidebar"  id="sidebar_id">
 					<img class="img-responsive" v-if="logo_src" v-bind:src="logo_src" alt="club_logo"> 
 					<h1> {{chinese}} </h1>
 					<ul>
 						<li v-for="intro in main_intros">
-							<a v-bind:href="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''">{{intro.name}}</a>
+							<a v-bind:href="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''" v-on:click="sidebarCollapse">{{intro.name}}</a>
+		
 						</li>
-						<li><a href="#connect">聯絡資訊</a></li>
+						<li><a href="#connect" v-on:click="sidebarCollapse">聯絡資訊</a></li>
 							
 					</ul>
 				</div>
@@ -246,6 +260,10 @@ var club = new Vue({
 	},
 
 	methods: {
+		sidebarCollapse : function(){
+			$('#sidebar_collapse_btn').click()
+		},
+
 		updatescroll : function(){
 			var scroll = document.documentElement.scrollTop || document.body.scrollTop
 

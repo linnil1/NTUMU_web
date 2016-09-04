@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="css/bootstrap.css"></link>
 	<link rel="stylesheet" href="css/markdown.css"></link>
 	<link rel="stylesheet" href="css/mynavbar.css"></link>
-	<title class="title-word">台大武術聯盟</title>
+	<title class="title-word">title</title>
 </head>
 <body>
 	<div id="LOGO" class="logo">
@@ -22,7 +22,7 @@
 	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" d data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -39,7 +39,7 @@
 						<a href="#" v-on:click="urlGo(nav.url)">{{nav.name}}</a>
 					</li>
 					<li class="dropdown">
-						<a href="#" v-on:click="urlGo('app=card')" class="dropdown-toggle">
+						<a href="#" v-on:click="urlGo('app=card')" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
 							{{club}}<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu grid">
@@ -55,7 +55,25 @@
 	</nav>
 	<!--navbar end-->
 
-	<div id="main"></div>
+	<div id="map">
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlggHYFZpq69QFa2_F1vE4Clt5bYmAtLA" ></script>
+
+		<style>
+#map {
+	height: 80vh;
+	width: 95vw;
+	margin: auto;
+}
+#gmap {
+	height: 100%;
+}
+#gmap p,#gmap h3{
+	padding: 5px;
+	margin: 0;
+}
+		</style>
+		<div id="gmap"></div>
+	</div>
 	
 	<footer class="footer">
       <div class="container">
@@ -69,47 +87,9 @@
 
 </body>
 
-	<script>
-
+	<script> 
 var jsondata = {},
-	clubname = "",
-	ts = "105_1",
-	appvue = null
-
-var vueDestroy = function(){
-	//$('#main').empty()
-	if(appvue != null)
-	{
-		appvue.$destroy(true)
-		console.log("destroy")
-	}
-	appvue = null
-}
-
-var vueBuildClub = function(c){
-	clubname = c
-	$('#main').append(club_html)
-	appvue = new Vue(club_vue)
-}
-
-var vueBuild= function(text){
-	if( text == "course" )
-	{
-		$('#main').append(course_html)
-		appvue = new Vue(course_vue)
-	}
-	else if( text == "coursedrag" )
-	{
-		$('#main').append(coursedrag_html)
-		appvue = new Vue(coursedrag_vue)
-	}
-	else if( text == "card" )
-	{
-		$('#main').append(card_html)
-		appvue = new Vue(card_vue)
-	}
-	console.log("created")
-}
+	ts = "105_1";
 
 var urlGo = function(text){
 	var parser = document.createElement('a')
@@ -119,9 +99,40 @@ var urlGo = function(text){
 	else
 		window.history.pushState('', '', '/?'+text);  // for ntu
 	console.log("go to "+window.location.href)
-//	navbar.urlRealGo()  this put to urlUpdate
 }
 
+var map = new Vue({
+	el: "#gmap",
+	data: { 
+		map:null
+	},
+	ready: function(){
+        this.map = new google.maps.Map(document.getElementById('gmap'), {
+          center: {lat: 25.0171052, lng: 121.5368509},
+          zoom: 19
+        });
+		var infowindow = new google.maps.InfoWindow({
+			content: "<h3><a href='#' onclick=\"urlGo('YangTai')\">楊氏廣法太極拳社</a></h3>" + 
+				"<p> Yang Taichi Club </p>"
+		});
+
+		var clubicon = {
+          url: 'http://homepage.ntu.edu.tw/~b04611017/img/clublogo/105_1_logo_YangTai.png',
+		  scaledSize: new google.maps.Size(25,25), // scaled size
+        };
+
+		var marker = new google.maps.Marker({
+			position: {lat:25.017329,lng:121.536809},
+			map: this.map,
+			title: 'hi',
+			icon: clubicon
+		});
+		marker.addListener('click', function() {
+			infowindow.open(this.map, marker);
+		});
+	}
+
+})
 
 var navbar = new Vue({
 	el : "#navbar",
@@ -131,7 +142,7 @@ var navbar = new Vue({
 		clubhtml: false,
 		navbar_fix: "",
 		search: 1, // never match 1
-		title: "台大武術聯盟",
+		title: "123",
 		
 		nav_bar : [{
 			name: '攤位',
@@ -148,51 +159,6 @@ var navbar = new Vue({
 	methods: {
 		urlGo: function(text){
 			urlGo(text)
-		},
-		urlRealGo: function(){
-			window.scrollTo(0,0)
-			parser = document.createElement('a')
-			parser.href = window.location.href
-			this.clubhtml = false
-			try{
-				var found = false
-				var dict = paramGet(parser.search)
-				console.log(dict)
-
-				for(var c in dict){
-					if(jsondata[ts].clubs.indexOf(c)!=-1 && dict[c] == true){
-						vueDestroy()
-						vueBuildClub(c)
-						this.clubhtml = true
-						found = true
-						break;
-					}
-				}
-				if(!found && 'app' in dict){
-					if(["course","card","coursedrag"].indexOf(dict.app)!= -1 ){
-						vueDestroy()
-						vueBuild(dict.app)
-						found = true
-					}
-				}
-
-				if( found == false)
-					throw ("not found")
-			}
-			catch(err){
-				console.log(err)
-				vueDestroy()
-				console.log("not found")
-				urlGo("app=card") // homepage
-			}
-		},
-		urlUpdate : function(){
-			parser = document.createElement('a')
-			parser.href = window.location.href
-			if(this.search !=  parser.search) {
-				this.search = parser.search
-				this.urlRealGo()
-			}
 		},
 		navbarUpdate : function(){
 			var scroll = document.documentElement.scrollTop || document.body.scrollTop
@@ -213,11 +179,10 @@ var navbar = new Vue({
 				})
 			})
 		});
-		$(".title-word").html(this.title)
+//		$(".title-word").html(this.title)
 	},
 	ready: function(){
 		document.addEventListener('scroll',this.navbarUpdate)
-		setInterval( this.urlUpdate , 500)
 	},
 	destroyed: function(){
 		document.removeEventListener('scroll',this.navbarUpdate)
@@ -242,38 +207,5 @@ var paramGet = function(text){
 	}
 	return dict
 }
-
-// share function
-
-var weeknames = ['星期日','星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
-
-weekGet = function(weekstr){
-	return weeknames.indexOf(weekstr.trim())
-}
-intervalGet = function(twotimes,timepx){
-	var arr =  twotimes.split('~')
-	var start = pxGet(arr[0],timepx)
-	if(arr.length==1)
-		arr.push("22:00")
-	var end   = pxGet(arr[1],timepx)
-	return {
-		top: start+"px",
-		height: end-start+"px"
-	}
-}
-
-pxGet = function(yourtime,timepx){
-	var arr = yourtime.split(':')
-	var hour = arr[0]|0
-	var mins = arr[1]|0
-	return (hour*60+mins-360)*timepx/60
-}
-
-pxRemove = function(text){
-	return text.slice(0,-2)|0
-}
-
-	</script>
-<script src="data/all.js"></script>
-
+</script>
 </html>

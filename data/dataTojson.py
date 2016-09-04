@@ -5,7 +5,7 @@ Wanted clubs data (json)
     latest: "105-1",
     "105-1":{ #version
         clubs : [""], #clubs name
-        slideshow: [{src,title,desp}] , #countdown 
+        countdown: [{src,title,desp}] , #countdown 
         location : {}  # have not think yet
     },
 
@@ -62,13 +62,14 @@ chinese english xxxx key
 president email blog fb logo xx
 time\nplace\ntitle\n, .... #for course
 time\nplace\ntitle\n, .... #for welcome
-short_intro course_intro q\na\n... 
+short_intro course_intro q\na\n ... (title content)
 a line for separte each club
 """
 
 import json
 import csv
 from pprint import pprint
+import markdown2 as md
 
 latest = "105_1"
 
@@ -128,10 +129,11 @@ with open("105_1_club.csv",newline='') as f:
         course['courses'] = []
         for c in row:
             nowc = {}
-            c = c.split('\n')
+            c = [cl for cl in c.split('\n') if cl.strip()]
             if len(c) < 2:
-                print(c)
-                print("course err")
+                if c:
+                    print(c)
+                    print("course err")
                 continue
             if len(c) >= 3:
                 nowc['title'] = c[2]
@@ -147,10 +149,11 @@ with open("105_1_club.csv",newline='') as f:
         course['courses'] = []
         for c in row:
             nowc = {}
-            c = c.split('\n')
-            if len(c) < 2:
-                print(c)
-                print("course err")
+            c = [cl for cl in c.split('\n') if cl.strip()]
+            if len(c) < 2 :
+                if c:
+                    print(c)
+                    print("course err")
                 continue
             if len(c) >= 3:
                 nowc['title'] = c[2]
@@ -186,6 +189,17 @@ with open("105_1_club.csv",newline='') as f:
             'name' : "Q-A",
             'content' : qalist
         })
+
+        for i in range(3,len(row)):
+            if row[i].strip() == "" :
+                continue;
+            rowtitle = row[i].split("\n")[0]
+            intro['intro'].append({
+                'id' : rowtitle,
+                'name' : rowtitle,
+                'content' : md.markdown(row[i][row[i].find('\n')+1:])
+            })
+
 
         #remove blank content 
         intro['intro'][:] = [ it for it  in intro['intro'] if it['content']]
