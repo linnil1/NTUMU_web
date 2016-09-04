@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="js/jquery-3.1.0.min.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css"></link>
+	<link rel="stylesheet" href="css/markdown.css"></link>
+	<link rel="stylesheet" href="css/mynavbar.css"></link>
+	<title class="title-word">title</title>
+</head>
+<body>
+	<div id="LOGO" class="logo">
+		<img src="img/permanent_logo.png" height="100" alt="LOGO">
+		<h1>台大武術聯盟      </h1> 
+		<h2>NTU Martial Union </h2>			
+	</div>
+
+	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" d data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="#" v-on:click="urlGo('')">
+					<img src="img/105_1_logo.png"  height="50" alt="logo">
+				</a>
+				<h3 class="navbar-text mobile-hide title-word">title</h3>
+			</div>
+			<div class="collapse navbar-collapse" id="nav-collapse">
+				<ul class="nav navbar-nav"  >
+					<li v-for="nav in nav_bar">
+						<a href="#" v-on:click="urlGo(nav.url)">{{nav.name}}</a>
+					</li>
+					<li class="dropdown">
+						<a href="#" v-on:click="urlGo('app=card')" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
+							{{club}}<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu grid">
+							<li v-for="club in clubs">
+								<a href="#" v-on:click="urlGo(club.url)">{{club.name}}</a>
+							</li>
+							<!-- <li class="divider"></li>-->
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<!--navbar end-->
+
+	<div id="showtime">	
+		<link href='http://fonts.googleapis.com/css?family=Droid+Serif|Open+Sans:400,700' rel='stylesheet' type='text/css' async>
+		<link rel="stylesheet" href="css/timeline.css"> <!-- Resource style -->
+		<header>
+			<h1>9/11 社團表演時間</h1>
+			<h2>地點 傅鐘前 表演空地</h2>
+		</header>
+
+		<section id="cd-timeline" class="cd-container">
+			<div class="cd-timeline-block">
+				<div class="cd-timeline-img cd-picture">
+					<span class="glyphicon glyphicon-pause"/>
+				</div> <!-- cd-timeline-img -->
+
+				<div class="cd-timeline-content">
+					<h2>stop</h2>
+					<span class="cd-date"></span>
+				</div> <!-- cd-timeline-content -->
+			</div> <!-- cd-timeline-block -->
+			<div class="cd-timeline-block" v-for="i in 10">
+				<div class="cd-timeline-img cd-picture">
+					<img src="img/clublogo/105_1_logo_YangTai.png" alt="Picture">
+				</div> <!-- cd-timeline-img -->
+
+				<div class="cd-timeline-content">
+					<h2>YangTai</h2>
+					<p>sing a song</p>
+					<span class="cd-date">10:30~11:12</span>
+				</div> <!-- cd-timeline-content -->
+			</div> <!-- cd-timeline-block -->
+		</section>
+	</div>
+	
+	<footer class="footer">
+      <div class="container">
+        <p >Author : linnil1 (楊氏廣法太極拳社)</p>
+        <p >Email : linnil1.886@gmail.com</p>
+		<p >Tool : <a href="http://vuejs.org/" target="_blank">Vuejs</a>,
+				   <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> 
+		</p>
+      </div>
+    </footer>
+
+</body>
+
+	<script> 
+var jsondata = {},
+	ts = "105_1";
+
+var urlGo = function(text){
+	var parser = document.createElement('a')
+	parser.href = window.location.href
+	if(parser.pathname.indexOf("~b04611017") != -1)
+		window.history.pushState('', '', '/~b04611017/?'+text);  // for ntu
+	else
+		window.history.pushState('', '', '/?'+text);  // for ntu
+	console.log("go to "+window.location.href)
+}
+
+var showtime = new Vue({
+	el: "#showtime",
+	data: { 
+	},
+	ready: function(){
+	}
+
+})
+
+var navbar = new Vue({
+	el : "#navbar",
+	data :{
+		club : '社團',
+		clubs: [],
+		clubhtml: false,
+		navbar_fix: "",
+		search: 1, // never match 1
+		title: "123",
+		
+		nav_bar : [{
+			name: '攤位',
+			url: "app=location"
+		},{
+			name: '表演節目',
+			url: "app=showtime"
+		},{ 
+			name: '課表',
+			url: "app=course" 
+		}],
+	},
+
+	methods: {
+		urlGo: function(text){
+			urlGo(text)
+		},
+		navbarUpdate : function(){
+			var scroll = document.documentElement.scrollTop || document.body.scrollTop
+			var navbar_top = document.getElementById("LOGO").offsetHeight
+			this.navbar_fix= scroll >= navbar_top ? "navbar-fixed-top" : ""
+
+			$("body").css("padding-top",scroll >= navbar_top ? "70px":"0")
+		}
+	},
+	created: function(){ // readjson
+		var clubs = this.clubs
+		$.getJSON("data/allclubs.json", function(json) {
+			jsondata = json
+			jsondata[ts].clubs.forEach(function(club){
+				clubs.push({
+					name: jsondata[club].chinese,
+					url : club
+				})
+			})
+		});
+//		$(".title-word").html(this.title)
+	},
+	ready: function(){
+		document.addEventListener('scroll',this.navbarUpdate)
+	},
+	destroyed: function(){
+		document.removeEventListener('scroll',this.navbarUpdate)
+	}
+})
+</script>
+</html>

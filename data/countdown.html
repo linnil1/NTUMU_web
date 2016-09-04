@@ -84,6 +84,9 @@
 	.countdown-img{
 		width: 100%;
 	}
+	.countdown-link{
+		position: relative;
+	}
 }
 
 .event-text{
@@ -138,9 +141,9 @@
 							<h2 class="media-heading">
 								{{count.title}}
 							</h2>
-							<div class="countdown-desp">
+							<p class="countdown-desp">
 								{{{count.desp}}}
-							</div>
+							</p>
 						</div>
 						<a href="#" class="countdown-link">&gt;&gt;&gt;description</a>
 					</div>
@@ -156,6 +159,7 @@
 	</footer>
 
 	<script>
+var ts = "105_1"
 var navbar = new Vue({
 	el : "#navbar",
 	data :{
@@ -182,51 +186,6 @@ var navbar = new Vue({
 		urlGo: function(text){
 			urlGo(text)
 		},
-		urlRealGo: function(){
-			window.scrollTo(0,0)
-			parser = document.createElement('a')
-			parser.href = window.location.href
-			this.clubhtml = false
-			try{
-				var found = false
-				var dict = paramGet(parser.search)
-				console.log(dict)
-
-				for(var c in dict){
-					if(jsondata[ts].clubs.indexOf(c)!=-1 && dict[c] == true){
-						vueDestroy()
-						vueBuildClub(c)
-						this.clubhtml = true
-						found = true
-						break;
-					}
-				}
-				if(!found && 'app' in dict){
-					if(["course","card","coursedrag"].indexOf(dict.app)!= -1 ){
-						vueDestroy()
-						vueBuild(dict.app)
-						found = true
-					}
-				}
-
-				if( found == false)
-					throw ("not found")
-			}
-			catch(err){
-				console.log(err)
-				vueDestroy()
-				console.log("not found")
-				urlGo("app=card") // homepage
-			}
-		},
-		urlUpdate : function(){
-			parser = document.createElement('a')
-			parser.href = window.location.href
-			if(this.search !=  parser.search) {
-				this.search = parser.search
-				this.urlRealGo()
-			}
-		},
 		navbarUpdate : function(){
 			var scroll = document.documentElement.scrollTop || document.body.scrollTop
 			var navbar_top = document.getElementById("LOGO").offsetHeight
@@ -246,11 +205,10 @@ var navbar = new Vue({
 				})
 			})
 		});
-		$(".title-word").html(this.title)
+		$(".title-word").html("title")
 	},
 	ready: function(){
 		document.addEventListener('scroll',this.navbarUpdate)
-		setInterval( this.urlUpdate , 500)
 	},
 	destroyed: function(){
 		document.removeEventListener('scroll',this.navbarUpdate)
