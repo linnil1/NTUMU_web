@@ -7,7 +7,7 @@ Wanted clubs data (json)
         clubs : [""], #clubs name
         countdown: [{src,title,desp}] , #countdown 
         showtime:[ {time,clubname,title} ] , 
-        location : {}  # have not think yet
+        boothmap : {}  # have not think yet
     },
 
     "YangTai": { #clubs name
@@ -262,9 +262,30 @@ time name title
                 'title': show[2]
             })
 
+        #map
+        want[ts]['boothmap'] = []
+        for booth in data['booth'][1:]:
+            want[ts]['boothmap'].append({
+                'name': booth[0],
+                'lng': float(booth[1].split(',')[1]),
+                'lat': float(booth[1].split(',')[0]),
+                'num': booth[2]
+            })
+        
+        #countdown
+        want[ts]['countdown'] = []
+        for count in data['countdown'][1:]:
+            want[ts]['countdown'].append({
+                'name': count[0],
+                'title': count[1],
+                'src' : count[2],
+                'fullsrc' : count[3],
+                'desp': "<br>".join(count[4].split("\n"))
+            })
+
     pprint(want[ts])
     open("allclubs.json","w").write(json.dumps(want))
 
-build("105_1","105_1_club.csv")
+#build("105_1","105_1_club.csv")
 commonUpdate("105_1","105_1_common.csv")
 

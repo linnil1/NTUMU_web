@@ -55,28 +55,24 @@
 	</nav>
 	<!--navbar end-->
 
-	<div id="showtime">	
-		<link href='http://fonts.googleapis.com/css?family=Droid+Serif|Open+Sans:400,700' rel='stylesheet' type='text/css' async>
-		<link rel="stylesheet" href="css/showtime.css"> <!-- Resource style -->
-		<header>
-			<h1>{{title}}</h1>
-			<h2>地點: {{where}}</h2>
-		</header>
+	<div id="boothmap">
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlggHYFZpq69QFa2_F1vE4Clt5bYmAtLA" ></script>
 
-		<section id="cd-timeline" class="cd-container">
-			<div class="cd-timeline-block" v-for="show in shows">
-				<div class="cd-timeline-img cd-picture">
-					<img v-if="show.time!='pause'" v-bind:src="show.logo_src" alt="clublogo">
-					<span v-else class="glyphicon glyphicon-pause"/>
-				</div> <!-- cd-timeline-img -->
-
-				<div class="cd-timeline-content">
-					<h4>{{show.chinese}}</h4>
-					<p v-if="show.title">{{show.title}}</p>
-					<span class="cd-date">{{show.time}}</span>
-				</div> <!-- cd-timeline-content -->
-			</div> <!-- cd-timeline-block -->
-		</section>
+		<style>
+#boothmap{
+	height: 80vh;
+	width: 95vw;
+	margin: auto;
+}
+#gmap {
+	height: 100%;
+}
+#gmap p,#gmap h3{
+	padding: 5px;
+	margin: 0;
+}
+		</style>
+		<div id="gmap"></div>
 	</div>
 	
 	<footer class="footer">
@@ -96,49 +92,50 @@ var jsondata = {},
 	ts = "105_1";
 
 var urlGo = function(text){
-	var parser = document.createElement('a')
-	parser.href = window.location.href
-	if(parser.pathname.indexOf("~b04611017") != -1)
-		window.history.pushState('', '', '/~b04611017/?'+text);  // for ntu
-	else
-		window.history.pushState('', '', '/?'+text);  // for ntu
 	console.log("go to "+window.location.href)
 }
 
-var showtime = new Vue({
-	el: "#showtime",
+var map = new Vue({
+	el: "#boothmap",
 	data: { 
-		title: "",
-		where: "",
-		shows: []
+		map:null
 	},
 	created: function(){
-		var self = this.$data
-		self.shows = []
-//		$.getJSON("data/allclubs.json", function(jsondata) {
-
-		self.title = jsondata[ts].showtime.title 
-		self.where = jsondata[ts].showtime.where
-		jsondata[ts].showtime.shows.forEach( function(show){
-			self.shows.push({
-				name    : show.name,
-				time    : show.time,
-				title   : show.title,
-			})
-			var jdata = jsondata[show.name]
-			if(jdata){
-				self.shows[self.shows.length-1].chinese = jdata.chinese
-				self.shows[self.shows.length-1].logo_src =  "img/clublogo/"+jdata.logo[0].src
-			}
-			else
-				self.shows[self.shows.length-1].chinese = show.name
-		})
-//		})
-		$(".title-word").html("武聯-表演時間")
-	},
-	ready: function(){
+		$(".title-word").html("武聯-攤位地圖")
 	}
+	ready: function(){
+        this.map = new google.maps.Map(document.getElementById('gmap'), {
+          center: {lat: 25.0171052, lng: 121.5368509},
+          zoom: 19
+        });
 
+		var self = this.$data
+	$.getJSON("data/allclubs.json", function(jsondata) {
+		jsondata[ts]['boothmap'].forEach( function(bm){
+			console.log(bm)
+			var jdata = jsondata[bm.name]
+			var infowindow = new google.maps.InfoWindow({
+				content: "<h3><a href='#'>"+jdata.chinese+"</a></h3>" + 
+					"<p> Yang Taichi Club </p>"
+			});
+
+			var clubicon = {
+			  url: "img/clublogo/"+jdata.logo[0].src,
+			  scaledSize: new google.maps.Size(25,25), // scaled size
+			};
+
+			var marker = new google.maps.Marker({
+				position: {lat:bm.lat,lng:bm.lng},
+				map: self.map,
+				title: 'hi',
+				icon: clubicon
+			});
+			marker.addListener('click', function() {
+				infowindow.open(this.map, marker);
+			});
+		})
+	})
+	}
 })
 
 var navbar = new Vue({
@@ -195,5 +192,24 @@ var navbar = new Vue({
 		document.removeEventListener('scroll',this.navbarUpdate)
 	}
 })
+
+
+var paramGet = function(text){
+	if(text[0]!='?')
+		throw ("lack ?")
+	var text = text.slice(1,text.length)
+	var arr = text.split('&')
+	var dict ={}
+	for(var a in arr){
+		qa = arr[a].split('=')
+		if(qa.length>2)
+			throw ("length != 2")
+		else if(qa.length==1)
+			dict[decodeURIComponent(qa[0])] = true
+		else
+			dict[decodeURIComponent(qa[0])] = decodeURIComponent(qa[1])
+	}
+	return dict
+}
 </script>
 </html>

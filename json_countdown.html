@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<script src="js/jquery-3.1.0.min.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-hover-dropdown.min.js"></script>
+	<script src="js/vue-scroll.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css"></link>
+	<link rel="stylesheet" href="css/mynavbar.css"></link>
+	<title>123</title>
+</head>
+<body >
+
+	<div id="LOGO" class="logo">
+		<img src="img/permanent_logo.png" height="100" alt="LOGO">
+		<h1>台大武術聯盟      </h1> 
+		<h2>NTU Martial Union </h2>			
+	</div>
+	
+	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="#" v-on:click="urlGo('')">
+					<img src="img/105_1_logo.png"  height="50" alt="logo">
+				</a>
+				<h3 class="navbar-text mobile-hide title-word">title</h3>
+			</div>
+			<div class="collapse navbar-collapse" id="nav-collapse">
+				<ul class="nav navbar-nav"  >
+					<li v-for="nav in nav_bar">
+						<a href="#" v-on:click="urlGo(nav.url)">{{nav.name}}</a>
+					</li>
+					<li class="dropdown">
+						<a href="#" v-on:click="urlGo('app=card')" class="dropdown-toggle">
+							{{club}}<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu grid">
+							<li v-for="club in clubs">
+								<a href="#" v-on:click="urlGo(club.url)">{{club.name}}</a>
+							</li>
+							<!-- <li class="divider"></li>-->
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<!--navbar end-->
+
+	<!-- Slide show -->
+	<div class="container-fluid" id="countdown">
+		<script src="js/ekko-lightbox.js"></script>
+		<link rel="stylesheet" href="css/ekko-lightbox.css"></link>
+		<style>
+#countdown{
+	width: 100%;
+	margin:auto;
+}
+.countdown-all {
+	position: relative;
+	margin:100px auto;
+}
+.countdown-img{
+	width: 40%;
+}
+.countdown-img img{
+	max-height: 300px;
+	width:auto !important;
+	max-width: 100%;
+}
+.countdown-link{
+	position: absolute;
+	bottom: 0;
+}
+
+@media only screen and (max-width : 768px) {
+	.countdown-img{
+		width: 100%;
+	}
+	.countdown-link{
+		position: relative;
+	}
+}
+
+.event-text{
+	text-align: center;
+}
+
+
+.carousel .carousel-control,
+.carousel .carousel-caption { visibility: hidden; }
+.carousel:hover .carousel-control,
+.carousel:hover .carousel-caption{ visibility: visible; }
+		</style>
+		<div class="row" style=" background-color: #eee;">
+			<div class="col-sm-1"></div>
+			<div class="col-sm-9">
+				<!-- main object -->
+				<div class="event-text">
+					<h1>9/11 武術聯招</h1>
+					<h3>這是台大武術社團史上規模最大的聯招，現在開始進行倒數囉！<br>歡迎大家前來，有很多武術表演任君挑選，也有闖關遊戲，可以拿獎品喔！ </h3>
+				</div>
+
+				<!--slide show -->
+				<div id="slideshow" class="carousel slide" data-ride="carousel">
+					<div class="carousel-inner" role="listbox" 
+						style="display:block">
+						<div v-bind:class="['item',$index==0 ? 'active' : '']" 
+							 v-for="count in counts">
+							<img class="img-responsive" v-bind:src="count.imgsrc" alt="" 
+								 style="max-height:400px;margin:auto">
+							<div class="carousel-caption">
+								<h3>{{count.title}}</h3>
+							</div>
+						</div>
+					</div>
+					<a class="left carousel-control" href="#slideshow" role="button" data-slide="prev">
+						<span class="glyphicon glyphicon-chevron-left" aria-hidden=""></span>
+					</a>
+					<a class="right carousel-control" href="#slideshow" role="button" data-slide="next">
+						<span class="glyphicon glyphicon-chevron-right" aria-hidden=""></span>
+					</a>
+				</div>
+
+
+				<!-- show all countdown desp -->
+				<template v-for="count in counts">
+					<hr>
+					<div class="media countdown-all">
+						<div class="media-left countdown-img" v-bind:class="$index%2?'pull-left':'pull-right'">
+							<a v-bind:href="count.imgfullsrc" v-bind:data-title="count.title+ '-'+ count.chinese" data-toggle="lightbox">
+								<img class="media-object countdown-img" v-bind:src="count.imgsrc" alt="countdown_picture">
+							</a>
+						</div>
+						<div class="media-body">
+							<h2 class="media-heading">
+								{{count.title}} <small>- {{count.chinese}}</small> 
+							</h2>
+							<p class="countdown-desp">
+								{{{count.desp}}}
+							</p>
+						</div>
+						<a href="#" class="countdown-link">&gt;&gt;&gt;description</a>
+					</div>
+				</template>
+
+			</div>
+			<div class="col-sm-2"></div>
+		</div>
+	 </div>
+
+	 <footer class="pull-right">
+		 <p>This web is made by linnil1 by bootstrap and vuejs </p>
+	</footer>
+
+	<script>
+var ts = "105_1"
+var navbar = new Vue({
+	el : "#navbar",
+	data :{
+		club : '社團',
+		clubs: [],
+		clubhtml: false,
+		navbar_fix: "",
+		search: 1, // never match 1
+		title: "台大武術聯盟",
+		
+		nav_bar : [{
+			name: '攤位',
+			url: "app=location"
+		},{
+			name: '表演節目',
+			url: "app=showtime"
+		},{ 
+			name: '課表',
+			url: "app=course" 
+		}],
+	},
+
+	methods: {
+		urlGo: function(text){
+			urlGo(text)
+		},
+		navbarUpdate : function(){
+			var scroll = document.documentElement.scrollTop || document.body.scrollTop
+			var navbar_top = document.getElementById("LOGO").offsetHeight
+			this.navbar_fix= scroll >= navbar_top ? "navbar-fixed-top" : ""
+
+			$("body").css("padding-top",scroll >= navbar_top ? "70px":"0")
+		}
+	},
+	created: function(){ // readjson
+		var clubs = this.clubs
+		$.getJSON("data/allclubs.json", function(json) {
+			jsondata = json
+			jsondata[ts].clubs.forEach(function(club){
+				clubs.push({
+					name: jsondata[club].chinese,
+					url : club
+				})
+			})
+		});
+		$(".title-word").html("title")
+	},
+	ready: function(){
+		document.addEventListener('scroll',this.navbarUpdate)
+	},
+	destroyed: function(){
+		document.removeEventListener('scroll',this.navbarUpdate)
+	}
+})
+
+var countdown= new Vue({
+	el : "#countdown",
+	data : {
+		counts : []
+	},
+	created: function(){
+		var self = this.$data
+		self.counts = []
+	$.getJSON("data/allclubs.json", function(jsondata) {
+		jsondata[ts]['countdown'].forEach( function(count){
+			var jdata = jsondata[count.name]
+			self.counts.push( {
+				imgsrc : "img/countdown/"+ts+"_"+count.src,
+				imgfullsrc : "img/countdown/"+ts+"_"+count.fullsrc,
+				chinese : jdata.chinese,
+				title  : count.title,
+				desp   : count.desp
+			})
+		})
+	})
+
+		$(document).delegate('*[data-toggle="lightbox"]','click', function(event) {
+			event.preventDefault();
+			$(this).ekkoLightbox();
+		})
+		$(".title-word").html("武聯-倒數文案")
+	}
+})
+
+	</script>
+</body>
+</html>
