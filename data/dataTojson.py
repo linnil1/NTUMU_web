@@ -6,6 +6,7 @@ Wanted clubs data (json)
     "105-1":{ #version
         clubs : [""], #clubs name
         countdown: [{src,title,desp}] , #countdown 
+        showtime:[ {time,clubname,title} ] , 
         location : {}  # have not think yet
     },
 
@@ -71,12 +72,8 @@ import csv
 from pprint import pprint
 import markdown2 as md
 
-latest = "105_1"
 
-want = {
-        'latest' : latest,
-        latest:{'clubs':[]}
-}
+latest = "105_1"
 
 def tsFind(allts,ts=latest):
     for i in allts:
@@ -85,134 +82,189 @@ def tsFind(allts,ts=latest):
     allts.insert(0,{'ts':ts})
     return allts[0]
 
-with open("105_1_club.csv",newline='') as f:
-    cf = csv.reader(f)
-    for i in range(6):
-        cf.__next__()
-    while True:
-        #chinese english xxxx key
-        row = cf.__next__()
-        name = row[3]
-        print(name)
-        clubdict = want[name] = { 
-            'name' : name, 
-            'chinese' : row[0],
-            'english' : row[1]
-        }
-        want[latest]['clubs'].append(name)
-
-        #president email blog fb logo xx
-        row = cf.__next__()
-        clubdict['info'] = [] #new
-        info = tsFind(clubdict['info'])
-        info.update({
-                'president' : row[0],
-                'email' : row[1],
-                'blog' : row[2],
-                'fb': {},
-        })
-        if row[3]:
-            line = row[3].split('\n')
-            info['fb']['name'] = line[0]
-            if len(line) > 1:
-                info['fb']['link'] = line[1]
-        
-        if row[4]:
-            clubdict['logo'] = [] #new
-            logo= tsFind(clubdict['logo'])
-            logo['src'] = row[4]
-
-        #time\nplace\ntitle\n, .... #for course
-        row = cf.__next__()
-        clubdict['course'] = [] #new
-        course = tsFind(clubdict['course'])
-        course['courses'] = []
-        for c in row:
-            nowc = {}
-            c = [cl for cl in c.split('\n') if cl.strip()]
-            if len(c) < 2:
-                if c:
-                    print(c)
-                    print("course err")
-                continue
-            if len(c) >= 3:
-                nowc['title'] = c[2]
-            nowc['time'] = c[0]
-            nowc['place'] = c[1]
-            course['courses'].append(nowc)
-        
-        #time\nplace\ntitle\n, .... #for welcome
-        #same as above
-        row = cf.__next__()
-        clubdict['welcome'] = [] #new
-        course = tsFind(clubdict['welcome'])
-        course['courses'] = []
-        for c in row:
-            nowc = {}
-            c = [cl for cl in c.split('\n') if cl.strip()]
-            if len(c) < 2 :
-                if c:
-                    print(c)
-                    print("course err")
-                continue
-            if len(c) >= 3:
-                nowc['title'] = c[2]
-            nowc['time'] = c[0]
-            nowc['place'] = c[1]
-            course['courses'].append(nowc)
-
-        
-        # short_intro course_intro q\na\n... 
-        row = cf.__next__()
-        clubdict['intro'] = [] #new
-        intro = tsFind(clubdict['intro'])
-        intro['intro'] = [{
-            'id' : "short_intro",
-            'name' : "簡介",
-            'content' : list(filter(None,row[0].split('\n')))
-        },{
-            'id' : "course_intro",
-            'name' : "教學內容",
-            'content' : list(filter(None,row[1].split('\n')))
-        }]
-        
-        qas = list(filter(None,row[2].split('\n')))
-        qalist = []
-        for line in range(0,len(qas),2):
-            qalist.append({
-                'q':qas[line][1:],  #remove Q A
-                'a':qas[line+1][1:]
-            })
-
-        intro['intro'].append({
-            'id' : "qa",
-            'name' : "Q-A",
-            'content' : qalist
-        })
-
-        for i in range(3,len(row)):
-            if row[i].strip() == "" :
-                continue;
-            rowtitle = row[i].split("\n")[0]
-            intro['intro'].append({
-                'id' : rowtitle,
-                'name' : rowtitle,
-                'content' : md.markdown(row[i][row[i].find('\n')+1:])
-            })
-
-
-        #remove blank content 
-        intro['intro'][:] = [ it for it  in intro['intro'] if it['content']]
-
-        #a line for separte each club
-        try:
+def build(ts,filename):
+    want = {
+        'latest' : ts,
+        ts:{'clubs':[]}
+    }
+    with open(filename,newline='') as f:
+        cf = csv.reader(f)
+        for i in range(6):
+            cf.__next__()
+        while True:
+            #chinese english xxxx key
             row = cf.__next__()
-        except:
-            break;
+            name = row[3]
+            print(name)
+            clubdict = want[name] = { 
+                'name' : name, 
+                'chinese' : row[0],
+                'english' : row[1]
+            }
+            want[ts]['clubs'].append(name)
 
-        #pprint(clubdict)
+            #president email blog fb logo xx
+            row = cf.__next__()
+            clubdict['info'] = [] #new
+            info = tsFind(clubdict['info'])
+            info.update({
+                    'president' : row[0],
+                    'email' : row[1],
+                    'blog' : row[2],
+                    'fb': {},
+            })
+            if row[3]:
+                line = row[3].split('\n')
+                info['fb']['name'] = line[0]
+                if len(line) > 1:
+                    info['fb']['link'] = line[1]
+            
+            if row[4]:
+                clubdict['logo'] = [] #new
+                logo= tsFind(clubdict['logo'])
+                logo['src'] = row[4]
 
-want[latest]['clubs'].sort()
+            #time\nplace\ntitle\n, .... #for course
+            row = cf.__next__()
+            clubdict['course'] = [] #new
+            course = tsFind(clubdict['course'])
+            course['courses'] = []
+            for c in row:
+                nowc = {}
+                c = [cl for cl in c.split('\n') if cl.strip()]
+                if len(c) < 2:
+                    if c:
+                        print(c)
+                        print("course err")
+                    continue
+                if len(c) >= 3:
+                    nowc['title'] = c[2]
+                nowc['time'] = c[0]
+                nowc['place'] = c[1]
+                course['courses'].append(nowc)
+            
+            #time\nplace\ntitle\n, .... #for welcome
+            #same as above
+            row = cf.__next__()
+            clubdict['welcome'] = [] #new
+            course = tsFind(clubdict['welcome'])
+            course['courses'] = []
+            for c in row:
+                nowc = {}
+                c = [cl for cl in c.split('\n') if cl.strip()]
+                if len(c) < 2 :
+                    if c:
+                        print(c)
+                        print("course err")
+                    continue
+                if len(c) >= 3:
+                    nowc['title'] = c[2]
+                nowc['time'] = c[0]
+                nowc['place'] = c[1]
+                course['courses'].append(nowc)
 
-open("allclubs.json","w").write(json.dumps(want))
+            
+            # short_intro course_intro q\na\n... 
+            row = cf.__next__()
+            clubdict['intro'] = [] #new
+            intro = tsFind(clubdict['intro'])
+            intro['intro'] = [{
+                'id' : "short_intro",
+                'name' : "簡介",
+                'content' : list(filter(None,row[0].split('\n')))
+            },{
+                'id' : "course_intro",
+                'name' : "教學內容",
+                'content' : list(filter(None,row[1].split('\n')))
+            }]
+            
+            qas = list(filter(None,row[2].split('\n')))
+            qalist = []
+            for line in range(0,len(qas),2):
+                qalist.append({
+                    'q':qas[line][1:],  #remove Q A
+                    'a':qas[line+1][1:]
+                })
+
+            intro['intro'].append({
+                'id' : "qa",
+                'name' : "Q-A",
+                'content' : qalist
+            })
+
+            for i in range(3,len(row)):
+                if row[i].strip() == "" :
+                    continue;
+                rowtitle = row[i].split("\n")[0]
+                intro['intro'].append({
+                    'id' : rowtitle,
+                    'name' : rowtitle,
+                    'content' : md.markdown(row[i][row[i].find('\n')+1:])
+                })
+
+
+            #remove blank content 
+            intro['intro'][:] = [ it for it  in intro['intro'] if it['content']]
+
+            #a line for separte each club
+            try:
+                row = cf.__next__()
+            except:
+                break;
+
+            #pprint(clubdict)
+
+    want[ts]['clubs'].sort()
+    open("allclubs.json","w").write(json.dumps(want))
+
+
+def commonUpdate(ts,filename):
+    """ 
+csv data
+countdown
+name title src desp
+...
+
+booth
+name lonlat number
+...
+
+name
+time name title
+...
+
+    """
+    want = json.loads(open("allclubs.json").read())
+    with open(filename,newline='') as f:
+        cf = list(csv.reader(f))
+
+        #classify data
+        data = {}
+        index = 0
+        while index < len(cf):
+            start = index
+            while index < len(cf) and cf[index][0]:
+                index += 1
+            data[ cf[start][0] ] = cf[start:index]
+            while index < len(cf) and cf[index][0] == '':
+                index += 1
+
+        #showtime
+        want[ts]['showtime'] = {
+                'title' : data['showtime'][0][1],
+                'where' : data['showtime'][0][2],
+                'shows' : []
+        }
+        for show in data['showtime'][1:]:
+            want[ts]['showtime']['shows'].append({
+                'time': show[0],
+                'name': show[1],
+                'title': show[2]
+            })
+
+    pprint(want[ts])
+    open("allclubs.json","w").write(json.dumps(want))
+
+build("105_1","105_1_club.csv")
+commonUpdate("105_1","105_1_common.csv")
 

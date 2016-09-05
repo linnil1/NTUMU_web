@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="css/bootstrap.css"></link>
 	<link rel="stylesheet" href="css/markdown.css"></link>
 	<link rel="stylesheet" href="css/mynavbar.css"></link>
-	<title class="title-word">台大武術聯盟</title>
+	<title class="title-word">title</title>
 </head>
 <body>
 	<div id="LOGO" class="logo">
@@ -22,7 +22,7 @@
 	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" d data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -39,7 +39,7 @@
 						<a href="#" v-on:click="urlGo(nav.url)">{{nav.name}}</a>
 					</li>
 					<li class="dropdown">
-						<a href="#" v-on:click="urlGo('app=card')" class="dropdown-toggle">
+						<a href="#" v-on:click="urlGo('app=card')" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
 							{{club}}<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu grid">
@@ -55,7 +55,29 @@
 	</nav>
 	<!--navbar end-->
 
-	<div id="main"></div>
+	<div id="showtime">	
+		<link href='http://fonts.googleapis.com/css?family=Droid+Serif|Open+Sans:400,700' rel='stylesheet' type='text/css' async>
+		<link rel="stylesheet" href="css/showtime.css"> <!-- Resource style -->
+		<header>
+			<h1>{{title}}</h1>
+			<h2>地點: {{where}}</h2>
+		</header>
+
+		<section id="cd-timeline" class="cd-container">
+			<div class="cd-timeline-block" v-for="show in shows">
+				<div class="cd-timeline-img cd-picture">
+					<img v-if="show.time!='pause'" v-bind:src="show.logo_src" alt="clublogo">
+					<span v-else class="glyphicon glyphicon-pause"/>
+				</div> <!-- cd-timeline-img -->
+
+				<div class="cd-timeline-content">
+					<h4>{{show.chinese}}</h4>
+					<p v-if="show.title">{{show.title}}</p>
+					<span class="cd-date">{{show.time}}</span>
+				</div> <!-- cd-timeline-content -->
+			</div> <!-- cd-timeline-block -->
+		</section>
+	</div>
 	
 	<footer class="footer">
       <div class="container">
@@ -69,52 +91,9 @@
 
 </body>
 
-	<script>
-
+	<script> 
 var jsondata = {},
-	clubname = "",
-	ts = "105_1",
-	appvue = null
-
-var vueDestroy = function(){
-	//$('#main').empty()
-	if(appvue != null)
-	{
-		appvue.$destroy(true)
-		console.log("destroy")
-	}
-	appvue = null
-}
-
-var vueBuildClub = function(c){
-	clubname = c
-	$('#main').append(club_html)
-	appvue = new Vue(club_vue)
-}
-
-var vueBuild= function(text){
-	if( text == "course" )
-	{
-		$('#main').append(course_html)
-		appvue = new Vue(course_vue)
-	}
-	else if( text == "coursedrag" )
-	{
-		$('#main').append(coursedrag_html)
-		appvue = new Vue(coursedrag_vue)
-	}
-	else if( text == "card" )
-	{
-		$('#main').append(card_html)
-		appvue = new Vue(card_vue)
-	}
-	else if( text == "showtime" )
-	{
-		$('#main').append(showtime_html)
-		appvue = new Vue(showtime_vue)
-	}
-	console.log("created")
-}
+	ts = "105_1";
 
 var urlGo = function(text){
 	var parser = document.createElement('a')
@@ -124,9 +103,43 @@ var urlGo = function(text){
 	else
 		window.history.pushState('', '', '/?'+text);  // for ntu
 	console.log("go to "+window.location.href)
-//	navbar.urlRealGo()  this put to urlUpdate
 }
 
+var showtime = new Vue({
+	el: "#showtime",
+	data: { 
+		title: "",
+		where: "",
+		shows: []
+	},
+	created: function(){
+		var self = this.$data
+		self.shows = []
+//		$.getJSON("data/allclubs.json", function(jsondata) {
+
+		self.title = jsondata[ts].showtime.title 
+		self.where = jsondata[ts].showtime.where
+		jsondata[ts].showtime.shows.forEach( function(show){
+			self.shows.push({
+				name    : show.name,
+				time    : show.time,
+				title   : show.title,
+			})
+			var jdata = jsondata[show.name]
+			if(jdata){
+				self.shows[self.shows.length-1].chinese = jdata.chinese
+				self.shows[self.shows.length-1].logo_src =  "img/clublogo/"+jdata.logo[0].src
+			}
+			else
+				self.shows[self.shows.length-1].chinese = show.name
+		})
+//		})
+		$(".title-word").html("武連-表演時間")
+	},
+	ready: function(){
+	}
+
+})
 
 var navbar = new Vue({
 	el : "#navbar",
@@ -136,7 +149,7 @@ var navbar = new Vue({
 		clubhtml: false,
 		navbar_fix: "",
 		search: 1, // never match 1
-		title: "台大武術聯盟",
+		title: "123",
 		
 		nav_bar : [{
 			name: '攤位',
@@ -153,51 +166,6 @@ var navbar = new Vue({
 	methods: {
 		urlGo: function(text){
 			urlGo(text)
-		},
-		urlRealGo: function(){
-			window.scrollTo(0,0)
-			parser = document.createElement('a')
-			parser.href = window.location.href
-			this.clubhtml = false
-			try{
-				var found = false
-				var dict = paramGet(parser.search)
-				console.log(dict)
-
-				for(var c in dict){
-					if(jsondata[ts].clubs.indexOf(c)!=-1 && dict[c] == true){
-						vueDestroy()
-						vueBuildClub(c)
-						this.clubhtml = true
-						found = true
-						break;
-					}
-				}
-				if(!found && 'app' in dict){
-					if(["course","card","coursedrag","showtime"].indexOf(dict.app)!= -1 ){
-						vueDestroy()
-						vueBuild(dict.app)
-						found = true
-					}
-				}
-
-				if( found == false)
-					throw ("not found")
-			}
-			catch(err){
-				console.log(err)
-				vueDestroy()
-				console.log("not found")
-				urlGo("app=card") // homepage
-			}
-		},
-		urlUpdate : function(){
-			parser = document.createElement('a')
-			parser.href = window.location.href
-			if(this.search !=  parser.search) {
-				this.search = parser.search
-				this.urlRealGo()
-			}
 		},
 		navbarUpdate : function(){
 			var scroll = document.documentElement.scrollTop || document.body.scrollTop
@@ -218,67 +186,14 @@ var navbar = new Vue({
 				})
 			})
 		});
-		$(".title-word").html(this.title)
+//		$(".title-word").html(this.title)
 	},
 	ready: function(){
 		document.addEventListener('scroll',this.navbarUpdate)
-		setInterval( this.urlUpdate , 500)
 	},
 	destroyed: function(){
 		document.removeEventListener('scroll',this.navbarUpdate)
 	}
 })
-
-
-var paramGet = function(text){
-	if(text[0]!='?')
-		throw ("lack ?")
-	var text = text.slice(1,text.length)
-	var arr = text.split('&')
-	var dict ={}
-	for(var a in arr){
-		qa = arr[a].split('=')
-		if(qa.length>2)
-			throw ("length != 2")
-		else if(qa.length==1)
-			dict[decodeURIComponent(qa[0])] = true
-		else
-			dict[decodeURIComponent(qa[0])] = decodeURIComponent(qa[1])
-	}
-	return dict
-}
-
-// share function
-
-var weeknames = ['星期日','星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
-
-weekGet = function(weekstr){
-	return weeknames.indexOf(weekstr.trim())
-}
-intervalGet = function(twotimes,timepx){
-	var arr =  twotimes.split('~')
-	var start = pxGet(arr[0],timepx)
-	if(arr.length==1)
-		arr.push("22:00")
-	var end   = pxGet(arr[1],timepx)
-	return {
-		top: start+"px",
-		height: end-start+"px"
-	}
-}
-
-pxGet = function(yourtime,timepx){
-	var arr = yourtime.split(':')
-	var hour = arr[0]|0
-	var mins = arr[1]|0
-	return (hour*60+mins-360)*timepx/60
-}
-
-pxRemove = function(text){
-	return text.slice(0,-2)|0
-}
-
-	</script>
-<script src="data/all.js"></script>
-
+</script>
 </html>

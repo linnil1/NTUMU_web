@@ -149,7 +149,7 @@ var club = new Vue({
 	created: function(){
 		var self = this.$data
 		var clubs = []
-		$.getJSON("data/allclubs.json", function(jsondata) {
+//		$.getJSON("data/allclubs.json", function(jsondata) {
 
 		jsondata[ts].clubs.forEach( function(clubname){
 			var jdata = jsondata[clubname]
@@ -159,7 +159,7 @@ var club = new Vue({
 				logo_src :  "img/clublogo/"+jdata.logo[0].src,
 				english : jdata.english
 			})
-		})
+//		})
 
 		self.clubs = clubs
 

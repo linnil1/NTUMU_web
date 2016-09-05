@@ -70,7 +70,7 @@ header {
   flex-direction: column;
   justify-content: center;
 }
-header h1,header h2{
+header *{
   color : white;
 }
 
@@ -254,7 +254,7 @@ header h1,header h2{
   margin-left: 60px;
   background: white;
   border-radius: 0.25em;
-  padding: 1em;
+  padding: 0.5em;
   box-shadow: 0 3px 0 #d7e4ed;
 }
 .cd-timeline-content:after {
@@ -266,8 +266,8 @@ header h1,header h2{
   color: #303e49;
 }
 .cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
-  font-size: 13px;
-  font-size: 0.8125rem;
+//  font-size: 13px;
+  font-size: 1.6rem;
 }
 .cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
   display: inline-block;
@@ -288,7 +288,7 @@ header h1,header h2{
 }
 .cd-timeline-content .cd-date {
   float: left;
-  padding: .8em 0;
+  padding: .2em 0;
   opacity: .7;
 }
 .cd-timeline-content::before {
@@ -321,8 +321,8 @@ header h1,header h2{
     width: 100%;
     left: 122%;
     top: 6px;
-    font-size: 16px;
-    font-size: 1rem;
+//    font-size: 16px;
+    font-size: 1.6rem;
   }
   .cd-timeline-block .cd-timeline-content {
 	padding: 10px;
