@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -106,8 +105,8 @@
 			<div class="col-sm-9">
 				<!-- main object -->
 				<div class="event-text">
-					<h1>9/11 武術聯招</h1>
-					<h3>這是台大武術社團史上規模最大的聯招，現在開始進行倒數囉！<br>歡迎大家前來，有很多武術表演任君挑選，也有闖關遊戲，可以拿獎品喔！ </h3>
+					<h1>{{title}}</h1>
+					<h3>{{desp }}</h3>
 				</div>
 
 				<!--slide show -->
@@ -149,7 +148,7 @@
 								{{{count.desp}}}
 							</p>
 						</div>
-						<a href="#" class="countdown-link">&gt;&gt;&gt;description</a>
+						<a href="#" v-on:click="urlGo(count.name)" class="countdown-link">&gt;&gt;&gt;詳細資訊</a>
 					</div>
 				</template>
 
@@ -227,24 +226,32 @@ var countdown= new Vue({
 	created: function(){
 		var self = this.$data
 		self.counts = []
-	$.getJSON("data/allclubs.json", function(jsondata) {
+//	$.getJSON("data/allclubs.json", function(jsondata) {
 		jsondata[ts]['countdown'].forEach( function(count){
+			if(self.counts.length == 4) // unfinished
+				return 0;
 			var jdata = jsondata[count.name]
 			self.counts.push( {
-				imgsrc : "img/countdown/"+ts+"_"+count.src,
+				name : count.name,
+				imgsrc : "img/countdown/"+count.src,
 				imgfullsrc : "img/countdown/"+count.fullsrc,
 				chinese : jdata.chinese,
 				title  : count.title,
 				desp   : count.desp
 			})
 		})
-	})
+//	})
 
 		$(document).delegate('*[data-toggle="lightbox"]','click', function(event) {
 			event.preventDefault();
 			$(this).ekkoLightbox();
 		})
 		$(".title-word").html("武聯-倒數文案")
+	},
+	methods: {
+		urlGo: function(text){
+			urlGo(text)
+		}
 	}
 })
 

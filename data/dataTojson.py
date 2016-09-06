@@ -277,9 +277,13 @@ time name title
             })
         
         #countdown
-        want[ts]['countdown'] = []
+        want[ts]['countdown'] = {
+                'title' : data['countdown'][0][1],
+                'desp' : data['countdown'][0][2],
+                'counts' : []
+        }
         for count in data['countdown'][1:]:
-            want[ts]['countdown'].append({
+            want[ts]['countdown']['counts'].append({
                 'name': count[0],
                 'title': count[1],
                 'src' : count[2] +'?'+str(os.path.getmtime("../img/countdown/"+count[2])),
