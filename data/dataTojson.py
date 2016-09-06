@@ -8,6 +8,7 @@ Wanted clubs data (json)
         countdown: [{src,title,desp}] , #countdown 
         showtime:[ {time,clubname,title} ] , 
         boothmap : {}  # have not think yet
+        logo: "", 
     },
 
     "YangTai": { #clubs name
@@ -58,55 +59,71 @@ Wanted clubs data (json)
 }
 """
 
-""" csv data
-chinese english xxxx key
-president email blog fb logo xx
-time\nplace\ntitle\n, .... #for course
-time\nplace\ntitle\n, .... #for welcome
-short_intro course_intro q\na\n ... (title content)
-a line for separte each club
-"""
 
 import json
 import csv
+import sys
+import os.path
 from pprint import pprint
 import markdown2 as md
 
-
-latest = "105_1"
-
-def tsFind(allts,ts=latest):
+def tsFind(data,key,ts):
+    if not data.get(key):
+        data[key] = []
+    allts = data[key]
     for i in allts:
         if(i['ts'] == ts ):
             return i
     allts.insert(0,{'ts':ts})
     return allts[0]
 
-def build(ts,filename):
+def build(ts):
     want = {
         'latest' : ts,
         ts:{'clubs':[]}
     }
+    open("allclubs.json","w").write(json.dumps(want))
+
+def clubUpdate(ts,filename):
+    """ csv data
+chinese english xxxx name
+president email blog fb logo xx
+time\nplace\ntitle\n, .... #for course
+time\nplace\ntitle\n, .... #for welcome
+short_intro course_intro q\na\n ... (title content)
+a line for separte each club
+    """
+    want = json.loads(open("allclubs.json").read())
+    if ts > want['latest'] :
+        want['latest'] = ts
+        want[ts] = {}
+    want[ts]['clubs'] = []
+
     with open(filename,newline='') as f:
         cf = csv.reader(f)
-        for i in range(6):
+        for i in range(6):  # for header
             cf.__next__()
         while True:
-            #chinese english xxxx key
             row = cf.__next__()
+
+            #name
             name = row[3]
             print(name)
-            clubdict = want[name] = { 
+            if not want.get(name):
+                want[name] = {}
+            clubdict = want[name]
+            want[ts]['clubs'].append(name)
+
+            #chinese english xxxx name
+            clubdict.update({ 
                 'name' : name, 
                 'chinese' : row[0],
                 'english' : row[1]
-            }
-            want[ts]['clubs'].append(name)
+            })
 
             #president email blog fb logo xx
             row = cf.__next__()
-            clubdict['info'] = [] #new
-            info = tsFind(clubdict['info'])
+            info = tsFind(clubdict,'info',ts)
             info.update({
                     'president' : row[0],
                     'email' : row[1],
@@ -120,54 +137,35 @@ def build(ts,filename):
                     info['fb']['link'] = line[1]
             
             if row[4]:
-                clubdict['logo'] = [] #new
-                logo= tsFind(clubdict['logo'])
-                logo['src'] = row[4]
+                logo= tsFind(clubdict,'logo',ts)
+                # last modified time append 
+                logo['src'] = row[4]+'?'+str(os.path.getmtime("../img/clublogo/"+row[4]))
 
             #time\nplace\ntitle\n, .... #for course
-            row = cf.__next__()
-            clubdict['course'] = [] #new
-            course = tsFind(clubdict['course'])
-            course['courses'] = []
-            for c in row:
-                nowc = {}
-                c = [cl for cl in c.split('\n') if cl.strip()]
-                if len(c) < 2:
-                    if c:
-                        print(c)
-                        print("course err")
-                    continue
-                if len(c) >= 3:
-                    nowc['title'] = c[2]
-                nowc['time'] = c[0]
-                nowc['place'] = c[1]
-                course['courses'].append(nowc)
-            
-            #time\nplace\ntitle\n, .... #for welcome
-            #same as above
-            row = cf.__next__()
-            clubdict['welcome'] = [] #new
-            course = tsFind(clubdict['welcome'])
-            course['courses'] = []
-            for c in row:
-                nowc = {}
-                c = [cl for cl in c.split('\n') if cl.strip()]
-                if len(c) < 2 :
-                    if c:
-                        print(c)
-                        print("course err")
-                    continue
-                if len(c) >= 3:
-                    nowc['title'] = c[2]
-                nowc['time'] = c[0]
-                nowc['place'] = c[1]
-                course['courses'].append(nowc)
+            def courseRead(name):
+                row = cf.__next__()
+                course = tsFind(clubdict,name,ts)
+                course['courses'] = []
+                for c in row:
+                    nowc = {}
+                    c = [cl for cl in c.split('\n') if cl.strip()]
+                    if len(c) < 2:
+                        if c:
+                            print(c)
+                            print("course err")
+                        continue
+                    if len(c) >= 3:
+                        nowc['title'] = c[2]
+                    nowc['time'] = c[0]
+                    nowc['place'] = c[1]
+                    course['courses'].append(nowc)
 
+            courseRead("course")
+            courseRead("welcome")
             
             # short_intro course_intro q\na\n... 
             row = cf.__next__()
-            clubdict['intro'] = [] #new
-            intro = tsFind(clubdict['intro'])
+            intro = tsFind(clubdict,'intro',ts)
             intro['intro'] = [{
                 'id' : "short_intro",
                 'name' : "簡介",
@@ -192,6 +190,7 @@ def build(ts,filename):
                 'content' : qalist
             })
 
+            # other desp should be markdown format
             for i in range(3,len(row)):
                 if row[i].strip() == "" :
                     continue;
@@ -263,9 +262,14 @@ time name title
             })
 
         #map
-        want[ts]['boothmap'] = []
+        want[ts]['boothmap'] = {
+                'lat':float(data['booth'][0][1]),
+                'lng':float(data['booth'][0][2]),
+                'zoom':float(data['booth'][0][3]),
+                'maps':[]
+                }
         for booth in data['booth'][1:]:
-            want[ts]['boothmap'].append({
+            want[ts]['boothmap']['maps'].append({
                 'name': booth[0],
                 'lng': float(booth[1].split(',')[1]),
                 'lat': float(booth[1].split(',')[0]),
@@ -278,14 +282,39 @@ time name title
             want[ts]['countdown'].append({
                 'name': count[0],
                 'title': count[1],
-                'src' : count[2],
+                'src' : count[2] +'?'+str(os.path.getmtime("../img/countdown/"+count[2])),
                 'fullsrc' : count[3],
                 'desp': "<br>".join(count[4].split("\n"))
             })
-
-    pprint(want[ts])
+    
+    want[ts]['logo'] = ts+"_logo.png"
+    for i in want[ts]:
+        print(i)
     open("allclubs.json","w").write(json.dumps(want))
 
-#build("105_1","105_1_club.csv")
+
+myarg = sys.argv[1:]
+print(myarg)
+if len(myarg) == 0 :
+    raise TypeError("no operation")
+if len(myarg) == 1 :
+    raise TypeError("no ts")
+if myarg[0] == "build":
+    build(myarg[1])
+    exit()
+if len(myarg) == 2 :
+    raise TypeError("no path")
+
+if myarg[0] == "clubUpdate":
+    clubUpdate(myarg[1],myarg[2])
+elif myarg[0] == "commonUpdate":
+    commonUpdate(myarg[1],myarg[2])
+else:
+    raise TypeError("error operation")
+    
+""" example
+build("105_1")
+clubUpdate("105_1","105_1_club.csv")
 commonUpdate("105_1","105_1_common.csv")
+"""
 

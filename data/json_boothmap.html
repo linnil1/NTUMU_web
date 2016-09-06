@@ -11,6 +11,8 @@
 	<link rel="stylesheet" href="css/markdown.css"></link>
 	<link rel="stylesheet" href="css/mynavbar.css"></link>
 	<title class="title-word">title</title>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlggHYFZpq69QFa2_F1vE4Clt5bYmAtLA" ></script>
+	<script src="https://cdn.rawgit.com/googlemaps/v3-utility-library/master/markerwithlabel/src/markerwithlabel.js"></script>
 </head>
 <body>
 	<div id="LOGO" class="logo">
@@ -56,7 +58,6 @@
 	<!--navbar end-->
 
 	<div id="boothmap">
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlggHYFZpq69QFa2_F1vE4Clt5bYmAtLA" ></script>
 
 		<style>
 #boothmap{
@@ -98,43 +99,69 @@ var urlGo = function(text){
 var map = new Vue({
 	el: "#boothmap",
 	data: { 
-		map:null
+		map:null,
+		lastopen:null
 	},
 	created: function(){
 		$(".title-word").html("武聯-攤位地圖")
-	}
+	},
 	ready: function(){
-        this.map = new google.maps.Map(document.getElementById('gmap'), {
-          center: {lat: 25.0171052, lng: 121.5368509},
-          zoom: 19
+		var self = this.$data;
+
+//	$.getJSON("data/allclubs.json", function(jsondata) {
+        self.map = new google.maps.Map(document.getElementById('gmap'), {
+          center: {lat:jsondata[ts]['boothmap'].lat,lng:jsondata[ts]['boothmap'].lng},
+          zoom: jsondata[ts]['boothmap'].zoom
         });
-
-		var self = this.$data
-	$.getJSON("data/allclubs.json", function(jsondata) {
-		jsondata[ts]['boothmap'].forEach( function(bm){
-			console.log(bm)
+		jsondata[ts]['boothmap']['maps'].forEach( function(bm){
+//			console.log(bm)
 			var jdata = jsondata[bm.name]
-			var infowindow = new google.maps.InfoWindow({
-				content: "<h3><a href='#'>"+jdata.chinese+"</a></h3>" + 
-					"<p> Yang Taichi Club </p>"
-			});
+			if( jdata){ //no stage
+				var infowindow = new google.maps.InfoWindow({
+					content: "<h3><a href='#'>"+jdata.chinese+"</a></h3>" + 
+						"<p>"+ jdata.english +"</p>"
+				});
 
-			var clubicon = {
-			  url: "img/clublogo/"+jdata.logo[0].src,
-			  scaledSize: new google.maps.Size(25,25), // scaled size
-			};
+				//http://stackoverflow.com/questions/32467212/google-maps-marker-label-with-multiple-characters
+				var marker = new MarkerWithLabel({
+					position: {lat:bm.lat,lng:bm.lng},
+					map: self.map,
+					labelContent: bm.num,
+					title: bm.name,
+					icon: {
+						url: "img/clublogo/"+jdata.logo[0].src,
+						scaledSize: new google.maps.Size(25,25), // scaled size
+					},
+					labelAnchor: new google.maps.Point(0,0)
+				});
+			}
+			else{
+				var infowindow = new google.maps.InfoWindow({
+					content: "<h3>"+bm.name+"</h3>" 
+				});
 
-			var marker = new google.maps.Marker({
-				position: {lat:bm.lat,lng:bm.lng},
-				map: self.map,
-				title: 'hi',
-				icon: clubicon
-			});
+				var marker = new MarkerWithLabel({
+					position: {lat:bm.lat,lng:bm.lng},
+					map: self.map,
+					labelContent: bm.name,
+					title: "NTUMU",
+					icon: {
+						url: "img/"+jsondata[ts].logo,
+						scaledSize: new google.maps.Size(50,50), // scaled size
+					},
+					labelAnchor: new google.maps.Point(0,0)
+				});
+			}
+
 			marker.addListener('click', function() {
+				if(self.lastopen)
+					self.lastopen.close()
 				infowindow.open(this.map, marker);
+				self.lastopen = infowindow
 			});
 		})
-	})
+//	})
+
 	}
 })
 
@@ -191,6 +218,21 @@ var navbar = new Vue({
 	destroyed: function(){
 		document.removeEventListener('scroll',this.navbarUpdate)
 	}
+	/* ntu.map
+var markers = new OpenLayers.Layer.Markers( "Markers" );
+newMap.addLayer(markers);
+var lonlat = new OpenLayers.LonLat( 121.536761,25.017058).transform( proj,gProj )
+var marker = new OpenLayers.Marker(lonlat)
+markers.addMarker(marker)
+var popup = new OpenLayers.Popup.FramedCloud(
+  "Popup", lonlat, null, "Text", null, true);
+popup.autoSize = true;  // initial setting
+popup.hide();  // hide this popup!
+newMap.addPopup(popup)
+marker.events.register("click", popup, function () {  // add click event
+      this.toggle();  // show or hide
+});
+	 */
 })
 
 

@@ -11,6 +11,8 @@
 	<link rel="stylesheet" href="css/markdown.css"></link>
 	<link rel="stylesheet" href="css/mynavbar.css"></link>
 	<title class="title-word">台大武術聯盟</title>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlggHYFZpq69QFa2_F1vE4Clt5bYmAtLA" ></script>
+	<script src="https://cdn.rawgit.com/googlemaps/v3-utility-library/master/markerwithlabel/src/markerwithlabel.js"></script>
 </head>
 <body>
 	<div id="LOGO" class="logo">
@@ -113,6 +115,11 @@ var vueBuild= function(text){
 		$('#main').append(showtime_html)
 		appvue = new Vue(showtime_vue)
 	}
+	else if( text == "boothmap" )
+	{
+		$('#main').append(boothmap_html)
+		appvue = new Vue(boothmap_vue)
+	}
 	console.log("created")
 }
 
@@ -140,7 +147,7 @@ var navbar = new Vue({
 		
 		nav_bar : [{
 			name: '攤位',
-			url: "app=location"
+			url: "app=boothmap"
 		},{
 			name: '表演節目',
 			url: "app=showtime"
@@ -174,7 +181,7 @@ var navbar = new Vue({
 					}
 				}
 				if(!found && 'app' in dict){
-					if(["course","card","coursedrag","showtime"].indexOf(dict.app)!= -1 ){
+					if(["course","card","coursedrag","showtime","boothmap"].indexOf(dict.app)!= -1 ){
 						vueDestroy()
 						vueBuild(dict.app)
 						found = true
