@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="js/jquery-3.1.0.min.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css"></link>
+	<link rel="stylesheet" href="css/markdown.css"></link>
+	<link rel="stylesheet" href="css/mynavbar.css"></link>
+	<title class="title-word">title</title>
+</head>
+<body>
+	<div id="LOGO" class="logo">
+		<img src="img/permanent_logo.png" height="100" alt="LOGO">
+		<h1>台大武術聯盟      </h1> 
+		<h2>NTU Martial Union </h2>			
+	</div>
+
+	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" d data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="#" v-on:click="urlGo('')">
+					<img src="img/105_1_logo.png"  height="50" alt="logo">
+				</a>
+				<h3 class="navbar-text mobile-hide title-word">title</h3>
+			</div>
+			<div class="collapse navbar-collapse" id="nav-collapse">
+				<ul class="nav navbar-nav"  >
+					<li v-for="nav in nav_bar">
+						<a href="#" v-on:click="urlGo(nav.url)">{{nav.name}}</a>
+					</li>
+					<li class="dropdown">
+						<a href="#" v-on:click="urlGo('app=card')" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="false">
+							{{club}}<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu grid">
+							<li v-for="club in clubs">
+								<a href="#" v-on:click="urlGo(club.url)">{{club.name}}</a>
+							</li>
+							<!-- <li class="divider"></li>-->
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<!--navbar end-->
+
+	<div id="home">	
+<style>
+.homeimg{
+	background: #323033 url("./bg.jpg") no-repeat scroll 70% center / auto 750px;
+	height: 750px;
+	position: relative;
+}
+.hometitle{
+	position: absolute;
+	top:10%;
+	left:40%;
+}
+.flexsection{
+	padding: 0 10%;
+	background-color:#f4f7f8;
+	min-height: 400px;
+	display : flex;
+	border-bottom : solid #F5F5DC;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	flex-wrap: wrap ;
+}
+.flexsection:nth-child(even){
+	flex-direction: row-reverse;
+}
+.fbpage{
+	width:500px;
+}
+.sectionimg{
+	max-width: 500px;
+	max-height: 300px;
+}
+a.homebutton {
+    background-color: #eb5e28;
+    border-radius: 20px;
+    box-sizing: border-box;
+    color: #fff;
+    display: block;
+    font: 1em/41px;
+    height: 41px;
+    margin: 20px auto 18px;
+	line-height: 40px;
+    text-align: center;
+    transition: background-color 0.3s ease 0s;
+    width: 115px;
+}
+a.homebutton:hover {
+	background-color: #b33c12;
+}
+.fbshare{
+	text-align:center;
+	background-color: #484848;
+	min-height: 30px;
+	color: white;
+}
+
+</style>
+	<div id="fb-root"></div>
+<script>
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.7"
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+
+	<div class="homeimg" >
+		<div class="hometitle">
+			<h1>123456</h1>
+			<h2>123</h2>
+			<a class="homebutton" > see something</a>
+		</div>
+	</div>
+	<div class="row">
+	<div class="flexsection" style=" background-color:#3b5998;">
+			<div>
+				<h1>FB 粉專</h1>
+			</div>
+			
+			<div class="fbpage">
+				<div class="fb-page" 
+					data-href="https://www.facebook.com/2016ntumau/" 
+					data-small-header="false" 
+					data-adapt-container-width="true" 
+					data-hide-cover="false" 
+					data-width="500" 
+					data-show-facepile="true">
+					<blockquote cite="https://www.facebook.com/2016ntumau/" class="fb-xfbml-parse-ignore">
+						<a href="https://www.facebook.com/2016ntumau/">2016武術聯合招生</a>
+					</blockquote>
+				</div>
+			</div>
+	</div>
+
+	<div class="flexsection" v-for="intro in intros">
+		<div>
+			<h1>{{intro.title}}</h1>
+			<p> {{{intro.desp}}} </p>
+		</div>
+		<img class="sectionimg" v-bind:src="intro.img" alt="">
+	</div>
+
+	<!-- foot -->
+	<div class="fbshare">
+		<span> share this page </span>
+		<div class="fb-share-button" 
+			data-href="http://homepage.ntu.edu.tw/~b04611017" 
+			data-layout="button_count" 
+			data-size="small" 
+			data-mobile-iframe="true">
+			<a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fhomepage.ntu.edu.tw%2F%7Eb04611017&amp;src=sdkpreparse">分享</a>
+		</div>
+	</div>
+	
+
+	<footer class="footer">
+      <div class="container">
+        <p >Author : linnil1 (楊氏廣法太極拳社)</p>
+        <p >Email : linnil1.886@gmail.com</p>
+		<p >Tool : <a href="http://vuejs.org/" target="_blank">Vuejs</a>,
+				   <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> 
+		</p>
+      </div>
+    </footer>
+
+</body>
+
+	<script> 
+var jsondata = {},
+	ts = "105_1";
+
+var urlGo = function(text){
+	var parser = document.createElement('a')
+	parser.href = window.location.href
+	if(parser.pathname.indexOf("~b04611017") != -1)
+		window.history.pushState('', '', '/~b04611017/?'+text);  // for ntu
+	else
+		window.history.pushState('', '', '/?'+text);  // for ntu
+	console.log("go to "+window.location.href)
+}
+
+var home = new Vue({
+	el: "#home",
+	data: { 
+		intros:[{
+			title:"攤位地圖",
+			desp:"精美攤位圖 配合 google map 製作 <br> 輕鬆規劃路線 不迷路",
+			img: "img/map.jpg"
+		},{
+			title:"清楚課表",
+			desp:"把上課資訊 圖像化  <br> 能更清楚的知道 各社衝突時間<br> 勾選社團排時間表 <br> 輕鬆規劃課表",
+			img: "img/course.jpg"
+		},{
+			title:"社團總覽",
+			desp:"卡片式的 社團名稱 <br> 找尋想要得社團更是容易",
+			img: "img/clubs.jpg"
+		},{
+			title:"社團介紹",
+			desp:" 詳細介紹<br> 課程介紹<br> QA <br> FB 連結 等等<br> 應有盡有<br> 給您最詳細的資訊",
+			img: "img/club.jpg"
+		},{
+			title:"表演時間",
+			desp:" 以時間軸 展示 <br> 當天的時間與內容<br> 輕鬆融入精彩的表演中",
+			img: "img/showtime.jpg"
+		}]
+	},
+	created: function(){
+		var self = this.$data
+//	$.getJSON("data/allclubs.json", function(jsondata) {
+		$(".title-word").html("武聯-HOME")
+		document.getElementsByTagName("footer")[0].style.marginTop = "0px"
+//	})
+	},
+	ready: function(){
+	}
+
+})
+
+var navbar = new Vue({
+	el : "#navbar",
+	data :{
+		club : '社團',
+		clubs: [],
+		clubhtml: false,
+		navbar_fix: "",
+		search: 1, // never match 1
+		title: "123",
+		
+		nav_bar : [{
+			name: '攤位',
+			url: "app=location"
+		},{
+			name: '表演節目',
+			url: "app=showtime"
+		},{ 
+			name: '課表',
+			url: "app=course" 
+		}],
+	},
+
+	methods: {
+		urlGo: function(text){
+			urlGo(text)
+		},
+		navbarUpdate : function(){
+			var scroll = document.documentElement.scrollTop || document.body.scrollTop
+			var navbar_top = document.getElementById("LOGO").offsetHeight
+			this.navbar_fix= scroll >= navbar_top ? "navbar-fixed-top" : ""
+
+			$("body").css("padding-top",scroll >= navbar_top ? "70px":"0")
+		}
+	},
+	created: function(){ // readjson
+		var clubs = this.clubs
+		$.getJSON("data/allclubs.json", function(json) {
+			jsondata = json
+			jsondata[ts].clubs.forEach(function(club){
+				clubs.push({
+					name: jsondata[club].chinese,
+					url : club
+				})
+			})
+		});
+//		$(".title-word").html(this.title)
+	},
+	ready: function(){
+		document.addEventListener('scroll',this.navbarUpdate)
+		document.getElementById("LOGO").style.display = "none"
+	},
+	destroyed: function(){
+		document.removeEventListener('scroll',this.navbarUpdate)
+	}
+})
+</script>
+</html>

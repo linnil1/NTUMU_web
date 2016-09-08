@@ -183,7 +183,7 @@ tr td{
 			<label v-bind:for="'day_'+name">{{name.slice(2,3)}}</label>
 		</template>
 
-		<button type="button" class="btn btn-default" v-on:click="urlGo('app=coursedrag')">
+		<button type="button" class="btn btn-default" v-on:click.prevent="urlGo('app=coursedrag')">
 			<span class="glyphicon glyphicon-retweet"></span> 
 			computer version</button>
 	</div>

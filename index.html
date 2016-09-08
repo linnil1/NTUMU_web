@@ -30,7 +30,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a href="#" v-on:click="urlGo('')">
+				<a href="#" v-on:click.prevent="urlGo('')">
 					<img src="img/105_1_logo.png"  height="50" alt="logo">
 				</a>
 				<h3 class="navbar-text mobile-hide title-word">title</h3>
@@ -38,15 +38,15 @@
 			<div class="collapse navbar-collapse" id="nav-collapse">
 				<ul class="nav navbar-nav"  >
 					<li v-for="nav in nav_bar">
-						<a href="#" v-on:click="urlGo(nav.url)">{{nav.name}}</a>
+						<a href="#" v-on:click.prevent="urlGo(nav.url)">{{nav.name}}</a>
 					</li>
 					<li class="dropdown">
-						<a href="#" v-on:click="urlGo('app=card')" class="dropdown-toggle">
+						<a href="#" v-on:click.prevent="urlGo('app=card')" class="dropdown-toggle">
 							{{club}}<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu grid">
 							<li v-for="club in clubs">
-								<a href="#" v-on:click="urlGo(club.url)">{{club.name}}</a>
+								<a href="#" v-on:click.prevent="urlGo(club.url)">{{club.name}}</a>
 							</li>
 							<!-- <li class="divider"></li>-->
 						</ul>
@@ -95,36 +95,10 @@ var vueBuildClub = function(c){
 }
 
 var vueBuild= function(text){
-	if( text == "course" )
-	{
-		$('#main').append(course_html)
-		appvue = new Vue(course_vue)
-	}
-	else if( text == "coursedrag" )
-	{
-		$('#main').append(coursedrag_html)
-		appvue = new Vue(coursedrag_vue)
-	}
-	else if( text == "card" )
-	{
-		$('#main').append(card_html)
-		appvue = new Vue(card_vue)
-	}
-	else if( text == "showtime" )
-	{
-		$('#main').append(showtime_html)
-		appvue = new Vue(showtime_vue)
-	}
-	else if( text == "boothmap" )
-	{
-		$('#main').append(boothmap_html)
-		appvue = new Vue(boothmap_vue)
-	}
-	else if( text == "countdown" )
-	{
-		$('#main').append(countdown_html)
-		appvue = new Vue(countdown_vue)
-	}
+	var texthtml = text+"_html"
+	var textvue  = text+"_vue"
+	$('#main').append(window[texthtml])
+	appvue = new Vue(window[textvue])
 	console.log("created")
 }
 

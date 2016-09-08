@@ -9,6 +9,9 @@
 	display: inline-block;
     vertical-align: bottom;
 }
+.navbar{
+	margin: 0;
+}
 .navbar ul.grid{
 	width: 570px;
 }
