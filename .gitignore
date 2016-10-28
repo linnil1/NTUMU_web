@@ -1,7 +1,5 @@
 *.swp
 node_modules
 test*
-img
-*.json
-*.csv
-__pycache__
+static
+src/assets
