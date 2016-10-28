@@ -198,7 +198,7 @@ a line for separte each club
                 intro['intro'].append({
                     'id' : rowtitle,
                     'name' : rowtitle,
-                    'content' : md.markdown(row[i][row[i].find('\n')+1:])
+                    'content' : md.markdown(row[i][row[i].find('\n')+1:],extras=["tables","cuddled-lists"])
                 })
 
 

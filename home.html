@@ -111,7 +111,7 @@ a.homebutton:hover {
 	min-height: 30px;
 	color: white;
 }
-
+.twitter-share-button[style] { vertical-align: text-bottom !important; }
 </style>
 	<div id="fb-root"></div>
 <script>
@@ -133,23 +133,23 @@ a.homebutton:hover {
 	</div>
 	<div class="row">
 	<div class="flexsection" style=" background-color:#3b5998;">
-			<div>
-				<h1>FB 粉專</h1>
+		<div>
+			<h1>FB 粉專</h1>
+		</div>
+		
+		<div class="fbpage">
+			<div class="fb-page" 
+				v-bind:data-href= "link"
+				data-small-header="false" 
+				data-adapt-container-width="true" 
+				data-hide-cover="false" 
+				data-width="500" 
+				data-show-facepile="true">
+				<blockquote b-bind:cite="link" class="fb-xfbml-parse-ignore">
+					<a v-bind:href="link">2016武術聯合招生</a>
+				</blockquote>
 			</div>
-			
-			<div class="fbpage">
-				<div class="fb-page" 
-					data-href="https://www.facebook.com/2016ntumau/" 
-					data-small-header="false" 
-					data-adapt-container-width="true" 
-					data-hide-cover="false" 
-					data-width="500" 
-					data-show-facepile="true">
-					<blockquote cite="https://www.facebook.com/2016ntumau/" class="fb-xfbml-parse-ignore">
-						<a href="https://www.facebook.com/2016ntumau/">2016武術聯合招生</a>
-					</blockquote>
-				</div>
-			</div>
+		</div>
 	</div>
 
 	<div class="flexsection" v-for="intro in intros">
@@ -170,6 +170,8 @@ a.homebutton:hover {
 			data-mobile-iframe="true">
 			<a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fhomepage.ntu.edu.tw%2F%7Eb04611017&amp;src=sdkpreparse">分享</a>
 		</div>
+		<a href="https://twitter.com/share" class="twitter-share-button" data-show-count="true">share</a>
+		<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 	</div>
 	
 
@@ -202,6 +204,7 @@ var urlGo = function(text){
 var home = new Vue({
 	el: "#home",
 	data: { 
+		link : "https://www.facebook.com/2016ntumau/",
 		intros:[{
 			title:"攤位地圖",
 			desp:"精美攤位圖 配合 google map 製作 <br> 輕鬆規劃路線 不迷路",
@@ -218,6 +221,10 @@ var home = new Vue({
 			title:"社團介紹",
 			desp:" 詳細介紹<br> 課程介紹<br> QA <br> FB 連結 等等<br> 應有盡有<br> 給您最詳細的資訊",
 			img: "img/club.jpg"
+		},{
+			title:"倒數文案",
+			desp:"一天天的倒數<br> 一招招的武功動作<br> 配上短而有力的簡介<br> 各社團的異同 一目了然",
+			img: "img/countdown.jpg"
 		},{
 			title:"表演時間",
 			desp:" 以時間軸 展示 <br> 當天的時間與內容<br> 輕鬆融入精彩的表演中",

@@ -102,3 +102,140 @@ body{font-size:16px;}
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3 { page-break-after: avoid; }
 }
+
+
+/*http://codepen.io/alassetter/pen/cyrfB*/
+/*** Table Styles **/
+
+
+.markdown div.table-title {
+   display: block;
+  margin: auto;
+  max-width: 600px;
+  padding:5px;
+  width: 100%;
+}
+
+.markdown .table-title h3 {
+   color: #fafafa;
+   font-size: 30px;
+   font-weight: 400;
+   font-style:normal;
+   font-family: "Roboto", helvetica, arial, sans-serif;
+   text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+   text-transform:uppercase;
+}
+
+.markdown .table-fill {
+  background: white;
+  border-radius:3px;
+  border-collapse: collapse;
+  height: 320px;
+  margin: auto;
+  max-width: 600px;
+  padding:5px;
+  width: 100%;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  animation: float 5s infinite;
+}
+ 
+.markdown th {
+  color:#D5DDE5;;
+  background:#1b1e24;
+  border-bottom:4px solid #9ea7af;
+  border-right: 1px solid #343a45;
+//  font-size:23px;
+//  font-weight: 100;
+  padding:10px;
+  text-align:left;
+//  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  vertical-align:middle;
+}
+
+.markdown th:first-child {
+  border-top-left-radius:3px;
+}
+ 
+.markdown th:last-child {
+  border-top-right-radius:3px;
+  border-right:none;
+}
+  
+.markdown tr {
+  border-top: 1px solid #C1C3D1;
+  border-bottom-: 1px solid #C1C3D1;
+  color:#666B85;
+//  font-size:16px;
+//  font-weight:normal;
+//  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+}
+ 
+.markdown tr:hover td {
+  background:#4E5066;
+  color:#FFFFFF;
+  border-top: 1px solid #22262e;
+  border-bottom: 1px solid #22262e;
+}
+ 
+.markdown tr:first-child {
+  border-top:none;
+}
+
+.markdown tr:last-child {
+  border-bottom:none;
+}
+ 
+.markdown tr:nth-child(odd) td {
+  background:#EBEBEB;
+}
+ 
+.markdown tr:nth-child(odd):hover td {
+  background:#4E5066;
+}
+
+.markdown tr:last-child td:first-child {
+  border-bottom-left-radius:3px;
+}
+ 
+.markdown tr:last-child td:last-child {
+  border-bottom-right-radius:3px;
+}
+ 
+.markdown td {
+  background:#FFFFFF;
+  padding:5px;
+  vertical-align:middle;
+//  font-weight:300;
+//  text-align:left;
+//  font-size:18px;
+//  text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #C1C3D1;
+}
+
+.markdown td:last-child {
+  border-right: 0px;
+}
+
+.markdown th.text-left {
+  text-align: left;
+}
+
+.markdown th.text-center {
+  text-align: center;
+}
+
+.markdown th.text-right {
+  text-align: right;
+}
+
+.markdown td.text-left {
+  text-align: left;
+}
+
+.markdown td.text-center {
+  text-align: center;
+}
+
+.markdown td.text-right {
+  text-align: right;
+}
