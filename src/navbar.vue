@@ -1,38 +1,45 @@
 <template>
-	<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a href="#" v-on:click.prevent="urlGo('')">
-						<img src="static/img/105_1_logo.png"  height="50" alt="logo">
-					</a>
-					<h3 class="navbar-text mobile-hide title-word">title</h3>
+	<container>
+		<div id="LOGO" class="logo">
+			<img src="./../static/img/permanent_logo.png" height="100" alt="LOGO">
+			<h1>台大武術聯盟      </h1> 
+			<h2>NTU Martial Union </h2>			
+		</div>
+		<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a href="#">
+							<img src="static/img/105_1_logo.png"  height="50" alt="logo">
+						</a>
+						<h3 class="navbar-text mobile-hide title-word">title</h3>
+					</div>
+					<div class="collapse navbar-collapse" id="nav-collapse">
+						<ul class="nav navbar-nav"  >
+							<li v-for="nav in nav_bar">
+								<a href="#">{{nav.name}}</a>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle">
+									{{club}}<b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu grid">
+									<li v-for="club in clubs">
+										<a href="#" >{{club.name}}</a>
+									</li>
+									<!-- <li class="divider"></li>-->
+								</ul>
+							</li>
+						</ul>
+					</div>
 				</div>
-				<div class="collapse navbar-collapse" id="nav-collapse">
-					<ul class="nav navbar-nav"  >
-						<li v-for="nav in nav_bar">
-							<a href="#" v-on:click.prevent="urlGo(nav.url)">{{nav.name}}</a>
-						</li>
-						<li class="dropdown">
-							<a href="#" v-on:click.prevent="urlGo('app=card')" class="dropdown-toggle">
-								{{club}}<b class="caret"></b>
-							</a>
-							<ul class="dropdown-menu grid">
-								<li v-for="club in clubs">
-									<a href="#" v-on:click.prevent="urlGo(club.url)">{{club.name}}</a>
-								</li>
-								<!-- <li class="divider"></li>-->
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</nav>
+			</nav>
+	</container>
 </template>
 
 <style>
@@ -73,25 +80,9 @@
 		display: none;
 	}
 }
-
-.footer {
-	margin-top : 200px;
-    background-color:  #5f5f5f;
-    bottom: 0;
-    width: 100%;
-}
-.footer *{
-	text-align: center;
-	color: white !important;
-}
-
 </style>
 
 <script>
-
-var jsondata = require('./assets/allclubs.json'),
-	clubname = "",
-	ts = "105_1"
 
 export default {
 	name: 'navbar',
@@ -105,20 +96,20 @@ export default {
 		
 		nav_bar : [{
 			name: '攤位',
-			url: "app=boothmap"
+			url: "boothmap"
 		},{
 			name: '表演節目',
-			url: "app=showtime"
+			url: "showtime"
 		},{
 			name: '倒數',
-			url: "app=countdown"
+			url: "countdown"
 		},{ 
 			name: '課表',
-			url: "app=course" 
+			url: "course" 
 		}],
 	}},
 	created:function(){ // readjson
-		console.log(jsondata)
+		var ts = window.ts,jsondata = window.clubsdata
 		var clubs = this.clubs
 		jsondata[ts].clubs.forEach(function(club){
 			clubs.push({
@@ -127,6 +118,23 @@ export default {
 			})
 		})
 		$(".title-word").html(this.title)
+
+	},
+	methods:{
+		navbarUpdate : function(){
+			var scroll = document.documentElement.scrollTop || document.body.scrollTop
+			var navbar_top = document.getElementById("LOGO").offsetHeight
+			this.navbar_fix= scroll >= navbar_top ? "navbar-fixed-top" : ""
+
+			$("body").css("padding-top",scroll >= navbar_top ? "70px":"0")
+		}
+	},
+	mounted: function(){
+		document.addEventListener('scroll',this.navbarUpdate)
+		setInterval( this.urlUpdate , 500)
+	},
+	destroyed: function(){
+		document.removeEventListener('scroll',this.navbarUpdate)
 	}
 }
 </script>
