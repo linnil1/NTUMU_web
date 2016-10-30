@@ -200,7 +200,7 @@ export default {
 		data.welcomes= club.welcome[0].courses
 		data.logo_src =  "./../static/img/clublogo/"+club.logo[0].src
 		$(".title-word").html(data.chinese)
-		console.log(data.main_intros)
+//		console.log(data.main_intros)
 		document.addEventListener('scroll',this.updatescroll)
 	},
 	methods:{

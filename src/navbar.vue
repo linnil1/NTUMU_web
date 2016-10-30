@@ -30,7 +30,8 @@
 								</a>
 								<ul class="dropdown-menu grid">
 									<li v-for="club in clubs">
-										<a href="#" >{{club.name}}</a>
+										<router-link v-bind:to="club.url">{{club.name}}</router-link>
+										<!-- <a href="#" >{{club.name}}</a> -->
 									</li>
 									<!-- <li class="divider"></li>-->
 								</ul>
@@ -114,7 +115,7 @@ export default {
 		jsondata[ts].clubs.forEach(function(club){
 			clubs.push({
 				name: jsondata[club].chinese,
-				url : club
+				url : '/club/'+club
 			})
 		})
 		$(".title-word").html(this.title)

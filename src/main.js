@@ -2,8 +2,6 @@ import Vue from 'vue'
 /* eslint-disable no-new */
 
 import App from './App'
-import navbar from './navbar'
-import foot from './foot'
 import club from './components/club'
 
 import 'bootstrap/dist/css/bootstrap.css'
@@ -15,33 +13,25 @@ window.clubsdata = require('./assets/allclubs.json')
 window.clubname = "TaiChi"
 window.ts = "105_1"
 
-new Vue({
-  el: '#navbar',
-  template: '<navbar/>',
-  components: { navbar }
-})
-
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
 	routes: [
     {
-		path: '/',
+		path: '/club/:clubname',
 		component: club,
-    }
-  ]
+		name: 'clublink',
+		beforeEnter: function(to,from,next){
+			console.log(to.params.clubname)
+			window.clubname = to.params.clubname
+			next();
+		}
+    }]
 })
 
 const app = new Vue({
 	router,
-	template:"<router-view></router-view>",
+	template: '<app/>',
+	components:{App}
 }).$mount('#app')
-console.log(app)
-
-new Vue({
-  el: '#foot',
-  template: '<foot/>',
-  components: { foot }
-})
-
