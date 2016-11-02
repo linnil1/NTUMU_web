@@ -1,5 +1,5 @@
 <template>
-	<container>
+	<div>
 		<div id="LOGO" class="logo">
 			<img src="./../static/img/permanent_logo.png" height="100" alt="LOGO">
 			<h1>台大武術聯盟      </h1> 
@@ -31,7 +31,6 @@
 								<ul class="dropdown-menu grid">
 									<li v-for="club in clubs">
 										<router-link v-bind:to="club.url">{{club.name}}</router-link>
-										<!-- <a href="#" >{{club.name}}</a> -->
 									</li>
 									<!-- <li class="divider"></li>-->
 								</ul>
@@ -40,10 +39,10 @@
 					</div>
 				</div>
 			</nav>
-	</container>
+	</div>
 </template>
 
-<style>
+<style scoped>
 .logo{
 	overflow: hidden;
 	max-height: 100px;
@@ -97,16 +96,16 @@ export default {
 		
 		nav_bar : [{
 			name: '攤位',
-			url: "boothmap"
+			url: "/boothmap"
 		},{
 			name: '表演節目',
-			url: "showtime"
+			url: "/showtime"
 		},{
 			name: '倒數',
-			url: "countdown"
+			url: "/countdown"
 		},{ 
 			name: '課表',
-			url: "course" 
+			url: "/course" 
 		}],
 	}},
 	created:function(){ // readjson

@@ -76,8 +76,8 @@
 	</div>
 </template>
 
-<style src="./../markdown.css"></style>
-<style>
+<style src="./markdown.css" scoped></style>
+<style scoped>
 #qa{
 	overflow: auto;
 }
@@ -112,7 +112,7 @@ h2 a{
 	padding-top:70px;
 }
 </style>
-<style>  /* sidebar */
+<style scoped>  /* sidebar */
 @media (min-width:768px ) {
 	#sidebar_collapse{
 		display: none;
@@ -191,6 +191,7 @@ export default {
 		var jsondata = window.clubsdata,
 			ts = window.ts,
 			clubname = window.clubname
+		console.log(clubname)
 		var data = this.$data
 		var club = jsondata[clubname]
 		data.info = club.info[0]

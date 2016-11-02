@@ -3,6 +3,7 @@ import Vue from 'vue'
 
 import App from './App'
 import club from './components/club'
+import countdown from './components/countdown'
 
 import 'bootstrap/dist/css/bootstrap.css'
 var $ = require('jquery');
@@ -17,17 +18,21 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-	routes: [
-    {
+	routes: [ {
 		path: '/club/:clubname',
 		component: club,
-		name: 'clublink',
 		beforeEnter: function(to,from,next){
-			console.log(to.params.clubname)
+			console.log(to)
+			console.log(from)
 			window.clubname = to.params.clubname
-			next();
+			next()
+			console.log(next)
 		}
-    }]
+    },{
+		path: '/countdown',
+		component: countdown
+    }
+	]
 })
 
 const app = new Vue({
