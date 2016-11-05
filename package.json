@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "ekko-lightbox": "^4.0.1",
     "jquery": "^3.1.1",
+    "jsdom": "^9.8.3",
     "vue": "^2.0.1",
     "vue-router": "^2.0.1"
   },

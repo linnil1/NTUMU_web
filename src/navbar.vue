@@ -22,7 +22,7 @@
 					<div class="collapse navbar-collapse" id="nav-collapse">
 						<ul class="nav navbar-nav"  >
 							<li v-for="nav in nav_bar">
-								<a href="#">{{nav.name}}</a>
+								<router-link v-bind:to="nav.url">{{nav.name}}</router-link>
 							</li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle">

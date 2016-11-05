@@ -5,10 +5,8 @@ import App from './App'
 import club from './components/club'
 import countdown from './components/countdown'
 
+import bootstrap from 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
-var $ = require('jquery');
-window.jQuery = $;
-window.$ = $;
 
 window.clubsdata = require('./assets/allclubs.json')
 window.clubname = "TaiChi"

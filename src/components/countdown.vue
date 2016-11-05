@@ -1,7 +1,7 @@
 <template>
 	<div class="container-fluid" id="countdown">
 		<!-- <script src="js/ekko-lightbox.js"></script> -->
-		<div class="row" style=" background-color: #eee;">
+		<div class="row">
 			<div class="col-sm-1"></div>
 			<div class="col-sm-10">
 
@@ -41,16 +41,17 @@
 						<h4>{{count.chinese}}</h4>
 					</div>
 					<div class="count-body">
-						<img class="img-responsive" v-bind:src="count.imgsrc">
-						<p class="count-desp" v-html="count.desp"></p>
-						<router-link v-bind:to="'/club/'+count.name" class="btn btn-default" href="#" role="button">詳細資訊</router-link>
+						<div class="count-img">
+							<a v-bind:href="count.imgfullsrc"  data-toggle="lightbox">
+								<img v-bind:src="count.imgsrc" class="img-responsive img-fluid">
+							</a>
+						</div>
+						<div class="count-data">
+							<p class="count-desp" v-html="count.desp"></p>
+							<router-link v-bind:to="'/club/'+count.name" class="btn btn-default count-btn" href="#" role="button">詳細資訊</router-link>
+						</div>
 					</div>
 				</div>
-						<!-- <div class="media-left countdown-img" v-bind:class="index%2?'pull-left':'pull-right'">
-							<a v-bind:href="count.imgfullsrc" v-bind:data-title="count.title+ '-'+ count.chinese" data-toggle="lightbox">
-								<img class="media-object countdown-img" v-bind:src="count.imgsrc" alt="countdown_picture">
-							</a>
-						</div> -->
 			</div>
 		</div>
 	 </div>
@@ -66,6 +67,7 @@
 }
 
 .countdown-all {
+	background-color:#eee;
 	position: relative;
 	margin:100px auto;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -81,21 +83,25 @@
 	position: relative;
 }
 .count-desp{
-    margin: 20px 30px;
-    max-width: 400px;
-    width:100%;
-
     word-wrap: break-word;
 }
 
+.count-data{
+    margin: 20px;
+    max-width: 400px;
+    word-wrap: break-word;
+}
 .count-img{
 	width:450px;
-	text-align:center;
 }
 
-.count-body img{
+.count-img img{
+	margin: 5px auto 15px auto;
 	max-width: 450px;
 	max-height: 400px;
+}
+.count-btn{
+	float:right
 }
 
 
@@ -115,8 +121,9 @@
 .carousel:hover .carousel-caption{ visibility: visible; }
 </style>
 
-<style src="./ekko-lightbox.css" scoped></style>
 <script>
+
+import lightbox from 'ekko-lightbox'
 export default {
 	name: 'countdown',
 	data(){ return {
@@ -143,6 +150,7 @@ export default {
 			})
 		})
 
+		//import lightbox from 'ekko-lightbox'
 		$(document).delegate('*[data-toggle="lightbox"]','click', function(event) {
 			event.preventDefault();
 			$(this).ekkoLightbox();
