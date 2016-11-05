@@ -17,6 +17,12 @@ var port = process.env.PORT || config.dev.port
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+
+// history mode need 
+var history = require('connect-history-api-fallback');
+app.use(history())
+// need end 
+
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {

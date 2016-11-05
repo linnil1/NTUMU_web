@@ -25,9 +25,7 @@
 								<router-link v-bind:to="nav.url">{{nav.name}}</router-link>
 							</li>
 							<li class="dropdown">
-								<a href="#" class="dropdown-toggle">
-									{{club}}<b class="caret"></b>
-								</a>
+								<router-link class="dropdown-toggle" to="/club">{{club}}<b class="caret"></b></router-link>
 								<ul class="dropdown-menu grid">
 									<li v-for="club in clubs">
 										<router-link v-bind:to="club.url">{{club.name}}</router-link>

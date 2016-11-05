@@ -249,7 +249,6 @@ export default {
 	},
 	computed: {
 		sortedshowday: function(){
-			console.log(123)
 			return this.$data.showday.sort(function(a,b){return a-b})
 		},
 		showevents: function(){

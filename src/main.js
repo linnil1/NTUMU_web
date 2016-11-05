@@ -2,9 +2,6 @@ import Vue from 'vue'
 /* eslint-disable no-new */
 
 import App from './App'
-import club from './components/club'
-import countdown from './components/countdown'
-import course from './components/course'
 
 import bootstrap from 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -17,24 +14,30 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
+	mode: 'history',
 	routes: [ {
+		path: '/club',
+		component: require('./components/clublist.vue')
+    },{
 		path: '/club/:clubname',
-		component: club,
+		component: require('./components/club.vue'),
 		beforeEnter: function(to,from,next){
-			console.log(to)
-			console.log(from)
 			window.clubname = to.params.clubname
 			next()
-			console.log(next)
 		}
     },{
 		path: '/countdown',
-		component: countdown
+		component: require('./components/countdown.vue')
     },{
 		path: '/course',
-		component: course
-    }
-	]
+		component: require('./components/course.vue')
+    },{
+		path: '/boothmap',
+		component: require('./components/boothmap.vue')
+    },{
+		path: '/showtime',
+		component: require('./components/showtime.vue')
+    }]
 })
 
 const app = new Vue({

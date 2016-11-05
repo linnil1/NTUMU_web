@@ -241,7 +241,9 @@ export default {
 			}
 		}
 	},
-	
+	destroyed: function(){
+		document.removeEventListener('scroll',this.updatescroll)
+	}
 }
 
 </script>
