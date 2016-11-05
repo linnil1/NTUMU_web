@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import club from './components/club'
 import countdown from './components/countdown'
+import course from './components/course'
 
 import bootstrap from 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -29,6 +30,9 @@ const router = new VueRouter({
     },{
 		path: '/countdown',
 		component: countdown
+    },{
+		path: '/course',
+		component: course
     }
 	]
 })
