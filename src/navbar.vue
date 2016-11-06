@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div id="LOGO" class="logo">
-			<img src="./../static/img/permanent_logo.png" height="100" alt="LOGO">
+			<img src="static/img/permanent_logo.png" height="100" alt="LOGO">
 			<h1>台大武術聯盟      </h1> 
 			<h2>NTU Martial Union </h2>			
 		</div>
@@ -17,7 +17,7 @@
 						<a href="#">
 							<img src="static/img/105_1_logo.png"  height="50" alt="logo">
 						</a>
-						<h3 class="navbar-text mobile-hide title-word">title</h3>
+						<h3 class="navbar-text mobile-hide title-word">台大武術聯盟</h3>
 					</div>
 					<div class="collapse navbar-collapse" id="nav-collapse">
 						<ul class="nav navbar-nav"  >
@@ -107,6 +107,7 @@ export default {
 		}],
 	}},
 	created:function(){ // readjson
+		$(".title-word").html(this.title)
 		var ts = window.ts,jsondata = window.clubsdata
 		var clubs = this.clubs
 		jsondata[ts].clubs.forEach(function(club){
@@ -115,8 +116,13 @@ export default {
 				url : '/club/'+club
 			})
 		})
-		$(".title-word").html(this.title)
 
+		// navbar won't collapse after click
+		$(document).on('click','.navbar-collapse.in',function(e) {
+			if( $(e.target).is('a') && $(e.target).attr('class') != 'dropdown-toggle' ) {
+				$(this).collapse('hide');
+			}
+		});
 	},
 	methods:{
 		navbarUpdate : function(){

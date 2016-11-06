@@ -54,7 +54,7 @@ export default {
 					labelContent: bm.num,
 					title: bm.name,
 					icon: {
-						url: "./../static/img/clublogo/"+jdata.logo[0].src,
+						url: "./static/img/clublogo/"+jdata.logo[0].src,
 						scaledSize: new google.maps.Size(25,25), // scaled size
 					},
 					labelAnchor: new google.maps.Point(0,0)
@@ -71,7 +71,7 @@ export default {
 					labelContent: bm.name,
 					title: "NTUMU",
 					icon: {
-						url: "./../static/img/"+jsondata[ts].logo,
+						url: "./static/img/"+jsondata[ts].logo,
 						scaledSize: new google.maps.Size(50,50), // scaled size
 					},
 					labelAnchor: new google.maps.Point(0,0)

@@ -16,6 +16,13 @@
 			</div>
 
 			<div class="col-sm-6">
+				<!-- for phone -->
+				<div class="smallscreen">
+					<img class="img-responsive" v-bind:src="logo_src" alt="club_logo" > 
+					<h1 > {{chinese}} </h1>
+					<h2 > {{english}} </h2>
+				</div>
+
 				<div v-for="intro in main_intros" v-bind:id="intro.id">
 					<h2>{{intro.name}}
 						<a v-bind:href="('#'+intro.id)" class="glyphicon glyphicon-tags" style="font-size:15px"></a>
@@ -149,7 +156,19 @@ h2 a{
 #sidebar_collapse_btn{
 	float:left;
 }
-
+.smallscreen img{
+	margin:10px auto;
+	max-width:300px;
+	max-height:300px;
+}
+.smallscreen *{
+	text-align:center;
+}
+@media (min-width:768px ) {
+	.smallscreen{
+		display:none;
+	}
+}
 @media (max-width:768px ) {
 	.sidebar{
 		margin: 0;
@@ -182,6 +201,7 @@ export default {
 		sidebar_style : {},
 		info: {},
 		chinese : "",
+		english: "",
 		courses : [],
 		welcomes: [],
 		main_intros : [],
@@ -197,11 +217,11 @@ export default {
 		data.info = club.info[0]
 		data.main_intros = club.intro[0].intro
 		data.chinese = club.chinese
+		data.english = club.english
 		data.courses = club.course[0].courses
 		data.welcomes= club.welcome[0].courses
-		data.logo_src =  "./../static/img/clublogo/"+club.logo[0].src
+		data.logo_src =  "./static/img/clublogo/"+club.logo[0].src
 		$(".title-word").html(data.chinese)
-//		console.log(data.main_intros)
 		document.addEventListener('scroll',this.updatescroll)
 	},
 	methods:{

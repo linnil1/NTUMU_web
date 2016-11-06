@@ -1,5 +1,5 @@
 <template>
-	<div class="container-fluid" id="countdown">
+	<div class="container-fluid" id="countdown" style="background-color:#e9ebee">
 		<!-- <script src="js/ekko-lightbox.js"></script> -->
 		<div class="row">
 			<div class="col-sm-1"></div>
@@ -67,12 +67,18 @@
 }
 
 .countdown-all {
-	background-color:#eee;
-	position: relative;
-	margin:100px auto;
-	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-	transition: 0.3s;
-	padding: 10px;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-image: none;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+	margin: 10px;
+	background-color: #f6f7f9;
+    color: #1d2129;
 }
 
 .count-body{
@@ -142,8 +148,8 @@ export default {
 			var jdata = jsondata[count.name]
 			self.counts.push( {
 				name : count.name,
-				imgsrc : "./../static/img/countdown/"+count.src,
-				imgfullsrc : "./../static/img/countdown/"+count.fullsrc,
+				imgsrc : "./static/img/countdown/"+count.src,
+				imgfullsrc : "./static/img/countdown/"+count.fullsrc,
 				chinese : jdata.chinese,
 				title  : count.title,
 				desp   : count.desp

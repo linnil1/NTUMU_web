@@ -3,7 +3,7 @@
 		<div class="row" style=" background-color: #eee;">
 			<div class="col-sm-1"></div>
 			<div class="col-sm-10">
-				<router-link class="card-horizon" v-for="club in clubs" v-bind:to="club.name" append tag="div">
+				<router-link class="card-horizon" v-for="club in clubs" v-bind:to="'/club/'+club.name" tag="div">
 						<div class="card-img">
 							<img v-bind:src="club.logo_src" alt="club_logo">
 						</div>
@@ -94,7 +94,7 @@ export default {
 			clubs.push({
 				chinese : jdata.chinese,
 				name    : clubname,
-				logo_src :  "./../static/img/clublogo/"+jdata.logo[0].src,
+				logo_src :  "./static/img/clublogo/"+jdata.logo[0].src,
 				english : jdata.english
 			})
 

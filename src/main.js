@@ -14,8 +14,12 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-	mode: 'history',
+//	mode: 'history',
+	base: '/~b04611017',
 	routes: [ {
+		path: '/',
+		component: require('./components/clublist.vue')
+    },{
 		path: '/club',
 		component: require('./components/clublist.vue')
     },{
