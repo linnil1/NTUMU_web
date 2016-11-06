@@ -14,9 +14,9 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<a href="#">
+						<router-link to="/">
 							<img src="static/img/105_1_logo.png"  height="50" alt="logo">
-						</a>
+						</router-link>
 						<h3 class="navbar-text mobile-hide title-word">台大武術聯盟</h3>
 					</div>
 					<div class="collapse navbar-collapse" id="nav-collapse">

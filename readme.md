@@ -1,23 +1,25 @@
-#NTUMU_web
+# NTUMU_web
 
-## NTU Marital Art Union
+NTU Marital Art Union
 
-## The page is on homepage.ntu.edu.tw/~b04611017/
+## The page
+
+homepage.ntu.edu.tw/~b04611017/
 
 
-# Usage
+# build data from csv
 
 transfer your csv data to json by python
 
-### build
+## build
 
 ` python3 dataTojson.py build `
 
-### update club
+## update club
 
 ` python3 dataTojson.py clubUpdate yourcsv.csv `
 
-### update common thing 
+## update common thing 
 
 like. boothmap, countdown, showtime
 
@@ -30,13 +32,30 @@ and the output is allclubs.json
 
 # build the web
 
-I use ugly methods to do that
+I use [vue-cli](https://github.com/vuejs/vue-cli) [vue-router](https://github.com/vuejs/vue-router) to do that
 
-put your html in data/ and add prefix json_
+build : ` npm init `
 
-run `python3 html_to_js.py` will put it all into all.js
+run   : ` npm run dev `
 
-you should mind the keyword in your json_*.html file
+build : ` npm run build `
 
+# put your asset
+
+```
+static
+└── img
+    ├── 105_1_logo.png
+    ├── clublogo
+    │   ├── 105_1_logo_*.png
+    ├── countdown
+    │   └── 105_1_countdown_*.jpg
+    ├── permanent_logo.png
+    ├── permanent_logo_small.png
+    └── showtime.jpg
+
+src/assets
+└── allclubs.json
+```
 
 

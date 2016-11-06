@@ -3,6 +3,10 @@ node_modules/
 test*
 static/
 src/assets
+*.json
+*.csv
+__pycache__
+ntu.ftp
 
 .DS_Store
 dist/
