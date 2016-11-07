@@ -1,5 +1,5 @@
 <template>
-	<div class="markdown container-fluid">
+	<div class="markdown-body container-fluid">
 		<div class="row">
 			<div class="col-sm-2">
 				<div v-bind:style="sidebar_style" class="sidebar"  id="sidebar_id">
@@ -7,9 +7,11 @@
 					<h1> {{chinese}} </h1>
 					<ul>
 						<li v-for="intro in main_intros">
-							<a v-bind:href="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''" v-on:click="sidebarCollapse">{{intro.name}}</a>
+							<router-link v-bind:to="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''" >{{intro.name}}</router-link>
 						</li>
-						<li><a href="#connect" v-on:click="sidebarCollapse">聯絡資訊</a></li>
+						<li>
+							<router-link to="#connect">聯絡資訊</router-link>
+						</li>
 							
 					</ul>
 				</div>
@@ -25,16 +27,15 @@
 
 				<div v-for="intro in main_intros" v-bind:id="intro.id">
 					<h2>{{intro.name}}
-						<a v-bind:href="('#'+intro.id)" class="glyphicon glyphicon-tags" style="font-size:15px"></a>
+						<router-link v-bind:to="('#'+intro.id)" class="glyphicon glyphicon-tags" style="font-size:15px"></router-link>
 					</h2>
-					<hr>
-					<container v-if="intro.id=='qa'">
-						<container v-for="qa in intro.content">
+					<span v-if="intro.id=='qa'">
+						<span v-for="qa in intro.content">
 							<div class="question"> {{qa.q}} </div>
 							<div class="answer">   {{qa.a}} </div>
-						</container>
-					</container>
-					<container v-else> <!-- why not else if -->
+						</span >
+					</span>
+					<span v-else> <!-- why not else if -->
 						<ul v-if="intro.id=='course_intro'">
 							<li v-for="courselist in intro.content">
 								{{courselist}}
@@ -47,7 +48,7 @@
 
 							<div v-else v-html="intro.content"></div>
 						</div>
-					</container>
+					</span>
 					<!-- <br><br> --> 
 				</div>
 			</div>
@@ -55,7 +56,7 @@
 			<div class="col-sm-4">
 				<div class="connect" id='connect' style="padding-left: 10px">
 					<h2>聯絡資訊
-						<a href="#connect" class="glyphicon glyphicon-tags" style="font-size:15px"></a>
+						<router-link to="#connect" class="glyphicon glyphicon-tags" style="font-size:15px"></router-link>
 					</h2>
 					<h3>社長</h3>
 					<p>{{info.president}}</p>
@@ -83,7 +84,7 @@
 	</div>
 </template>
 
-<style src="./markdown.css" scoped></style>
+<style src="./../../node_modules/github-markdown-css/github-markdown.css" ></style>
 <style scoped>
 #qa{
 	overflow: auto;
@@ -118,7 +119,18 @@
 h2 a{
 	padding-top:70px;
 }
+
+.smallscreen img{
+	margin:10px auto;
+	max-width:300px;
+	max-height:300px;
+}
+.smallscreen *{
+	text-align:center;
+	border-bottom: 0 !important;
+}
 </style>
+
 <style scoped>  /* sidebar */
 @media (min-width:768px ) {
 	#sidebar_collapse{
@@ -148,7 +160,7 @@ h2 a{
 	margin-left: 5px; 
 	overflow-x: hidden; 
 	overflow-y: auto; 
-	padding: 2.2em 0;
+	padding: 0;
 }
 .sidebar ul li a{
 	color : #34495e;
@@ -156,13 +168,12 @@ h2 a{
 #sidebar_collapse_btn{
 	float:left;
 }
-.smallscreen img{
-	margin:10px auto;
-	max-width:300px;
-	max-height:300px;
-}
-.smallscreen *{
+.sidebar *{
 	text-align:center;
+}
+.sidebar h1{
+	border-bottom: 0 !important;
+	margin: 5px auto;
 }
 @media (min-width:768px ) {
 	.smallscreen{
@@ -208,24 +219,35 @@ export default {
 		logo_src : ""
 	}},
 	created: function(){
-		var jsondata = window.clubsdata,
-			ts = window.ts,
-			clubname = window.clubname
-		console.log(clubname)
-		var data = this.$data
-		var club = jsondata[clubname]
-		data.info = club.info[0]
-		data.main_intros = club.intro[0].intro
-		data.chinese = club.chinese
-		data.english = club.english
-		data.courses = club.course[0].courses
-		data.welcomes= club.welcome[0].courses
-		data.logo_src =  "./static/img/clublogo/"+club.logo[0].src
-		$(".title-word").html(data.chinese)
+		this.createfunc() // ugly but work beacuse router won't change 
+	},
+	mounted: function(){
+		//sidebar
+		this.sidebar_style = { 
+			position: "fixed" ,
+			top : document.getElementById("navbar").offsetHeight+"px",
+			width :$(".col-sm-2").width()+"px"
+		}
 		document.addEventListener('scroll',this.updatescroll)
 	},
 	methods:{
 		sidebarCollapse : function(){},
+		createfunc : function(){
+			var jsondata = window.clubsdata,
+				ts = window.ts,
+				clubname = window.clubname
+			console.log(clubname)
+			var data = this.$data
+			var club = jsondata[clubname]
+			data.info = club.info[0]
+			data.main_intros = club.intro[0].intro
+			data.chinese = club.chinese
+			data.english = club.english
+			data.courses = club.course[0].courses
+			data.welcomes= club.welcome[0].courses
+			data.logo_src =  "./static/img/clublogo/"+club.logo[0].src
+			$(".title-word").html(data.chinese)
+		},
 		updatescroll : function(){
 			var scroll = document.documentElement.scrollTop || document.body.scrollTop
 
@@ -240,24 +262,21 @@ export default {
 				}
 			}
 
-			// sidebar fix or not
-			if( $("#sidebar_collapse_btn").is(":visible") )
-				return ;
-				
-			var onsidebar = document.getElementById("navbar").offsetHeight
-			if(scroll >= document.getElementById("LOGO").offsetHeight)
+		}
+	},
+	watch: {
+		'$route' (to, from) {
+			console.log(to)
+			if(window.clubname != to.params.clubname)
 			{
-				this.sidebar_style = { 
-					position: "fixed" ,
-					top : document.getElementById("navbar").offsetHeight+"px",
-					width :$(".col-sm-2").width()+"px"
-				}
+				window.clubname = to.params.clubname 
+				this.createfunc()
 			}
-			else{
-				this.sidebar_style = { 
-					position: "relative",
-					top : "0"
-				 }
+			if(to.hash && to.hash.indexOf('%')<0 ){ 
+//				url enocde will cause syntax error
+				$('html, body').animate({
+					scrollTop: $(to.hash).offset().top
+				},1000);
 			}
 		}
 	},

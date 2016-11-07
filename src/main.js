@@ -3,9 +3,6 @@ import Vue from 'vue'
 
 import App from './App'
 
-import bootstrap from 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.css'
-
 window.clubsdata = require('./assets/allclubs.json')
 window.clubname = "TaiChi"
 window.ts = "105_1"
@@ -18,9 +15,10 @@ const router = new VueRouter({
 	base: '/~b04611017',
 	routes: [ {
 		path: '/',
-		component: require('./components/clublist.vue')
+		redirect: {name: 'clublist'}
     },{
 		path: '/club',
+		name: 'clublist',
 		component: require('./components/clublist.vue')
     },{
 		path: '/club/:clubname',

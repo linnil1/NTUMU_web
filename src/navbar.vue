@@ -1,57 +1,38 @@
 <template>
-	<div>
-		<div id="LOGO" class="logo">
-			<img src="static/img/permanent_logo.png" height="100" alt="LOGO">
-			<h1>台大武術聯盟      </h1> 
-			<h2>NTU Martial Union </h2>			
-		</div>
-		<nav class="navbar navbar-default" id="navbar" v-bind:class="navbar_fix">
-				<div class="container-fluid">
-					<div class="navbar-header">
-						<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
-						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-						<router-link to="/">
-							<img src="static/img/105_1_logo.png"  height="50" alt="logo">
-						</router-link>
-						<h3 class="navbar-text mobile-hide title-word">台大武術聯盟</h3>
-					</div>
-					<div class="collapse navbar-collapse" id="nav-collapse">
-						<ul class="nav navbar-nav"  >
-							<li v-for="nav in nav_bar">
-								<router-link v-bind:to="nav.url">{{nav.name}}</router-link>
-							</li>
-							<li class="dropdown">
-								<router-link class="dropdown-toggle" to="/club">{{club}}<b class="caret"></b></router-link>
-								<ul class="dropdown-menu grid">
-									<li v-for="club in clubs">
-										<router-link v-bind:to="club.url">{{club.name}}</router-link>
-									</li>
-									<!-- <li class="divider"></li>-->
-								</ul>
+	<nav class="navbar navbar-default navbar-fixed-top" id="navbar">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<router-link to="/">
+					<img src="static/img/105_1_logo.png"  height="50" alt="logo">
+				</router-link>
+				<h3 class="title-word navbar-text mobile-hide">台大武術聯盟</h3>
+			</div>
+			<div class="collapse navbar-collapse" id="nav-collapse">
+				<ul class="nav navbar-nav"  >
+					<li v-for="nav in nav_bar">
+						<router-link v-bind:to="nav.url">{{nav.name}}</router-link>
+					</li>
+					<li class="dropdown">
+						<router-link class="dropdown-toggle" to="/club">{{club}}<b class="caret"></b></router-link>
+						<ul class="dropdown-menu grid">
+							<li v-for="club in clubs">
+								<router-link v-bind:to="club.url">{{club.name}}</router-link>
 							</li>
 						</ul>
-					</div>
-				</div>
-			</nav>
-	</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 </template>
 
 <style scoped>
-.logo{
-	overflow: hidden;
-	max-height: 100px;
-}
-.logo img{
-	padding: 10px;
-}
-.logo h1,.logo h2{
-	display: inline-block;
-    vertical-align: bottom;
-}
 .navbar{
 	margin: 0;
 }
@@ -64,6 +45,7 @@
 }
 .navbar-text {
 	display: inline-block;
+	margin: 0;
 }
 .navbar ul.grid li a{
 	display:block;
@@ -107,7 +89,7 @@ export default {
 		}],
 	}},
 	created:function(){ // readjson
-		$(".title-word").html(this.title)
+//		$(".title-word").html(this.title)
 		var ts = window.ts,jsondata = window.clubsdata
 		var clubs = this.clubs
 		jsondata[ts].clubs.forEach(function(club){
@@ -123,23 +105,8 @@ export default {
 				$(this).collapse('hide');
 			}
 		});
+		$("body").css("padding-top","50px")
 	},
-	methods:{
-		navbarUpdate : function(){
-			var scroll = document.documentElement.scrollTop || document.body.scrollTop
-			var navbar_top = document.getElementById("LOGO").offsetHeight
-			this.navbar_fix= scroll >= navbar_top ? "navbar-fixed-top" : ""
-
-			$("body").css("padding-top",scroll >= navbar_top ? "70px":"0")
-		}
-	},
-	mounted: function(){
-		document.addEventListener('scroll',this.navbarUpdate)
-		setInterval( this.urlUpdate , 500)
-	},
-	destroyed: function(){
-		document.removeEventListener('scroll',this.navbarUpdate)
-	}
 }
 </script>
 
