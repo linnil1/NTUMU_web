@@ -6,8 +6,8 @@
 
 <style scoped>
 #boothmap{
-	height: 80vh;
-	width: 95vw;
+	height: calc(100vh - 50px);
+	width: 100%;
 	margin: auto;
 }
 #gmap {
@@ -28,12 +28,13 @@ export default {
 	}},
 	created: function(){
 		$(".title-word").html("武聯-攤位地圖")
-	},
-	mounted: function(){
+
 		var self = this.$data;
 		var jsondata = window.clubsdata,
 			ts = window.ts,
 			clubname = window.clubname
+
+		var createMap = function() {
 
         self.map = new google.maps.Map(document.getElementById('gmap'), {
           center: {lat:jsondata[ts]['boothmap'].lat,lng:jsondata[ts]['boothmap'].lng},
@@ -85,6 +86,23 @@ export default {
 				self.lastopen = infowindow
 			});
 		})
+
+		}// createMap
+
+		var checkDefine =  function(){
+			setTimeout( function(){
+				if(typeof google !== 'undefined') {
+					createMap()
+				}else{
+					console.log("wait for load map")
+					checkDefine()
+				}},100)// settimeout
+		}
+		checkDefine()
+
+	},
+	mounted:function(){
+		window.scrollTo(0,0);// scroll to top when load
 	}
 }
 </script>

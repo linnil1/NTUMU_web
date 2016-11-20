@@ -15,30 +15,29 @@ const router = new VueRouter({
 	base: '/~b04611017',
 	routes: [ {
 		path: '/',
-		redirect: {name: 'clublist'}
+		redirect: "/club/"
     },{
 		path: '/club',
-		name: 'clublist',
-		component: require('./components/clublist.vue')
+		component: resolve => require(['./components/clublist.vue'], resolve)
     },{
 		path: '/club/:clubname',
-		component: require('./components/club.vue'),
+		component: resolve => require(['./components/club.vue'], resolve),
 		beforeEnter: function(to,from,next){
 			window.clubname = to.params.clubname
 			next()
 		}
     },{
 		path: '/countdown',
-		component: require('./components/countdown.vue')
+		component: resolve => require(['./components/countdown.vue'], resolve)
     },{
 		path: '/course',
-		component: require('./components/course.vue')
+		component: resolve => require(['./components/course.vue'], resolve)
     },{
 		path: '/boothmap',
-		component: require('./components/boothmap.vue')
+		component: resolve => require(['./components/boothmap.vue'], resolve)
     },{
 		path: '/showtime',
-		component: require('./components/showtime.vue')
+		component: resolve => require(['./components/showtime.vue'], resolve)
     }]
 })
 

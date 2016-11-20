@@ -2,7 +2,6 @@
 	<footer class="footer">
 		 <div class="container">
 		   <p >Author : linnil1 (楊氏廣法太極拳社)</p>
-		   <p >Email : linnil1.886@gmail.com</p>
 		<p >Tool : <a href="http://vuejs.org/" target="_blank">Vuejs</a>,
 				   <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> 
 		</p>

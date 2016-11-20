@@ -36,6 +36,8 @@ export default {
 		shows: []
 	}},
 	created: function(){
+		$(".title-word").html("武聯-表演時間")
+
 		var self = this.$data
 		self.shows = []
 		var jsondata = window.clubsdata,
@@ -58,8 +60,10 @@ export default {
 			else
 				self.shows[self.shows.length-1].chinese = show.name
 		})
-		$(".title-word").html("武聯-表演時間")
 	},
+	mounted:function(){
+		window.scrollTo(0,0);// scroll to top when load
+	}
 }
 
 </script>

@@ -100,6 +100,9 @@ export default {
 
 			self.clubs = clubs
 		})
+	},
+	mounted:function(){
+		window.scrollTo(0,0);// scroll to top when load
 	}
 }
 </script>

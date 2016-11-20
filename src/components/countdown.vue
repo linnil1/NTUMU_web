@@ -132,6 +132,8 @@ export default {
 		counts : []
 	}},
 	created: function(){
+		$(".title-word").html("武聯-倒數文案")
+
 		var self = this.$data
 		self.counts = []
 		var jsondata = window.clubsdata,
@@ -157,7 +159,9 @@ export default {
 			event.preventDefault();
 			$(this).ekkoLightbox();
 		})
-		$(".title-word").html("武聯-倒數文案")
+	},
+	mounted:function(){
+		window.scrollTo(0,0);// scroll to top when load
 	}
 }
 

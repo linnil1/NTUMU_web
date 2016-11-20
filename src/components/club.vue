@@ -229,6 +229,21 @@ export default {
 			width :$(".col-sm-2").width()+"px"
 		}
 		document.addEventListener('scroll',this.updatescroll)
+
+		// scroll to hash 
+		var url = window.location.hash
+		var hash = url.slice(1).match(/#.*/)
+		if(hash != null )
+		{
+			var scroll = this.scrollToId
+			// delay for build
+			setTimeout( function(){ scroll(hash[0]) },
+				2000 )
+		}
+		else{
+			window.scrollTo(0,0);// scroll to top when load
+		}
+		
 	},
 	methods:{
 		sidebarCollapse : function(){},
@@ -250,7 +265,6 @@ export default {
 		},
 		updatescroll : function(){
 			var scroll = document.documentElement.scrollTop || document.body.scrollTop
-
 			// sidebar link active or not
 			for(var i in this.main_intros){
 				var intro = this.main_intros[i]
@@ -261,7 +275,13 @@ export default {
 					break;
 				}
 			}
-
+		},
+		scrollToId : function(hash){
+			if(hash){ 
+				$('html, body').animate({
+					scrollTop: $(decodeURI(hash)).offset().top
+				},1000);
+			}
 		}
 	},
 	watch: {
@@ -272,12 +292,7 @@ export default {
 				window.clubname = to.params.clubname 
 				this.createfunc()
 			}
-			if(to.hash && to.hash.indexOf('%')<0 ){ 
-//				url enocde will cause syntax error
-				$('html, body').animate({
-					scrollTop: $(to.hash).offset().top
-				},1000);
-			}
+			this.scrollToId(to.hash)
 		}
 	},
 	destroyed: function(){

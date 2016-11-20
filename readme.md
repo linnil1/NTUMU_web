@@ -44,6 +44,7 @@ build : ` npm run build `
 
 ```
 static
+├ permanent_logo.ico
 └── img
     ├── 105_1_logo.png
     ├── clublogo
@@ -57,5 +58,10 @@ static
 src/assets
 └── allclubs.json
 ```
+Remind : the picture **should** shrink 
+
+You can use [https://tinypng.com/](https://tinypng.com/)
+
+Remember to put .ico in root
 
 

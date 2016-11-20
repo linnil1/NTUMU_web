@@ -247,6 +247,9 @@ export default {
 			self.showclub = clubs
 		})
 	},
+	mounted:function(){
+		window.scrollTo(0,0);// scroll to top when load
+	},
 	computed: {
 		sortedshowday: function(){
 			return this.$data.showday.sort(function(a,b){return a-b})
