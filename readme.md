@@ -43,17 +43,19 @@ build : ` npm run build `
 # put your asset
 
 ```
+favicon.ico
 static
-├ permanent_logo.ico
+├ logo 
+├   └ xxx.png
 └── img
     ├── 105_1_logo.png
     ├── clublogo
-    │   ├── 105_1_logo_*.png
+    │   └── 105_1_logo_*.png
     ├── countdown
-    │   └── 105_1_countdown_*.jpg
+    │   ├── 105_1_count*_*.jpg
+    │   └── 105_1_count*_*_full.jpg
     ├── permanent_logo.png
-    ├── permanent_logo_small.png
-    └── showtime.jpg
+    └── permanent_logo_small.png
 
 src/assets
 └── allclubs.json

@@ -5,10 +5,22 @@ Wanted clubs data (json)
     latest: "105-1",
     "105-1":{ #version
         clubs : [""], #clubs name
-        countdown: [{src,title,desp}] , #countdown 
-        showtime:[ {time,clubname,title} ] , 
-        boothmap : {}  # have not think yet
         logo: "", 
+        showtime:{
+            title: 2015/12/4,
+            desp: where is the stage,
+            shows:[ {time,clubname,title},... ]  
+        }
+        countdown:{
+            title: the show is waiting for you,
+            desp: 
+            counts:[ {name,title,src,fullsrc,desp},...]
+        }
+        boothmap : {
+            lat: 
+            log:
+            zoom:
+            maps:[{name,lon,lat,num},...]}
     },
 
     "YangTai": { #clubs name
@@ -33,17 +45,7 @@ Wanted clubs data (json)
         }],
 
         intro: [{ts,intro=[ {
-            id : "short_intro",
-            name: "簡介",
-            content: ["first","second"], #each pargraph a line 
-            },{
-            id : "course_intro",
-            name: "教學內容",
-            content: [ #each pargraph a line 
-                    "鄭子太極37式拳架",
-                    "熊經、鳥伸等基本養生功"]
-            },{
-                id: "qa",
+                id: "qa",  ## qa is be special parsed
                 name: "Q-A",
                 content:[{
                     q: "question？",
@@ -53,9 +55,7 @@ Wanted clubs data (json)
             },{id,name,content} # otherwise content should be html
             ]}],  #sorted latest is first
 
-        longintro: [ {ts,intro=""} ] #i have not do this yet intro may be html
     }
-    
 }
 """
 
@@ -65,7 +65,10 @@ import csv
 import sys
 import os.path
 from pprint import pprint
-import markdown2 as md
+import markdown2 
+
+def markdown(data):
+    return markdown2.markdown(data, extras=["tables","cuddled-lists"])
 
 def tsFind(data,key,ts):
     if not data.get(key):
@@ -139,7 +142,7 @@ a line for separte each club
             if row[4]:
                 logo= tsFind(clubdict,'logo',ts)
                 # last modified time append 
-                logo['src'] = row[4]+'?'+str(os.path.getmtime("../img/clublogo/"+row[4]))
+                logo['src'] = row[4]
 
             #time\nplace\ntitle\n, .... #for course
             def courseRead(name):
@@ -166,39 +169,34 @@ a line for separte each club
             # short_intro course_intro q\na\n... 
             row = cf.__next__()
             intro = tsFind(clubdict,'intro',ts)
-            intro['intro'] = [{
-                'id' : "short_intro",
-                'name' : "簡介",
-                'content' : list(filter(None,row[0].split('\n')))
-            },{
-                'id' : "course_intro",
-                'name' : "教學內容",
-                'content' : list(filter(None,row[1].split('\n')))
-            }]
+            intro['intro'] = []
             
-            qas = list(filter(None,row[2].split('\n')))
-            qalist = []
-            for line in range(0,len(qas),2):
-                qalist.append({
-                    'q':qas[line][1:],  #remove Q A
-                    'a':qas[line+1][1:]
-                })
-
-            intro['intro'].append({
-                'id' : "qa",
-                'name' : "Q-A",
-                'content' : qalist
-            })
-
             # other desp should be markdown format
-            for i in range(3,len(row)):
+            for i in range(0,len(row)):
                 if row[i].strip() == "" :
                     continue;
-                rowtitle = row[i].split("\n")[0]
+                rowtitle = row[i].split("\n")[0].strip()
+                # QA
+                if rowtitle == "QA":
+                    qas = list(filter(None,row[i].split('\n')[1:]))
+                    qalist = []
+                    for line in range(0,len(qas),2):
+                        qalist.append({
+                            'q':qas[line][1:],  #remove Q A
+                            'a':qas[line+1][1:]
+                        })
+
+                    intro['intro'].append({
+                        'id' : "qa",
+                        'name' : "Q-A",
+                        'content' : qalist
+                    })
+                    continue
+
                 intro['intro'].append({
                     'id' : rowtitle,
                     'name' : rowtitle,
-                    'content' : md.markdown(row[i][row[i].find('\n')+1:])
+                    'content' : markdown(row[i][row[i].find('\n')+1:])
                 })
 
 
@@ -220,18 +218,17 @@ a line for separte each club
 def commonUpdate(ts,filename):
     """ 
 csv data
-countdown
+showtime title desp
 name title src desp
 ...
 
-booth
+booth lat lon zoom
 name lonlat number
 ...
 
-name
-time name title
+countdown title desp
+name title src fullsrc desp
 ...
-
     """
     want = json.loads(open("allclubs.json").read())
     with open(filename,newline='') as f:
@@ -286,9 +283,9 @@ time name title
             want[ts]['countdown']['counts'].append({
                 'name': count[0],
                 'title': count[1],
-                'src' : count[2] +'?'+str(os.path.getmtime("../img/countdown/"+count[2])),
+                'src' : count[2],
                 'fullsrc' : count[3],
-                'desp': "<br>".join(count[4].split("\n"))
+                'desp': markdown(count[4])
             })
     
     want[ts]['logo'] = ts+"_logo.png"

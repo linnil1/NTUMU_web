@@ -61,6 +61,8 @@
 	text-align:center;
 }
 
+
+
 .countdown-all {
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
@@ -129,6 +131,8 @@ import lightbox from 'ekko-lightbox'
 export default {
 	name: 'countdown',
 	data(){ return {
+		title : "",
+		desp  : "",
 		counts : []
 	}},
 	created: function(){
@@ -140,9 +144,9 @@ export default {
 			ts = window.ts,
 			clubname = window.clubname
 
-		jsondata[ts]['countdown'].forEach( function(count){
-			if(self.counts.length == 4) // unfinished
-				return 0;
+		self.title = jsondata[ts]['countdown']['title']
+		self.desp  = jsondata[ts]['countdown']['desp']
+		jsondata[ts]['countdown']['counts'].forEach( function(count){
 			var jdata = jsondata[count.name]
 			self.counts.push( {
 				name : count.name,
@@ -162,6 +166,9 @@ export default {
 	},
 	mounted:function(){
 		window.scrollTo(0,0);// scroll to top when load
+	},
+	destroyed:function(){
+		$(document).undelegate('*[data-toggle="lightbox"]','click')
 	}
 }
 
