@@ -9,8 +9,8 @@ import markdown2
 #Wanted clubs data 
 #JSON format
 {
-    latest: "105-1",
-    "105-1":{ #version
+    latest: "105_1",
+    "105_1":{ #version
         clubs : [""], #clubs name
         logo: "", 
         showtime:{
@@ -35,8 +35,8 @@ import markdown2
         chinese: "",
         english: "",
         logo: src ,  #newest logo 
-        latest: "105-1", 
-        105-1:{
+        latest: "105_1", 
+        105_1:{
             logo : src,
             chinese: "",
             english: "",
@@ -119,6 +119,11 @@ a line for separte each club
             # update if it is newest data
             if not want[name].get("latest") or want[name]["latest"] <= ts:
                 want[name].update(base_data)
+
+            want[name]['version'] = want[name].get('version',[])
+            if ts not in want[name]['version']:
+                want[name]['version'].append(ts)
+                want[name]['version'].sort() 
             clubdict = want[name][ts] = dict(base_data) #copy
 
             # Second Line 
@@ -286,9 +291,9 @@ name title src fullsrc desp
 def checkPrint(): 
     want = json.load(open("./allclubs.json"))
     pprint(want['YangTai'])
-    pprint(want['105-1'])
+    pprint(want['105_1'])
 
-#clubUpdate("105-1","105_1_club.csv")
-#commonUpdate("105-1","105_1_common.csv")
-#checkPrint()
+clubUpdate("105_10","105_1_club.csv")
+commonUpdate("105_10","105_1_common.csv")
+checkPrint()
 

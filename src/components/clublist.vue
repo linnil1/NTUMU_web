@@ -94,7 +94,7 @@ export default {
 			clubs.push({
 				chinese : jdata.chinese,
 				name    : clubname,
-				logo_src :  "./static/img/clublogo/"+jdata.logo[0].src,
+				logo_src :  "./static/img/clublogo/"+jdata.logo,
 				english : jdata.english
 			})
 

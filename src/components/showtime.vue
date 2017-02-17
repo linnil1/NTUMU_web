@@ -55,7 +55,7 @@ export default {
 			var jdata = jsondata[show.name]
 			if(jdata){
 				self.shows[self.shows.length-1].chinese = jdata.chinese
-				self.shows[self.shows.length-1].logo_src =  "./static/img/clublogo/"+jdata.logo[0].src
+				self.shows[self.shows.length-1].logo_src =  "./static/img/clublogo/"+jdata.logo
 			}
 			else
 				self.shows[self.shows.length-1].chinese = show.name

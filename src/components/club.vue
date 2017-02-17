@@ -5,6 +5,12 @@
 				<div v-bind:style="sidebar_style" class="sidebar"  id="sidebar_id">
 					<img class="img-responsive" v-if="logo_src" v-bind:src="logo_src" alt="club_logo"> 
 					<h1> {{chinese}} </h1>
+					<p> 版本
+						<select v-model="ts">
+							<option v-for="ver in version" v-bind:selected="ts == ver">
+								{{ver}}</option> 
+						</select>
+					<p>
 					<ul>
 						<li v-for="intro in main_intros">
 							<router-link v-bind:to="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''" >{{intro.name}}</router-link>
@@ -215,11 +221,13 @@ export default {
 		english: "",
 		courses : [],
 		welcomes: [],
+		ts: "",
+		version : [],
 		main_intros : [],
 		logo_src : ""
 	}},
 	created: function(){
-		this.createfunc() // ugly but work beacuse router won't change 
+		this.$data.ts = window.ts // ugly but work beacuse router won't change 
 	},
 	mounted: function(){
 		//sidebar
@@ -249,19 +257,29 @@ export default {
 		sidebarCollapse : function(){},
 		createfunc : function(){
 			var jsondata = window.clubsdata,
-				ts = window.ts,
 				clubname = window.clubname
-			console.log(clubname)
 			var data = this.$data
-			var club = jsondata[clubname]
-			data.info = club.info[0]
-			data.main_intros = club.intro[0].intro
+			var club = jsondata[clubname], error=false
+			console.log(clubname)
+			ts = data.ts
+			console.log(ts)
+			data.version = club.version
+			if( club.version.indexOf(ts) == -1 ){
+				console.log("error Page")
+				error=true
+			}
+			else
+				club = club[ts]
 			data.chinese = club.chinese
 			data.english = club.english
-			data.courses = club.course[0].courses
-			data.welcomes= club.welcome[0].courses
-			data.logo_src =  "./static/img/clublogo/"+club.logo[0].src
+			data.logo_src =  "./static/img/clublogo/"+club.logo
 			$(".title-word").html(data.chinese)
+			if(error)
+				return 
+			data.courses = club.course
+			data.welcomes= club.welcome
+			data.info    = club.info
+			data.main_intros = club.intro
 		},
 		updatescroll : function(){
 			var scroll = document.documentElement.scrollTop || document.body.scrollTop
@@ -285,6 +303,9 @@ export default {
 		}
 	},
 	watch: {
+		ts: function(){
+			this.createfunc()
+		},
 		'$route' (to, from) {
 			console.log(to)
 			if(window.clubname != to.params.clubname)

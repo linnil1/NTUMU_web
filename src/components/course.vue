@@ -234,7 +234,7 @@ export default {
 			clubs.push(clubname)
 						
 
-			club.course[0].courses.forEach(function(cour){
+			club[ts].course.forEach(function(cour){
 				var timearr = cour['time'].split(',')
 				events[ weekGet( timearr[0] ) ].push({
 						style  : intervalGet(timearr[1],self.timepx),
