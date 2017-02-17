@@ -1,6 +1,13 @@
-"""
-Wanted clubs data (json)
+import json
+import csv
+import sys
+import os.path
+from pprint import pprint
+import markdown2 
 
+"""
+#Wanted clubs data 
+#JSON format
 {
     latest: "105-1",
     "105-1":{ #version
@@ -27,24 +34,26 @@ Wanted clubs data (json)
         name : "YangTai", #same as key
         chinese: "",
         english: "",
-        logo: [ {src,ts} ] ,  #sorted latest is first
-        course:[
-            {ts,courses[{ title,time,place}]}  #course data
-            ],  #sorted latest is first
-        welcome: [{}], #same as course
-
-        info: [{
-            president: "范思晴",
-            email : "taida.taichi@gmail.com",
-            blog : "taida-taichi.blogspot.com",
-            fb : {
-                    name : "台大太極拳社 NTU Taichi Club",
-                    link : "https://www.facebook.com/台大劍道社-粉絲團-295543953792001/"
+        logo: src ,  #newest logo 
+        latest: "105-1", 
+        105-1:{
+            logo : src,
+            chinese: "",
+            english: "",
+            course:[
+                { title,time,place}  #course data
+            ],
+            welcome: [{}], #same as course
+            info: {
+                president: "范思晴",
+                email : "taida.taichi@gmail.com",
+                blog : "taida-taichi.blogspot.com",
+                fb : {
+                        name : "台大太極拳社 NTU Taichi Club",
+                        link : "https://www.facebook.com/4/"
+                },
             },
-            ts : "105-1" #sorted latest is first
-        }],
-
-        intro: [{ts,intro=[ {
+            intro: [{
                 id: "qa",  ## qa is be special parsed
                 name: "Q-A",
                 content:[{
@@ -52,42 +61,32 @@ Wanted clubs data (json)
                     a: "answer。"
 			}
                     ]
-            },{id,name,content} # otherwise content should be html
-            ]}],  #sorted latest is first
-
+                },
+                {id,name,content} # otherwise content should be html
+            ]
+        }
     }
 }
 """
 
-
-import json
-import csv
-import sys
-import os.path
-from pprint import pprint
-import markdown2 
-
 def markdown(data):
     return markdown2.markdown(data, extras=["tables","cuddled-lists"])
 
-def tsFind(data,key,ts):
-    if not data.get(key):
-        data[key] = []
-    allts = data[key]
-    for i in allts:
-        if(i['ts'] == ts ):
-            return i
-    allts.insert(0,{'ts':ts})
-    return allts[0]
-
-def build(ts):
-    want = {
-        'latest' : ts,
-        ts:{'clubs':[]}
-    }
-    open("allclubs.json","w").write(json.dumps(want))
 
 def clubUpdate(ts,filename):
+    """ Parse club data csv to json format file """
+
+    # open data or open blank data
+    if os.path.isfile("./allclubs.json"):
+        want = json.load(open("./allclubs.json"))
+    else:
+        want = {'latest':ts}
+
+    # Overwrite data if exist
+    want['latest'] = max(want['latest'], ts)
+    want[ts] = want.get(ts,{})
+    want[ts]['clubs'] = []
+
     """ csv data
 chinese english xxxx name
 president email blog fb logo xx
@@ -96,126 +95,120 @@ time\nplace\ntitle\n, .... #for welcome
 short_intro course_intro q\na\n ... (title content)
 a line for separte each club
     """
-    want = json.loads(open("allclubs.json").read())
-    if ts > want['latest'] :
-        want['latest'] = ts
-        want[ts] = {}
-    want[ts]['clubs'] = []
-
     with open(filename,newline='') as f:
         cf = csv.reader(f)
-        for i in range(6):  # for header
-            cf.__next__()
+        #Ignore Header
+        for i in range(6):
+            next(cf)
+
+        #Each club
         while True:
-            row = cf.__next__()
-
-            #name
-            name = row[3]
-            print(name)
-            if not want.get(name):
-                want[name] = {}
-            clubdict = want[name]
+            # First Line 
+            # chinese english xxxx name
+            row = next(cf)
+            name = row[3].strip()
+            print("Now Parsing :" + name)
+            want[name] = want.get(name, {})
             want[ts]['clubs'].append(name)
+            base_data = { 
+                    'name': name, 
+                    'chinese': row[0].strip(),
+                    'english': row[1].strip(),
+                    'latest': ts
+                }
+            # update if it is newest data
+            if not want[name].get("latest") or want[name]["latest"] <= ts:
+                want[name].update(base_data)
+            clubdict = want[name][ts] = dict(base_data) #copy
 
-            #chinese english xxxx name
-            clubdict.update({ 
-                'name' : name, 
-                'chinese' : row[0],
-                'english' : row[1]
-            })
-
-            #president email blog fb logo xx
-            row = cf.__next__()
-            info = tsFind(clubdict,'info',ts)
-            info.update({
-                    'president' : row[0],
-                    'email' : row[1],
-                    'blog' : row[2],
+            # Second Line 
+            # president email blog fb logo xx
+            row = next(cf)
+            info = clubdict['info'] = {
+                    'president' : row[0].strip(),
+                    'email' : row[1].strip(),
+                    'blog' : row[2].strip(),
                     'fb': {},
-            })
-            if row[3]:
-                line = row[3].split('\n')
-                info['fb']['name'] = line[0]
+            }
+            if row[3]: #fb
+                line = row[3].strip().split('\n')
+                info['fb']['name'] = line[0].strip()
                 if len(line) > 1:
-                    info['fb']['link'] = line[1]
-            
-            if row[4]:
-                logo= tsFind(clubdict,'logo',ts)
-                # last modified time append 
-                logo['src'] = row[4]
+                    info['fb']['link'] = line[1].strip()
+            if row[4]: #logo
+                clubdict['logo'] = row[4].strip()
+                if want[name]['latest'] <= ts:
+                    want[name]['logo'] = clubdict['logo']
 
-            #time\nplace\ntitle\n, .... #for course
-            def courseRead(name):
-                row = cf.__next__()
-                course = tsFind(clubdict,name,ts)
-                course['courses'] = []
+            # Third Line 
+            # time\nplace\ntitle\n, .... #for course
+            def courseRead(course_name):
+                row = next(cf)
+                course = clubdict[course_name] = []
                 for c in row:
-                    nowc = {}
-                    c = [cl for cl in c.split('\n') if cl.strip()]
-                    if len(c) < 2:
-                        if c:
-                            print(c)
-                            print("course err")
+                    c = list(filter(lambda a:a.strip(), c.strip().split('\n')))
+                    if not c: #empty
                         continue
-                    if len(c) >= 3:
-                        nowc['title'] = c[2]
-                    nowc['time'] = c[0]
-                    nowc['place'] = c[1]
-                    course['courses'].append(nowc)
-
+                    if len(c) < 2:
+                        print("Wrong : " + str(c))
+                        continue
+                    nowc = {}
+                    nowc['time'] = c[0].strip()
+                    nowc['place'] = c[1].strip()
+                    if len(c) >= 3 and c[2].strip():
+                        nowc['title'] = c[2].strip()
+                    course.append(nowc)
             courseRead("course")
             courseRead("welcome")
             
+            # Fourth Line 
             # short_intro course_intro q\na\n... 
-            row = cf.__next__()
-            intro = tsFind(clubdict,'intro',ts)
-            intro['intro'] = []
-            
-            # other desp should be markdown format
-            for i in range(0,len(row)):
-                if row[i].strip() == "" :
+            rows = next(cf)
+            intro = clubdict['intro'] = []
+            for row in rows:
+                row = row.strip()
+                if not row:
                     continue;
-                rowtitle = row[i].split("\n")[0].strip()
-                # QA
-                if rowtitle == "QA":
-                    qas = list(filter(None,row[i].split('\n')[1:]))
+                rowtitle = row.split("\n")[0].strip()
+                if rowtitle == "QA": # QA
+                    qas = list(filter(None,row.split('\n')[1:]))
                     qalist = []
                     for line in range(0,len(qas),2):
-                        qalist.append({
-                            'q':qas[line][1:],  #remove Q A
+                        qalist.append({ #remove Q A
+                            'q':qas[line][1:],
                             'a':qas[line+1][1:]
                         })
-
-                    intro['intro'].append({
+                    intro.append({
                         'id' : "qa",
                         'name' : "Q-A",
                         'content' : qalist
                     })
                     continue
-
-                intro['intro'].append({
+                intro.append({
                     'id' : rowtitle,
                     'name' : rowtitle,
-                    'content' : markdown(row[i][row[i].find('\n')+1:])
+                    'content' : markdown(row[row.find('\n')+1:])
                 })
 
-
-            #remove blank content 
-            intro['intro'][:] = [ it for it  in intro['intro'] if it['content']]
-
-            #a line for separte each club
+            # Blank Line for separation
             try:
-                row = cf.__next__()
+                next(cf)
             except:
                 break;
 
             #pprint(clubdict)
 
     want[ts]['clubs'].sort()
-    open("allclubs.json","w").write(json.dumps(want))
+    json.dump(want, open("./allclubs.json","w"))
 
 
 def commonUpdate(ts,filename):
+    # open data or open blank data
+    if os.path.isfile("./allclubs.json"):
+        want = json.load(open("./allclubs.json"))
+    else:
+        want = {'latest':ts, ts:{}}
+
     """ 
 csv data
 showtime title desp
@@ -230,7 +223,6 @@ countdown title desp
 name title src fullsrc desp
 ...
     """
-    want = json.loads(open("allclubs.json").read())
     with open(filename,newline='') as f:
         cf = list(csv.reader(f))
 
@@ -245,7 +237,7 @@ name title src fullsrc desp
             while index < len(cf) and cf[index][0] == '':
                 index += 1
 
-        #showtime
+        print("showtime")
         want[ts]['showtime'] = {
                 'title' : data['showtime'][0][1],
                 'where' : data['showtime'][0][2],
@@ -258,7 +250,7 @@ name title src fullsrc desp
                 'title': show[2]
             })
 
-        #map
+        print("map")
         want[ts]['boothmap'] = {
                 'lat':float(data['booth'][0][1]),
                 'lng':float(data['booth'][0][2]),
@@ -273,7 +265,7 @@ name title src fullsrc desp
                 'num': booth[2]
             })
         
-        #countdown
+        print("countdown")
         want[ts]['countdown'] = {
                 'title' : data['countdown'][0][1],
                 'desp' : data['countdown'][0][2],
@@ -289,33 +281,14 @@ name title src fullsrc desp
             })
     
     want[ts]['logo'] = ts+"_logo.png"
-    for i in want[ts]:
-        print(i)
-    open("allclubs.json","w").write(json.dumps(want))
+    json.dump(want, open("./allclubs.json","w"))
 
+def checkPrint(): 
+    want = json.load(open("./allclubs.json"))
+    pprint(want['YangTai'])
+    pprint(want['105-1'])
 
-myarg = sys.argv[1:]
-print(myarg)
-if len(myarg) == 0 :
-    raise TypeError("no operation")
-if len(myarg) == 1 :
-    raise TypeError("no ts")
-if myarg[0] == "build":
-    build(myarg[1])
-    exit()
-if len(myarg) == 2 :
-    raise TypeError("no path")
-
-if myarg[0] == "clubUpdate":
-    clubUpdate(myarg[1],myarg[2])
-elif myarg[0] == "commonUpdate":
-    commonUpdate(myarg[1],myarg[2])
-else:
-    raise TypeError("error operation")
-    
-""" example
-build("105_1")
-clubUpdate("105_1","105_1_club.csv")
-commonUpdate("105_1","105_1_common.csv")
-"""
+#clubUpdate("105-1","105_1_club.csv")
+#commonUpdate("105-1","105_1_common.csv")
+#checkPrint()
 
