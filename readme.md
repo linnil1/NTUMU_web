@@ -7,40 +7,32 @@ NTU Marital Art Union
 homepage.ntu.edu.tw/~b04611017/
 
 
-# build data from csv
+# build data from csv to json
 
-transfer your csv data to json by python
+transfer your csv data to json by python3
 
-## build
+put your csv in `./data/` with name 
+`xxxxx_club.csv`(for club data) or 
+`xxxxx_common.csv`(for boothmap, countdown showtime data)
 
-` python3 dataTojson.py build `
+`xxxxx` is version number. Like: `105_1`
 
-## update club
+and Run 
 
-` python3 dataTojson.py clubUpdate yourcsv.csv `
-
-## update common thing 
-
-like. boothmap, countdown, showtime
-
-` python3 dataTojson.py commonUpdate yourcsv.csv `
+```
+pip3 install markdown2 --user
+python3 data/dataTojson.py
+```
 
 all the format spec are written in dataTojson.py
 
-and the output is allclubs.json
+# build the static web
 
+I use 
+[vue-cli](https://github.com/vuejs/vue-cli) 
+[vue-router](https://github.com/vuejs/vue-router) to do that
 
-# build the web
-
-I use [vue-cli](https://github.com/vuejs/vue-cli) [vue-router](https://github.com/vuejs/vue-router) to do that
-
-build : ` npm init `
-
-run   : ` npm run dev `
-
-build : ` npm run build `
-
-# put your asset
+## put your asset like below
 
 ```
 favicon.ico
@@ -56,9 +48,6 @@ static
     │   └── 105_1_count*_*_full.jpg
     ├── permanent_logo.png
     └── permanent_logo_small.png
-
-src/assets
-└── allclubs.json
 ```
 Remind : the picture **should** shrink 
 
@@ -66,4 +55,15 @@ You can use [https://tinypng.com/](https://tinypng.com/)
 
 Remember to put .ico in root
 
+## build it
+
+init : ` npm install`
+
+build : ` npm run build `
+
+You can also run ` npm run dev ` to see if it is ok
+
+After build it, all files are in `dist/`
+
+and upload to your server
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="markdown-body container-fluid">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-sm-2">
 				<div v-bind:style="sidebar_style" class="sidebar"  id="sidebar_id">
@@ -44,22 +44,9 @@
 							<div class="answer">   {{qa.a}} </div>
 						</span >
 					</span>
-					<span v-else> <!-- why not else if -->
-						<ul v-if="intro.id=='course_intro'">
-							<li v-for="courselist in intro.content">
-								{{courselist}}
-							</li>
-						</ul>
-						<div v-else> <!-- why not else if -->
-							<div v-if='intro.id=="short_intro"'>
-								<p v-for="p in intro.content" style="text-indent:20px">{{p}}</p>
-							</div>
-
-							<div v-else v-html="intro.content"></div>
-						</div>
-					</span>
-					<!-- <br><br> --> 
+					<div v-else v-html="intro.content" class="markdown-body"></div>
 				</div>
+				<br/> <br/> <!-- blank for the bottom -->
 			</div>
 
 			<div class="col-sm-4">
@@ -93,7 +80,7 @@
 	</div>
 </template>
 
-<style src="./../../node_modules/github-markdown-css/github-markdown.css" ></style>
+<style src="github-markdown-css"></style>
 <style scoped>
 #qa{
 	overflow: auto;

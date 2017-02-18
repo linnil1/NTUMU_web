@@ -1,6 +1,5 @@
 <template>
 	<div class="container-fluid" id="countdown" style="background-color:#e9ebee">
-		<!-- <script src="js/ekko-lightbox.js"></script> -->
 		<div class="row">
 			<div class="col-sm-10 col-sm-offset-1" style="padding:0">
 
@@ -160,7 +159,6 @@ export default {
 			})
 		})
 
-		//import lightbox from 'ekko-lightbox'
 		$(document).delegate('*[data-toggle="lightbox"]','click', function(event) {
 			event.preventDefault();
 			$(this).ekkoLightbox();

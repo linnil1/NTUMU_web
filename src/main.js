@@ -4,12 +4,12 @@ Vue.use(VueRouter)
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-var now = "105_1"
-var versions = ["105_1"] // should be sorted
+var data = require('./assets/allclubs.json')
+var now = data.latest
+
 const store = new Vuex.Store({
 	state: {
-		clubsdata  : require('./assets/allclubs.json'),
-		'versions' : versions,
+		clubsdata  : data,
 		ver        : now
 	},
 	mutations: {
@@ -26,32 +26,32 @@ const router = new VueRouter({
 		path: '/',
 		redirect: '/'+now+'/club' //why cannot ./105_1/
     },{
-		path: '/:ver('+versions.join('|')+')',
+		path: '/:ver('+data.version.join('|')+')',
 		component: {'template':'<router-view></router-view>'},
 		children:[ {
 			path: 'club',
 			props: true,
-			component: resolve => require(['./components/clublist.vue'], resolve)
+			component: require('./components/clublist.vue')
 		},{
 			path: 'club/:clubname',
 			props: true,
-			component: resolve => require(['./components/club.vue'], resolve)
+			component: require('./components/club.vue')
 		},{
 			path: 'countdown',
 			props: true,
-			component: resolve => require(['./components/countdown.vue'], resolve)
+			component: require('./components/countdown.vue')
 		},{
 			path: 'course',
 			props: true,
-			component: resolve => require(['./components/course.vue'], resolve)
+			component: require('./components/course.vue')
 		},{
 			path: 'boothmap',
 			props: true,
-			component: resolve => require(['./components/boothmap.vue'], resolve)
+			component: require('./components/boothmap.vue')
 		},{
 			path: 'showtime',
 			props: true,
-			component: resolve => require(['./components/showtime.vue'], resolve)
+			component: require('./components/showtime.vue')
 		},{
 			path: '*',
 			redirect: "club"

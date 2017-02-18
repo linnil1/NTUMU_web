@@ -1,7 +1,8 @@
 import json
 import csv
 import sys
-import os.path
+import os
+from shutil import copyfile
 from pprint import pprint
 import markdown2 
 
@@ -10,6 +11,7 @@ import markdown2
 #JSON format
 {
     latest: "105_1",
+    version: ["105_1"],
     "105_1":{ #version
         clubs : [""], #clubs name
         logo: "", 
@@ -36,6 +38,7 @@ import markdown2
         english: "",
         logo: src ,  #newest logo 
         latest: "105_1", 
+        version: ["105_1"],
         105_1:{
             logo : src,
             chinese: "",
@@ -73,14 +76,16 @@ def markdown(data):
     return markdown2.markdown(data, extras=["tables","cuddled-lists"])
 
 
-def clubUpdate(ts,filename):
+def clubUpdate(ts,filename): 
     """ Parse club data csv to json format file """
-
     # open data or open blank data
-    if os.path.isfile("./allclubs.json"):
-        want = json.load(open("./allclubs.json"))
+    if os.path.isfile(dataname):
+        want = json.load(open(dataname))
     else:
-        want = {'latest':ts}
+        want = {'latest':ts, 'version':[ts]}
+    if ts not in want['version']:
+        want['version'].append(ts)
+        want['version'].sort()
 
     # Overwrite data if exist
     want['latest'] = max(want['latest'], ts)
@@ -204,15 +209,19 @@ a line for separte each club
             #pprint(clubdict)
 
     want[ts]['clubs'].sort()
-    json.dump(want, open("./allclubs.json","w"))
+    json.dump(want, open(dataname,"w"))
 
 
 def commonUpdate(ts,filename):
     # open data or open blank data
-    if os.path.isfile("./allclubs.json"):
-        want = json.load(open("./allclubs.json"))
+    if os.path.isfile(dataname):
+        want = json.load(open(dataname))
     else:
-        want = {'latest':ts, ts:{}}
+        want = {'latest':ts, 'version':[ts]}
+    if ts not in want['version']:
+        want['version'].append(ts)
+        want['version'].sort()
+    want[ts] = want.get(ts,{})
 
     """ 
 csv data
@@ -286,14 +295,31 @@ name title src fullsrc desp
             })
     
     want[ts]['logo'] = ts+"_logo.png"
-    json.dump(want, open("./allclubs.json","w"))
+    json.dump(want, open(dataname,"w"))
 
 def checkPrint(): 
-    want = json.load(open("./allclubs.json"))
+    want = json.load(open(dataname))
     pprint(want['YangTai'])
-    pprint(want['105_1'])
 
-clubUpdate("105_10","105_1_club.csv")
-commonUpdate("105_10","105_1_common.csv")
-checkPrint()
+dataname = "./data/allclubs.json"
+dirname = './data/'
+
+def autoAdd():
+    # Add csv in the folder
+    files = [ f for f in os.listdir(dirname) if f.endswith('.csv') ] 
+    for f in files:
+        ver = f[:5] # may be 5 char 
+        print("Now Reading... :"+f)
+        if f[6:-4] == "club":
+            clubUpdate(ver,dirname+f)
+        elif f[6:-4] == "common":
+            commonUpdate(ver,dirname+f)
+        else:
+            raise ValueError("strange Name")
+
+    # Move
+    copyfile(dataname,'./src/assets/allclubs.json')
+    print("Move to ./src/assets/allclubs.json")
+
+autoAdd()
 

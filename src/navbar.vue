@@ -108,10 +108,10 @@ export default {
 		}],
 	}},
 	created:function(){
-		this.versions = this.$store.state.versions
 //		$(".title-word").html(this.title)
 		var jsondata = this.$store.state.clubsdata,
 			ts = this.ts
+		this.versions = jsondata.version
 		var clubs = this.clubs
 		jsondata[ts].clubs.forEach(function(club){
 			clubs.push({
