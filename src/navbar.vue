@@ -2,7 +2,6 @@
 	<nav class="navbar navbar-default navbar-fixed-top" id="navbar">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<button id="sidebar_collapse_btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar_id" v-if="clubhtml">導覽</button>
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -15,18 +14,38 @@
 			</div>
 			<div class="collapse navbar-collapse" id="nav-collapse">
 				<ul class="nav navbar-nav"  >
+					<!-- Narbar -->
 					<li v-for="nav in nav_bar">
-						<router-link v-bind:to="nav.url">{{nav.name}}</router-link>
+						<router-link :to="'/'+ts+nav.url"
+							>{{nav.name}}</router-link>
 					</li>
+					<!-- Club -->
 					<li class="dropdown">
-						<router-link class="dropdown-toggle" to="/club">{{club}}<b class="caret"></b></router-link>
+						<router-link class="dropdown-toggle" 
+						             :to="'/'+ts+'/club'">
+							{{club}}<b class="caret"></b></router-link>
 						<ul class="dropdown-menu grid">
 							<li v-for="club in clubs">
-								<router-link v-bind:to="club.url">{{club.name}}</router-link>
+								<router-link v-bind:to="'/'+ts+club.url">{{club.name}}</router-link>
 							</li>
 						</ul>
 					</li>
 				</ul>
+
+				<!-- Version -->
+				<form class="navbar-form navbar-right">
+					<div class="form-group">
+						<span> {{versionname}} </span>
+						<select>
+							<!-- cannot use :key = "$route.path" -->
+							<router-link v-for="ver in versions"
+						                 :to  ="urlmodify(ver)"
+										 :selected = "ver == ts"
+							             tag  ="option">
+								{{ver}}</router-link>
+						</select>
+					</div>
+				</form>
 			</div>
 		</div>
 	</nav>
@@ -66,12 +85,12 @@
 
 export default {
 	name: 'navbar',
+//	props: ['ver'],
 	data(){ return {
 		club : '社團',
 		clubs: [],
-		clubhtml: false,
-		navbar_fix: "",
-		search: 1, // never match 1
+		versionname : '版本',
+		versions : [],
 		title: "台大武術聯盟",
 		
 		nav_bar : [{
@@ -88,9 +107,11 @@ export default {
 			url: "/course" 
 		}],
 	}},
-	created:function(){ // readjson
+	created:function(){
+		this.versions = this.$store.state.versions
 //		$(".title-word").html(this.title)
-		var ts = window.ts,jsondata = window.clubsdata
+		var jsondata = this.$store.state.clubsdata,
+			ts = this.ts
 		var clubs = this.clubs
 		jsondata[ts].clubs.forEach(function(club){
 			clubs.push({
@@ -99,7 +120,7 @@ export default {
 			})
 		})
 
-		// navbar won't collapse after click
+		// navbar collapse after click
 		$(document).on('click','.navbar-collapse.in',function(e) {
 			if( $(e.target).is('a')){
 				$(this).collapse('hide');
@@ -107,6 +128,19 @@ export default {
 		});
 		$("body").css("padding-top","50px")
 	},
+	methods:{
+		// bad methods to modify version
+		urlmodify: function(v){ 
+			var s = this.$route.path
+			return '/'+v+s.slice( s.indexOf('/',1))
+		}
+	},
+	computed: {
+		ts: function(){
+			return this.$store.state.ver
+		}
+	}
+
 }
 </script>
 

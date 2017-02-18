@@ -3,7 +3,7 @@
 		<div class="row" style=" background-color: #eee;">
 			<div class="col-sm-1"></div>
 			<div class="col-sm-10">
-				<router-link class="card-horizon" v-for="club in clubs" v-bind:to="'/club/'+club.name" tag="div">
+				<router-link class="card-horizon" v-for="club in clubs" v-bind:to="'/'+ver+'/club/'+club.name" tag="div">
 						<div class="card-img">
 							<img v-bind:src="club.logo_src" alt="club_logo">
 						</div>
@@ -78,17 +78,17 @@
 
 export default {
 	name: 'clublist',
+	props: ['ver'],
 	data(){ return {
 		clubs : []
 	}},
-	created: function(){
+	methods:{
+	create: function(){
 		$(".title-word").html("武聯-一覽")
 		var self = this.$data
 		var clubs = []
-		var jsondata = window.clubsdata,
-			ts = window.ts,
-			clubname = window.clubname
-
+		var jsondata = this.$store.state.clubsdata,
+			ts = this.ver
 		jsondata[ts].clubs.forEach( function(clubname){
 			var jdata = jsondata[clubname]
 			clubs.push({
@@ -100,6 +100,14 @@ export default {
 
 			self.clubs = clubs
 		})
+	}},
+	created: function(){ // not very well methods for reused component
+		this.create()
+	},
+	watch: {
+		'$route' (to, from) {
+			this.create()
+		}
 	},
 	mounted:function(){
 		window.scrollTo(0,0);// scroll to top when load

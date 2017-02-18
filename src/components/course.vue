@@ -201,6 +201,7 @@ var pxRemove = function(text){
 
 export default {
 	name: 'course',
+	props: ['ver'],
 	data(){ return {
 		weekname: weeknames,
 		showday : [0,1,2,3,4,5,6],  //sorted
@@ -212,44 +213,6 @@ export default {
 		allevents: [],
 		wantevents : []
 	}},
-	created: function(){
-		$(".title-word").html("武聯-課表")
-
-		var events = [ [],[],[],[],[],[],[] ]
-		
-		var self = this.$data
-		var jsondata = window.clubsdata,
-			ts = window.ts,
-			clubname = window.clubname
-
-		// put data into weeks array
-		var clubs =[]
-		self.clublist = [] // bug
-		jsondata[ts].clubs.forEach(function(clubname){
-			var club = jsondata[clubname]
-			self.clublist.push( {
-				name:    clubname,
-				chinese: club.chinese
-			})
-			clubs.push(clubname)
-						
-
-			club[ts].course.forEach(function(cour){
-				var timearr = cour['time'].split(',')
-				events[ weekGet( timearr[0] ) ].push({
-						style  : intervalGet(timearr[1],self.timepx),
-						chinese: club.chinese,
-						name   : clubname,
-						course : cour
-				})
-			})
-			self.allevents = events
-			self.showclub = clubs
-		})
-	},
-	mounted:function(){
-		window.scrollTo(0,0);// scroll to top when load
-	},
 	computed: {
 		sortedshowday: function(){
 			return this.$data.showday.sort(function(a,b){return a-b})
@@ -337,7 +300,52 @@ export default {
 				this.$data.showday = []
 			if(wantstr != "day")
 				this.$data.showclub = []
+		},
+		create: function(){
+			$(".title-word").html("武聯-課表")
+
+			var events = [ [],[],[],[],[],[],[] ]
+			
+			var self = this.$data
+			var jsondata = this.$store.state.clubsdata,
+				ts = this.ver
+
+			// put data into weeks array
+			var clubs =[]
+			self.clublist = [] // bug
+			jsondata[ts].clubs.forEach(function(clubname){
+				var club = jsondata[clubname]
+				self.clublist.push( {
+					name:    clubname,
+					chinese: club.chinese
+				})
+				clubs.push(clubname)
+							
+
+				club[ts].course.forEach(function(cour){
+					var timearr = cour['time'].split(',')
+					events[ weekGet( timearr[0] ) ].push({
+							style  : intervalGet(timearr[1],self.timepx),
+							chinese: club.chinese,
+							name   : clubname,
+							course : cour
+					})
+				})
+				self.allevents = events
+				self.showclub = clubs
+			})
+		},
+	},
+	created: function(){ // not very well methods for reused component
+		this.create()
+	},
+	watch: {
+		'$route' (to, from) {
+			this.create()
 		}
-	}
+	},
+	mounted:function(){
+		window.scrollTo(0,0);// scroll to top when load
+	},
 }
 </script>

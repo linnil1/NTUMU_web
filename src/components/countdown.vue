@@ -47,7 +47,7 @@
 						</div>
 						<div class="count-data">
 							<p class="count-desp" v-html="count.desp"></p>
-							<router-link v-bind:to="'/club/'+count.name" class="btn btn-default count-btn" href="#" role="button">詳細資訊</router-link>
+							<router-link v-bind:to="'/'+ver+'/club/'+count.name" class="btn btn-default count-btn" href="#" role="button">詳細資訊</router-link>
 						</div>
 					</div>
 				</div>
@@ -130,19 +130,21 @@
 import lightbox from 'ekko-lightbox'
 export default {
 	name: 'countdown',
+	props: ['ver'],
 	data(){ return {
 		title : "",
 		desp  : "",
 		counts : []
 	}},
-	created: function(){
+	methods:{
+	create: function(){
 		$(".title-word").html("武聯-倒數文案")
+		$(document).undelegate('*[data-toggle="lightbox"]','click')
 
 		var self = this.$data
 		self.counts = []
-		var jsondata = window.clubsdata,
-			ts = window.ts,
-			clubname = window.clubname
+		var jsondata = this.$store.state.clubsdata,
+			ts = this.ver
 
 		self.title = jsondata[ts]['countdown']['title']
 		self.desp  = jsondata[ts]['countdown']['desp']
@@ -163,6 +165,14 @@ export default {
 			event.preventDefault();
 			$(this).ekkoLightbox();
 		})
+	}},
+	created: function(){ // not very well methods for reused component
+		this.create()
+	},
+	watch: {
+		'$route' (to, from) {
+			this.create()
+		}
 	},
 	mounted:function(){
 		window.scrollTo(0,0);// scroll to top when load

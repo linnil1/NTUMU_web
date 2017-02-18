@@ -22,25 +22,27 @@
 <script>
 export default {
 	name: 'boothmap',
+	props: ['ver'],
 	data(){ return {
 		map:null,
 		lastopen:null
 	}},
-	created: function(){
+	methods:{
+	create: function(){
 		$(".title-word").html("武聯-攤位地圖")
 
 		var self = this.$data;
-		var jsondata = window.clubsdata,
-			ts = window.ts,
-			clubname = window.clubname
+		var jsondata = this.$store.state.clubsdata,
+			ts = this.ver,
+			boothmap = jsondata[ts]['boothmap']
 
 		var createMap = function() {
 
         self.map = new google.maps.Map(document.getElementById('gmap'), {
-          center: {lat:jsondata[ts]['boothmap'].lat,lng:jsondata[ts]['boothmap'].lng},
-          zoom: jsondata[ts]['boothmap'].zoom
+          center: {lat:boothmap.lat,lng:boothmap.lng},
+          zoom: boothmap.zoom
         });
-		jsondata[ts]['boothmap']['maps'].forEach( function(bm){
+		boothmap['maps'].forEach( function(bm){
 			var jdata = jsondata[bm.name]
 			if( jdata){ //no stage
 				var infowindow = new google.maps.InfoWindow({
@@ -99,7 +101,14 @@ export default {
 				}},100)// settimeout
 		}
 		checkDefine()
-
+	}},
+	created: function(){ // not very well methods for reused component
+		this.create()
+	},
+	watch: {
+		'$route' (to, from) {
+			this.create()
+		}
 	},
 	mounted:function(){
 		window.scrollTo(0,0);// scroll to top when load

@@ -5,12 +5,15 @@
 				<div v-bind:style="sidebar_style" class="sidebar"  id="sidebar_id">
 					<img class="img-responsive" v-if="logo_src" v-bind:src="logo_src" alt="club_logo"> 
 					<h1> {{chinese}} </h1>
-					<p> 版本
+					<!-- <p> 版本
 						<select v-model="ts">
-							<option v-for="ver in version" v-bind:selected="ts == ver">
-								{{ver}}</option> 
+							<router-link v-for="ver in version"
+							             v-bind:to="'/'+ver+'/club/'+clubname" 
+							             v-bind:value="ver"
+							             tag="option">
+								{{ver}}</router-link> 
 						</select>
-					<p>
+					</p> -->
 					<ul>
 						<li v-for="intro in main_intros">
 							<router-link v-bind:to="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''" >{{intro.name}}</router-link>
@@ -213,6 +216,7 @@ h2 a{
 
 export default {
 	name: 'club',
+	props: ['clubname','ver'],
 	data(){ return {
 		activeid : "",
 		sidebar_style : {},
@@ -226,9 +230,6 @@ export default {
 		main_intros : [],
 		logo_src : ""
 	}},
-	created: function(){
-		this.$data.ts = window.ts // ugly but work beacuse router won't change 
-	},
 	mounted: function(){
 		//sidebar
 		this.sidebar_style = { 
@@ -255,18 +256,16 @@ export default {
 	},
 	methods:{
 		sidebarCollapse : function(){},
-		createfunc : function(){
-			var jsondata = window.clubsdata,
-				clubname = window.clubname
+		create : function(){
+			console.log(this.clubname)
+			console.log(this.ver)
 			var data = this.$data
-			var club = jsondata[clubname], error=false
-			console.log(clubname)
-			ts = data.ts
-			console.log(ts)
+			var club = this.$store.state.clubsdata[this.clubname]
+			var ts = data.ts = this.ver
 			data.version = club.version
 			if( club.version.indexOf(ts) == -1 ){
 				console.log("error Page")
-				error=true
+				return 
 			}
 			else
 				club = club[ts]
@@ -274,8 +273,6 @@ export default {
 			data.english = club.english
 			data.logo_src =  "./static/img/clublogo/"+club.logo
 			$(".title-word").html(data.chinese)
-			if(error)
-				return 
 			data.courses = club.course
 			data.welcomes= club.welcome
 			data.info    = club.info
@@ -302,26 +299,16 @@ export default {
 			}
 		}
 	},
+	created: function(){ // not very well methods for reused component
+		this.create()
+	},
 	watch: {
-		ts: function(){
-			this.createfunc()
-		},
 		'$route' (to, from) {
-			console.log(to)
-			if(window.clubname != to.params.clubname)
-			{
-				window.clubname = to.params.clubname 
-				this.createfunc()
-			}
-			this.scrollToId(to.hash)
+			this.create()
 		}
 	},
 	destroyed: function(){
 		document.removeEventListener('scroll',this.updatescroll)
 	}
 }
-
 </script>
-
-
-

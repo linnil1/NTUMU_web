@@ -30,19 +30,20 @@
 <script>
 export default {
 	name: 'showtime',
+	props: ['ver'],
 	data(){ return {
 		title: "",
 		where: "",
 		shows: []
 	}},
-	created: function(){
+	methods:{
+	create: function(){
 		$(".title-word").html("武聯-表演時間")
 
 		var self = this.$data
 		self.shows = []
-		var jsondata = window.clubsdata,
-			ts = window.ts,
-			clubname = window.clubname
+		var jsondata = this.$store.state.clubsdata,
+			ts = this.ver
 
 		self.title = jsondata[ts].showtime.title 
 		self.where = jsondata[ts].showtime.where
@@ -60,6 +61,14 @@ export default {
 			else
 				self.shows[self.shows.length-1].chinese = show.name
 		})
+	}},
+	created: function(){ // not very well methods for reused component
+		this.create()
+	},
+	watch: {
+		'$route' (to, from) {
+			this.create()
+		}
 	},
 	mounted:function(){
 		window.scrollTo(0,0);// scroll to top when load
