@@ -1,5 +1,5 @@
 <template>
-	<div class="container-fluid">
+	<div class="container-fluid" style="padding-bottom:60px">
 		<div class="row">
 			<div class="col-sm-2">
 				<div v-bind:style="sidebar_style" class="sidebar"  id="sidebar_id">
@@ -46,7 +46,6 @@
 					</span>
 					<div v-else v-html="intro.content" class="markdown-body"></div>
 				</div>
-				<br/> <br/> <!-- blank for the bottom -->
 			</div>
 
 			<div class="col-sm-4">
@@ -119,6 +118,7 @@ h2 a{
 .smallscreen img{
 	margin:10px auto;
 	max-width:300px;
+	max-width:100%;
 	max-height:300px;
 }
 .smallscreen *{
@@ -217,33 +217,9 @@ export default {
 		main_intros : [],
 		logo_src : ""
 	}},
-	mounted: function(){
-		//sidebar
-		this.sidebar_style = { 
-			position: "fixed" ,
-			top : document.getElementById("navbar").offsetHeight+"px",
-			width :$(".col-sm-2").width()+"px"
-		}
-		document.addEventListener('scroll',this.updatescroll)
-
-		// scroll to hash 
-		var url = window.location.hash
-		var hash = url.slice(1).match(/#.*/)
-		if(hash != null )
-		{
-			var scroll = this.scrollToId
-			// delay for build
-			setTimeout( function(){ scroll(hash[0]) },
-				2000 )
-		}
-		else{
-			window.scrollTo(0,0);// scroll to top when load
-		}
-		
-	},
 	methods:{
-		sidebarCollapse : function(){},
 		create : function(){
+			// normal data
 			console.log(this.clubname)
 			console.log(this.ver)
 			var data = this.$data
@@ -258,12 +234,35 @@ export default {
 				club = club[ts]
 			data.chinese = club.chinese
 			data.english = club.english
-			data.logo_src =  "./static/img/clublogo/"+club.logo
-			$(".title-word").html(data.chinese)
 			data.courses = club.course
 			data.welcomes= club.welcome
 			data.info    = club.info
-			data.main_intros = club.intro
+			data.main_intros = jQuery.extend(true, {}, club.intro); //deep copy
+			data.logo_src =  "./static/img/clublogo/"+club.logo
+			$(".title-word").html(data.chinese)
+
+			// sidebar
+			this.$nextTick(function () {
+				this.sidebar_style = { 
+					position: "fixed" ,
+					top : document.getElementById("navbar").offsetHeight+"px",
+					width :$(".col-sm-2").width()+"px"
+				}
+				document.addEventListener('scroll',this.updatescroll)
+			})
+
+			// scroll to hash 
+			var hash = this.$route.hash
+			if(hash)
+			{
+				console.log("GO TO "+hash)
+				this.$nextTick(function () {
+					this.scrollToId(hash)
+				})
+			}
+			else{
+				window.scrollTo(0,0);// scroll to top when load
+			}
 		},
 		updatescroll : function(){
 			var scroll = document.documentElement.scrollTop || document.body.scrollTop
@@ -291,6 +290,7 @@ export default {
 	},
 	watch: {
 		'$route' (to, from) {
+			document.removeEventListener('scroll',this.updatescroll)
 			this.create()
 		}
 	},

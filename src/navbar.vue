@@ -7,10 +7,10 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<router-link to="/">
+				<router-link to="/" class="navbar-brand">
 					<img src="static/img/105_1_logo.png"  height="50" alt="logo">
 				</router-link>
-				<h3 class="title-word navbar-text mobile-hide">台大武術聯盟</h3>
+				<a class="title-word navbar-brand navbar-word">台大武術聯盟</a>
 			</div>
 			<div class="collapse navbar-collapse" id="nav-collapse">
 				<ul class="nav navbar-nav"  >
@@ -62,13 +62,14 @@
 	padding: 2px ;
 	float:left;
 }
-.navbar-text {
-	display: inline-block;
-	margin: 0;
-}
 .navbar ul.grid li a{
 	display:block;
 	border:none;
+}
+.navbar-brand img{
+	position: relative;
+	top:-15px;
+	left:-15px;
 }
 @media only screen and (min-width : 768px) {
     /* Make Navigation Toggle on Desktop Hover */
@@ -79,6 +80,18 @@
 		display: none;
 	}
 }
+@media only screen and (max-width : 768px) {
+	.navbar-word{
+		display: inline-block;
+		position: relative;
+		left:-30px;
+		padding:inherit 0 inherit 0;
+		max-width: calc(100vw - 150px);/* logo 90+ button 45+ padding 30 */
+		white-space: nowrap;
+		overflow: hidden;
+	}
+}
+
 </style>
 
 <script>

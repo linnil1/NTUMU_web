@@ -1,20 +1,39 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+/* Modify from https://codyhouse.co/gem/vertical-timeline/ */
+
 /* -------------------------------- 
 
 Primary style
+Set style
 
 -------------------------------- */
-html * {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-}
 
-/*
 *, *:after, *:before {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
+#showtime{
+  background-color: #e9f0f5;
+  font-size: 20px;
+}
+
+section {
+  font-size: 100%;
+  font-family: "Droid Serif", serif;
+  color: #7f8c97;
+  background-color: #e9f0f5;
+  line-height: 1;
+}
+section * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 a {
   color: #acb7c0;
@@ -30,14 +49,55 @@ h1, h2 {
   font-family: "Open Sans", sans-serif;
   font-weight: bold;
 }
-*/
 
-#showtime{
-  font-size: 100%;
-  font-family: "Droid Serif", serif;
-  color: #7f8c97;
-  background-color: #e9f0f5;
+span{ /* don't inherit font beacuse Glyphicons */
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	vertical-align: baseline;
 }
+section, div, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, main {
+	display: block;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
 /* -------------------------------- 
 
 Modules - reusable parts of our design
@@ -46,7 +106,7 @@ Modules - reusable parts of our design
 .cd-container {
   /* this class is used to give a max-width to the element it is applied to, and center it horizontally when it reaches that max-width */
   width: 90%;
-  max-width: 1170px;
+  max-width: 600px;/*1170px;*/
   margin: 0 auto;
 }
 .cd-container::after {
@@ -63,28 +123,29 @@ Main components
 -------------------------------- */
 header {
   height: 200px;
-  line-height: 300px;
   text-align: center;
   background: #303e49;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
-header *{
-  color : white;
+header h1 {
+  color: white;
+  font-size: 30px;/*18px;*/
+  font-size: 1.5em;/*1.125rem;*/
+  line-height: 150px;
 }
-
-@media only screen and (min-width: 768px) {
-  header {
-    height: 300px;
-    line-height: 300px;
-  }
+header h2 {
+  color: white;
+  font-size: 20px;/*18px;*/
+  font-size: 1.0em;/*1.125rem;*/
+  line-height: 50px;
 }
 
 #cd-timeline {
   position: relative;
-  padding: 2em 0;
+  padding: 2em 0 3em ; /* add */
+  /*
   margin-top: 2em;
+  margin-bottom: 2em;
+  */
 }
 #cd-timeline::before {
   /* this is the vertical line */
@@ -95,16 +156,6 @@ header *{
   height: 100%;
   width: 4px;
   background: #d7e4ed;
-}
-@media only screen and (min-width: 768px) {
-  #cd-timeline {
-    margin-top: 3em;
-//    margin-bottom: 3em;
-  }
-  #cd-timeline::before {
-    left: 20%;
-    margin-left: -2px;
-  }
 }
 
 .cd-timeline-block {
@@ -122,73 +173,45 @@ header *{
 .cd-timeline-block:last-child {
   margin-bottom: 0;
 }
-@media only screen and (min-width: 768px) {
-  .cd-timeline-block {
-    margin: 4em 0;
-  }
-  .cd-timeline-block:first-child {
-    margin-top: 0;
-  }
-  .cd-timeline-block:last-child {
-    margin-bottom: 0;
-  }
-}
 
 .cd-timeline-img {
   position: absolute;
   top: 0;
   left: 0;
-  width: 60px;
-  height: 60px;
+  width: 50px;/*40px;*/
+  height: 50px;/*40px;*/
+  /*
   border-radius: 50%;
-//  box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
+  */
 }
-.cd-timeline-img img,.cd-timeline-img span {
+.cd-timeline-img img {
   display: block;
   position: relative;
   left: 50%;
   top: 50%;
-  width: 40px;
-  height: 40px;
-  margin-left: -20px;
-  margin-top: -20px;
-  color : red;
-  font-size: 40px;
+  /*
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  margin-top: -12px;
+  */
+  width: 50px;
+  height: 50px;
+  margin-left: -30px;
+  margin-top: -30px;
+  border-radius: 20%; /* add */
 }
 .cd-timeline-img.cd-picture {
-//  background: #75ce66;
+/*
+  background: #75ce66;
+*/
 }
 .cd-timeline-img.cd-movie {
   background: #c03b44;
 }
 .cd-timeline-img.cd-location {
   background: #f0ca45;
-}
-@media only screen and (min-width: 768px) {
-  .cd-timeline-img {
-    width: 60px;
-    height: 60px;
-    left: 20%;
-    margin-left: -30px;
-    /* Force Hardware Acceleration in WebKit */
-    -webkit-transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-  }
-  .cd-timeline-img img {
-    width: 60px;
-    height: 60px;
-    margin-left: -30px;
-    margin-top: -30px;
-}
-  .cssanimations .cd-timeline-img.is-hidden {
-    visibility: hidden;
-  }
-  .cssanimations .cd-timeline-img.bounce-in {
-    visibility: visible;
-    -webkit-animation: cd-bounce-1 0.6s;
-    -moz-animation: cd-bounce-1 0.6s;
-    animation: cd-bounce-1 0.6s;
-  }
 }
 
 @-webkit-keyframes cd-bounce-1 {
@@ -253,7 +276,7 @@ header *{
   margin-left: 60px;
   background: white;
   border-radius: 0.25em;
-  padding: 0.5em;
+  padding: 0.4em;/*1em;*/
   box-shadow: 0 3px 0 #d7e4ed;
 }
 .cd-timeline-content:after {
@@ -264,9 +287,9 @@ header *{
 .cd-timeline-content h2 {
   color: #303e49;
 }
-.cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
-//  font-size: 13px;
-  font-size: 1.6rem;
+.cd-timeline-content p, .cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
+  font-size: 14px;
+  font-size: 0.7em;/*0.8125rem;*/
 }
 .cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
   display: inline-block;
@@ -287,7 +310,7 @@ header *{
 }
 .cd-timeline-content .cd-date {
   float: left;
-  padding: .2em 0;
+  padding: .8em 0;
   opacity: .7;
 }
 .cd-timeline-content::before {
@@ -300,70 +323,7 @@ header *{
   border: 7px solid transparent;
   border-right: 7px solid white;
 }
-@media only screen and (min-width: 768px) {
-  .cd-timeline-content {
-    margin-left: 0;
-    padding: 1.6em;
-    width: 45%;
-  }
-  .cd-timeline-content::before {
-    top: 24px;
-    left: 100%;
-    border-color: transparent;
-    border-left-color: white;
-  }
-  .cd-timeline-content .cd-read-more {
-    float: left;
-  }
-  .cd-timeline-content .cd-date {
-    position: absolute;
-    width: 100%;
-    left: 122%;
-    top: 6px;
-//    font-size: 16px;
-    font-size: 1.6rem;
-  }
-  .cd-timeline-block .cd-timeline-content {
-	padding: 10px;
-    left: 20%;
-	margin-left: 60px;
-    position: relative;
-  }
-  .cd-timeline-block .cd-timeline-content::before {
-    top: 24px;
-    left: auto;
-    right: 100%;
-    border-color: transparent;
-    border-right-color: white;
-  }
-  .cd-timeline-block .cd-timeline-content .cd-read-more {
-    float: right;
-  }
-  .cd-timeline-block .cd-timeline-content .cd-date {
-    left: auto;
-    right: 100%;
-	margin-right: 100px;
-    text-align: right;
-  }
-  .cssanimations .cd-timeline-content.is-hidden {
-    visibility: hidden;
-  }
-  .cssanimations .cd-timeline-content.bounce-in {
-    visibility: visible;
-    -webkit-animation: cd-bounce-2 0.6s;
-    -moz-animation: cd-bounce-2 0.6s;
-    animation: cd-bounce-2 0.6s;
-  }
-}
 
-@media only screen and (min-width: 768px) {
-  /* inverse bounce effect on even content blocks */
-  .cssanimations .cd-timeline-block:nth-child(even) .cd-timeline-content.bounce-in {
-    -webkit-animation: cd-bounce-2-inverse 0.6s;
-    -moz-animation: cd-bounce-2-inverse 0.6s;
-    animation: cd-bounce-2-inverse 0.6s;
-  }
-}
 @-webkit-keyframes cd-bounce-2 {
   0% {
     opacity: 0;

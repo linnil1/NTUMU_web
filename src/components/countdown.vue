@@ -1,7 +1,7 @@
 <template>
 	<div class="container-fluid" id="countdown" style="background-color:#e9ebee">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1" style="padding:0">
+			<div class="col-sm-10 col-sm-offset-1" style="padding:40px 0 60px 0">
 
 				<!-- main object -->
 				<div class="event-text">
@@ -40,7 +40,10 @@
 					</div>
 					<div class="count-body">
 						<div class="count-img">
-							<a v-bind:href="count.imgfullsrc"  data-toggle="lightbox">
+							<a v-bind:href="count.imgfullsrc"  
+							   v-bind:data-title="count.chinese"
+							   v-bind:data-footer="count.title"
+							   data-toggle="lightbox">
 								<img v-bind:src="count.imgsrc" class="img-responsive img-fluid">
 							</a>
 						</div>

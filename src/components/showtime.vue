@@ -1,6 +1,5 @@
 <template>
-	<div id="showtime">	
-		<link href='http://fonts.googleapis.com/css?family=Droid+Serif|Open+Sans:400,700' rel='stylesheet' type='text/css' async>
+	<div id="showtime" class="showtime">	
 		<header>
 			<h1>{{title}}</h1>
 			<h2>地點: {{where}}</h2>
@@ -10,7 +9,7 @@
 			<div class="cd-timeline-block" v-for="show in shows">
 				<div class="cd-timeline-img cd-picture">
 					<img v-if="show.time!='pause'" v-bind:src="show.logo_src" alt="clublogo">
-					<span v-else class="glyphicon glyphicon-pause"/>
+					<span v-else class="glyphicon glyphicon-pause" style="font-size:50px;color:red"/>
 				</div> <!-- cd-timeline-img -->
 	
 				<div class="cd-timeline-content">

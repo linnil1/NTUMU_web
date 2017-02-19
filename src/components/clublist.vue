@@ -2,7 +2,7 @@
 	<div class="container-fluid" id="card">
 		<div class="row" style=" background-color: #eee;">
 			<div class="col-sm-1"></div>
-			<div class="col-sm-10">
+			<div class="col-sm-10 card-container">
 				<router-link class="card-horizon" v-for="club in clubs" v-bind:to="'/'+ver+'/club/'+club.name" tag="div">
 						<div class="card-img">
 							<img v-bind:src="club.logo_src" alt="club_logo">
@@ -23,27 +23,31 @@
 </template>
 
 <style scoped>
+.card-container{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	padding: 20px 0px 60px;
+}
 .card-horizon{
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.2);
-	float : left;
     height: 75px;
     width: 30%;
-    position: relative;
 	overflow: hidden;
-	margin: 10px;
+	margin: 1vw;
 	background-color : white;
 	display : flex;
-	flex-direction: row
 }
 .card-horizon:hover {
     box-shadow: 0 2px 8px 0 rgba(0,0,0,.25);
+	cursor: pointer;
 }
 .card-img{
 	background-color: #fafafa;
 	height: 100%;
-	width: 25%;
+	width: 30%;
 	display : flex;
-	justify-content:center;
+	justify-content:center; /* veritcal align */
 }
 .card-img img{
 	margin: auto;
@@ -52,7 +56,7 @@
 	max-height: 100%;
 }
 .card-text{
-	width: 75%;
+	width: 70%;
 	right: 0;
 	text-align: center;
 	height: 100%;
@@ -69,7 +73,26 @@
 }
 @media only screen and (max-width : 768px) {
 	.card-horizon{
-		width: 40%;
+		width: 45%;
+		margin: 0.5rem;
+	}
+}
+@media only screen and (max-width : 480px) {
+	.card-horizon{
+		height: 200px;
+		flex-direction: column;
+		align-items: center;
+	}
+	.card-img{
+		width: 100%;
+		height: 65%;
+	}
+	.card-text{
+		width: 100%;
+		height: 35%;
+	}
+	.card-container{
+		padding: 10px 0 40px 0;
 	}
 }
 </style>
@@ -84,7 +107,7 @@ export default {
 	}},
 	methods:{
 	create: function(){
-		$(".title-word").html("武聯-一覽")
+		$(".title-word").html("武聯-社團們")
 		var self = this.$data
 		var clubs = []
 		var jsondata = this.$store.state.clubsdata,

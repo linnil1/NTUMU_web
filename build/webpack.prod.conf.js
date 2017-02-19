@@ -26,6 +26,10 @@ var webpackConfig = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
   plugins: [
+    //https://github.com/vuejs/vue-hackernews-2.0/issues/79
+    new webpack.ProvidePlugin({
+        Promise: 'es6-promise-promise', // works as expected
+    }),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env
