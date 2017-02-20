@@ -1,32 +1,41 @@
 <template>
-	<div class="background-events" :style="[height,{width:(range*width)+'px'}]">
-		<div class="background-all" :style="height">
-			<div class="background-box" :style="{width:width+'px'}" v-for="i in range"></div>
+	<div class="background-events" 
+	     :style="[height,{width:(cols*width)+'px'}]">
+		<div class="background-all" 
+		     :style="height">
+			<div class="background-box" 
+			     :style="{width:width+'px'}"
+			     v-for="i in cols"></div>
 		</div>
-		<div class="event" v-for="evt in eventSort" :style="styleGet(evt)">
+		<div class="event" 
+		     v-for="evt in eventSort" 
+		     :style="styleGet(evt)">
 			{{evt.title}}</div>
 	</div>
 </template>
 
 <script>
 export default {
-	name: 'onerowevent',
+	name: 'OneRowEvent',
 	props: {
 		width: {
 			type: Number,
 			default: 60
 		},
-		range: {
+		cols: {
 			type: Number,
 			default: 16 
 		},
 		eventdata: {
 			type: Array,
 			default: []
-		}
+		},
+		height: {
+			type: Object,
+			default: ()=>({'height':'1.5em'})
+		},
 	},
 	data () { return {
-		height: {'height':'1.5em'}
 	}},
 	methods: {
 		styleGet: function(evt){
@@ -41,10 +50,11 @@ export default {
 	},
 	computed: {
 		eventSort: function(){
-			if(!this.eventdata)
+			if(!this.eventdata.length)
 				return []
 			// sorted from first to last
-			var sortedevent = this.eventdata.sort( function(a,b){
+			var sortedevent = JSON.parse(JSON.stringify(this.eventdata)) //deepcopy
+			sortedevent.sort(function(a,b){
 				if(a.start != b.start)
 					return a.start > b.start
 				else
@@ -58,8 +68,8 @@ export default {
 					sortedevent[evt].rank = step += 1.5
 				else
 					sortedevent[evt].rank = step 
+			// hightest rank
 			this.height.height = step+1.5+'em'
-			console.log(sortedevent)
 			return sortedevent
 		}
 	}
