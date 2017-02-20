@@ -93,11 +93,13 @@ export default {
 				});
 			})
 		})
+		window.scrollTo(0,0);// scroll to top when load
 	}},
 	destroyed: function(){
 		GoogleMapsLoader.release();
 	},
 	created: function(){ // not very well methods for reused component
+		GoogleMapsLoader.release();
 		this.create()
 	},
 	watch: {
@@ -105,8 +107,5 @@ export default {
 			this.create()
 		}
 	},
-	mounted:function(){
-		window.scrollTo(0,0);// scroll to top when load
-	}
 }
 </script>

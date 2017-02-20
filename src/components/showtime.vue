@@ -59,6 +59,7 @@ export default {
 			else
 				self.shows[self.shows.length-1].chinese = show.name
 		})
+		window.scrollTo(0,0);// scroll to top when load
 	}},
 	created: function(){ // not very well methods for reused component
 		this.create()
@@ -68,9 +69,6 @@ export default {
 			this.create()
 		}
 	},
-	mounted:function(){
-		window.scrollTo(0,0);// scroll to top when load
-	}
 }
 
 </script>

@@ -123,6 +123,7 @@ export default {
 
 			self.clubs = clubs
 		})
+		window.scrollTo(0,0);// scroll to top when load
 	}},
 	created: function(){ // not very well methods for reused component
 		this.create()
@@ -132,8 +133,5 @@ export default {
 			this.create()
 		}
 	},
-	mounted:function(){
-		window.scrollTo(0,0);// scroll to top when load
-	}
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
 	<div class="container-fluid" id="course" >
 		<!-- button -->
-		<div>
+		<div style="display:none">
 			<!-- clear -->
 			<div class="btn-group">
 				<button type="button" class="btn btn-warning" v-on:click="showClear('')">clear</button>
@@ -53,7 +53,7 @@
 		</div>
 	
 		<!-- table -->
-		<div class="course-div">
+		<div id="course-table" class="course-div">
 			<table>
 				<tr>
 					<th></th>
@@ -282,7 +282,6 @@ export default {
 			})
 			dom.popover('show')
 		},
-
 		showAll: function(wantstr){
 			if(wantstr != "club")
 				this.$data.showday = [0,1,2,3,4,5,6]
@@ -303,9 +302,7 @@ export default {
 		},
 		create: function(){
 			$(".title-word").html("武聯-課表")
-
 			var events = [ [],[],[],[],[],[],[] ]
-			
 			var self = this.$data
 			var jsondata = this.$store.state.clubsdata,
 				ts = this.ver
@@ -334,6 +331,8 @@ export default {
 				self.allevents = events
 				self.showclub = clubs
 			})
+			window.scrollTo(0,0);// scroll to top when load
+			$( "#course-table" ).draggable();
 		},
 	},
 	created: function(){ // not very well methods for reused component
@@ -343,9 +342,6 @@ export default {
 		'$route' (to, from) {
 			this.create()
 		}
-	},
-	mounted:function(){
-		window.scrollTo(0,0);// scroll to top when load
 	},
 }
 </script>
