@@ -1,6 +1,6 @@
 <template>
 	<div class="background-events" 
-	     :style="[height,{width:(cols*width)+'px'}]">
+	     :style="[height,{width:cols*width+1+'px'}]">
 		<div class="background-all" 
 		     :style="height">
 			<div class="background-box" 
