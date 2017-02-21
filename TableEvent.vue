@@ -22,12 +22,12 @@
 					</div>
 				</div>
 			</td>
-			<td class="hiddencol hiddenrow">
+			<td class="hiddencol hiddenrow drag-table-div" >
 				<div id="drag-table">
 					<one-row-event v-for="(row,i) in table.rows" 
 								   :width="table.width" 
 								   :cols="table.cols.length-1" 
-								   :eventdata="rowFilter(i)" 
+								   :data="rowFilter(i)" 
 								   :height="colheight[i]"></one-row-event>
 				</div>
 			</td>
@@ -38,14 +38,18 @@
 <style scoped>
 .hiddencol{
 	overflow: hidden;
-	max-width: 60vw;
+	max-width: 200px;/* should be overwrite by important */
 }
 .hiddenrow{
 	overflow: hidden;
 	vertical-align: top;
 }
 .hiddenrow > div{ /* I don't know why */
-	max-height: 20vh;
+	max-height: 200px; /* should be overwrite by important */
+}
+.drag-table-div{
+	border:solid #aaa;
+	border-width:2px 0 0 2px;
 }
 .coltitle{
 }
@@ -54,14 +58,14 @@
 .coldivs{
 	white-space: nowrap;
 }
-.rowdivs{
-}
 .coldiv{
 	display: inline-block;
 	overflow: hidden;
 	min-height: 1.2em;
 	width: 60px;
 	padding-bottom: .1em;
+}
+.rowdivs{
 }
 .rowdiv{
 	text-align: right;
@@ -70,6 +74,7 @@
     justify-content: center;
     align-content: center;
     flex-direction: column; 
+	white-space: nowrap;
 }
 #cols-move-id, #rows-move-id{
 	position: relative;
@@ -121,7 +126,6 @@ export default {
 	mounted: function(){
 		this.$nextTick(function () {
 			$( "#drag-table" ).draggable({
-				containment: "document",
 				cursor: "move",
 				drag: function( event, ui ) {
 					// console.log(ui.position)

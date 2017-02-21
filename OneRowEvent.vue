@@ -1,6 +1,6 @@
 <template>
 	<div class="background-events" 
-	     :style="[height,{width:cols*width+1+'px'}]">
+	     :style="[height,{width:cols*width+2+'px'}]">
 		<div class="background-all" 
 		     :style="height">
 			<div class="background-box" 
@@ -8,7 +8,9 @@
 			     v-for="i in cols"></div>
 		</div>
 		<div class="event" 
-		     v-for="evt in eventSort" 
+		     v-for="evt in eventSort"
+		     v-on:mouseover="evt.hoverfunc"
+		     v-on:click="evt.clickfunc"
 		     :style="styleGet(evt)">
 			{{evt.title}}</div>
 	</div>
@@ -26,16 +28,16 @@ export default {
 			type: Number,
 			default: 16 
 		},
-		eventdata: {
+		data: {
 			type: Array,
 			default: []
 		},
 		height: {
 			type: Object,
 			default: ()=>({'height':'1.5em'})
-		},
-	},
+		}, },
 	data () { return {
+		eventdata: this.data
 	}},
 	methods: {
 		styleGet: function(evt){
@@ -44,7 +46,7 @@ export default {
 				width: (evt.end - evt.start) * this.width + 'px',
 				top: evt.rank + 'em',
 				color: evt.color,
-				'background-color': evt.bgcolor 
+				'background-color': evt.bgcolor
 			}
 		},
 	},
@@ -53,7 +55,7 @@ export default {
 			if(!this.eventdata.length)
 				return []
 			// sorted from first to last
-			var sortedevent = JSON.parse(JSON.stringify(this.eventdata)) //deepcopy
+			var sortedevent = this.eventdata //deepcopy
 			sortedevent.sort(function(a,b){
 				if(a.start != b.start)
 					return a.start > b.start
@@ -61,15 +63,26 @@ export default {
 					return a.end > b.start
 			})
 			// set sorted rank
-			var step = 0;
-			sortedevent[0].rank = step
-			for(var evt in sortedevent)
-				if(evt != 0 && sortedevent[evt-1].end > sortedevent[evt].start)
-					sortedevent[evt].rank = step += 1.5
-				else
-					sortedevent[evt].rank = step 
+			var queue=[]
+			for(var e in sortedevent){
+				var evt  = sortedevent[e]
+				evt.hoverfunc = evt.hoverfunc || function(){}
+				evt.clickfunc = evt.clickfunc || function(){}
+				var isput = false
+				for(var q in queue)
+					if(queue[q] <= evt.start){
+						queue[q] = evt.end
+						evt.rank = q*1.5
+						isput = true
+						break;
+					}
+				if(!isput){
+					evt.rank = 1.5*queue.length
+					queue.push(evt.end)
+				}
+			}
 			// hightest rank
-			this.height.height = step+1.5+'em'
+			this.height.height = queue.length*1.5+'em'
 			return sortedevent
 		}
 	}
