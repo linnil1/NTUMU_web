@@ -12,9 +12,9 @@
     "test": "npm run unit && npm run e2e"
   },
   "dependencies": {
-    "ekko-lightbox": "^4.0.1",
     "github-markdown-css": "^2.4.1",
     "google-maps": "^3.2.1",
+    "lightbox2": "^2.9.0",
     "markerwithlabel": "^2.0.0",
     "vue": "^2.1.10",
     "vue-router": "^2.2.1",

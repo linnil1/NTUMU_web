@@ -2,23 +2,27 @@
 	<table>
 		<tr>
 			<td class="hiddencol"></td>
-			<td class="hiddencol">
-				<div id="cols-move-id" class="coldivs">
-					<div v-for="(col,i) in table.cols" 
-						 class="coldiv"
-						 :style="{width:table.width+'px'}">
-						<span class="coltitle">{{col}}</span>
+			<td class="hiddencol" style="position:relative">
+				<div class="colsgrad"><!-- for grandient -->
+					<div id="cols-move-id" class="coldivs">
+						<div v-for="(col,i) in table.cols" 
+							 class="coldiv"
+							 :style="{width:table.width+'px'}">
+							<span class="coltitle">{{col}}</span>
+						</div>
 					</div>
 				</div>
 			</td>
 		</tr>
 		<tr>
-			<td class="hiddenrow">
-				<div id="rows-move-id" class="rowdivs">
-					<div v-for="(row,i) in table.rows" 
-						 class="rowdiv"
-						 :style="colheight[i]"> 
-						<span class="rowtitle">{{row}}</span>
+			<td class="hiddenrow" style="position:relative">
+				<div class="rowsgrad"><!-- for grandient -->
+					<div id="rows-move-id" class="rowdivs">
+						<div v-for="(row,i) in table.rows" 
+							 class="rowdiv"
+							 :style="colheight[i]"> 
+							<span class="rowtitle">{{row}}</span>
+						</div>
 					</div>
 				</div>
 			</td>
@@ -60,10 +64,32 @@
 }
 .coldiv{
 	display: inline-block;
+	vertical-align: top;
 	overflow: hidden;
-	min-height: 1.2em;
 	width: 60px;
-	padding-bottom: .1em;
+	padding-bottom: .5em;
+}
+.colsgrad:after, .rowsgrad:after {
+	width: 100%;
+	height: 100%;
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+}
+.colsgrad:after{
+	background: linear-gradient(90deg,
+		rgba(255,255,255,.75) 0%,
+		rgba(255,255,255,0) 10%,
+		rgba(255,255,255,0) 90%,
+		rgba(255,255,255,.75) 100% );
+}
+.rowsgrad:after {
+	background: linear-gradient(180deg,
+		rgba(255,255,255,.75) 0%,
+		rgba(255,255,255,0) 10%,
+		rgba(255,255,255,0) 90%,
+		rgba(255,255,255,.75) 100% );
 }
 .rowdivs{
 }
@@ -126,7 +152,7 @@ export default {
 	mounted: function(){
 		this.$nextTick(function () {
 			$( "#drag-table" ).draggable({
-				cursor: "move",
+				cursor: "grab",
 				drag: function( event, ui ) {
 					// console.log(ui.position)
 					// no blank bound
@@ -136,8 +162,7 @@ export default {
 					ui.position.top  = Math.max(
 						helper.clientHeight - helper.scrollHeight, ui.position.top  )
 					ui.position.left = Math.max( // rightest border cannot see
-						helper.clientWidth - $("#cols-move-id")[0].scrollWidth, 
-						ui.position.left )
+						helper.clientWidth  - helper.scrollWidth, ui.position.left )
 					// move col and row
 					$("#cols-move-id").css("left",ui.position.left+"px")
 					$("#rows-move-id").css("top" ,ui.position.top +"px")

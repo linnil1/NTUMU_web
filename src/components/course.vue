@@ -6,39 +6,46 @@
 
 <style scoped>
 .table-all >table{
-	margin: 30px auto;
+	margin: 20px auto;
 	max-width: 80vw;
-	max-height: 80vh;
+	max-height: calc(100vh - 50px - 40px);
 }
 @media only screen and (max-width: 768px) {
 	.table-all >table{
-		margin: 0;
+		margin: 0 auto;
 		max-width: 100vw ;
-		max-height: calc( 100vh - 70px - 1.5em);
+		max-height: calc(100vh - 50px );
 	}
 }
 
 </style>
 <style>
+.event:hover{
+	opacity: 0.6;
+	cursor: cell;
+}
 .hiddencol{
 	max-width: 80vw !important;
 }
 .hiddenrow > div{
-	max-height: 80vh !important;
+	max-height: calc(100vh - 50px - 40px - 1.3em - 2px) !important;
+}
+.coldivs{
+	height: 1.3em;
 }
 @media only screen and (max-width: 768px) {
 	.hiddencol{
-		max-width: calc( 100vw - 4em ) !important;
+		max-width: calc( 100vw - 3.5em - 2px ) !important;
 	}
 	.hiddenrow > div{
-		max-height: calc( 100vh - 70px - 1.5em) !important;
+		max-height: calc(100vh - 50px - 1.3em - 2px) !important;
 	}
 }
 </style>
 
 <script>
-
 import TableEvent from './drag-table/TableEvent'
+
 var weeknames = ['星期日','星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
 
 var weekGet = function(weekstr){
@@ -108,9 +115,8 @@ export default {
 								html : true, 
 								container: 'body',
 								placement:"bottom",
-//								trigger: "click",
+								trigger: "none", //overwrite
 								//delay: {hide: 500},
-
 								title: "<h5>"+club[ts].chinese+"</h5>",
 								content:"<span>"+cour.title+"<br>"+cour.place+"<br>"+cour.time+"</span>",
 							})
@@ -121,7 +127,6 @@ export default {
 			})
 			self.eventdata = events
 		})
-		window.scrollTo(0,0);// scroll to top when load
 		this.$nextTick( function(){
 			// center important data
 			var helper = $("#drag-table")
@@ -129,14 +134,20 @@ export default {
 			helper.css("left",left)
 			$("#cols-move-id").css("left",left)
 		})
+		window.scrollTo(0,0);// scroll to top when load
 	}},
 	created: function(){ // not very well methods for reused component
+		$(".popover").hide()
 		this.create()
 	},
 	watch: {
 		'$route' (to, from) {
+			$(".popover").hide()
 			this.create()
 		}
 	},
+	destroyed: function(){
+		$(".popover").hide()
+	}
 }
 </script>

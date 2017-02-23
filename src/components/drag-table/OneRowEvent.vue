@@ -1,6 +1,6 @@
 <template>
 	<div class="background-events" 
-	     :style="[height,{width:cols*width+2+'px'}]">
+	     :style="[height,{width:cols*width+1+'px'}]">
 		<div class="background-all" 
 		     :style="height">
 			<div class="background-box" 
@@ -101,6 +101,7 @@ export default {
 }
 .background-all{
 	border: 1px solid #ddd;
+	border-right: 0;
 	position: relative;
 	z-index: -5;
 	overflow: hidden;

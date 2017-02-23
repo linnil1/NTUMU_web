@@ -1,24 +1,27 @@
 <template>
-	<div class="container-fluid" id="card">
-		<div class="row" style=" background-color: #eee;">
-			<div class="col-sm-1"></div>
-			<div class="col-sm-10 card-container">
-				<router-link class="card-horizon" v-for="club in clubs" v-bind:to="'/'+ver+'/club/'+club.name" tag="div">
-						<div class="card-img">
-							<img v-bind:src="club.logo_src" alt="club_logo">
-						</div>
-						<div class="card-text">
-							<div class="card-title">
-								{{club.chinese}}
+	<div>
+		<div class="container-fluid" id="card">
+			<div class="row" style=" background-color: #eee;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-10 card-container">
+					<router-link class="card-horizon" v-for="club in clubs" v-bind:to="'/'+ver+'/club/'+club.name" tag="div">
+							<div class="card-img">
+								<img v-bind:src="club.logo_src" alt="club_logo">
 							</div>
-							<div class="card-subtitle">
-								{{club.english}}
+							<div class="card-text">
+								<div class="card-title">
+									{{club.chinese}}
+								</div>
+								<div class="card-subtitle">
+									{{club.english}}
+								</div>
 							</div>
-						</div>
-				</router-link>
+					</router-link>
+				</div>
+				<div class="col-sm-1"></div>
 			</div>
-			<div class="col-sm-1"></div>
 		</div>
+		<foot></foot>
 	</div>
 </template>
 
@@ -99,12 +102,16 @@
 
 <script>
 
+import foot from './../foot'
 export default {
 	name: 'clublist',
 	props: ['ver'],
 	data(){ return {
 		clubs : []
 	}},
+	components: {
+		foot
+	},
 	methods:{
 	create: function(){
 		$(".title-word").html("武聯-社團們")

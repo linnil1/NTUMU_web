@@ -2,34 +2,11 @@
 	<div class="container-fluid" id="countdown" style="background-color:#e9ebee">
 		<div class="row">
 			<div class="col-sm-10 col-sm-offset-1" style="padding:40px 0 60px 0">
-
 				<!-- main object -->
 				<div class="event-text">
 					<h1>{{title}}</h1>
 					<h3>{{desp }}</h3>
 				</div>
-
-				<!--slide show -->
-				<!-- remove it beacuse it is not very well for look-->
-				<!-- <div id="slideshow" class="carousel slide" data-ride="carousel">
-					<div class="carousel-inner" role="listbox" style="display:block">
-						<div v-bind:class="['item',index==0 ? 'active' : '']" 
-							 v-for="(count,index) in counts">
-							<img class="img-responsive" v-bind:src="count.imgsrc" alt="" 
-								 style="max-height:400px;margin:auto">
-							<div class="carousel-caption">
-								<h3>{{count.title}}</h3>
-							</div>
-						</div>
-					</div>
-					<a class="left carousel-control" role="button" data-slide="prev">
-						<span class="glyphicon glyphicon-chevron-left" aria-hidden=""></span>
-					</a>
-					<a class="right carousel-control" role="button" data-slide="next">
-						<span class="glyphicon glyphicon-chevron-right" aria-hidden=""></span>
-					</a>
-				</div> -->
-
 
 				<!-- show all countdown desp -->
 				<div v-for="(count,index) in counts">
@@ -42,8 +19,7 @@
 						<div class="count-img">
 							<a v-bind:href="count.imgfullsrc"  
 							   v-bind:data-title="count.chinese"
-							   v-bind:data-footer="count.title"
-							   data-toggle="lightbox">
+							   data-lightbox="image">
 								<img v-bind:src="count.imgsrc" class="img-responsive img-fluid">
 							</a>
 						</div>
@@ -62,9 +38,6 @@
 .count-head{
 	text-align:center;
 }
-
-
-
 .countdown-all {
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
@@ -79,7 +52,6 @@
     color: #1d2129;
 	margin: 10px;
 }
-
 .count-body{
 	display: flex;
 	justify-content:center;
@@ -90,7 +62,6 @@
 .count-desp{
     word-wrap: break-word;
 }
-
 .count-data{
     margin: 20px;
     max-width: 400px;
@@ -99,7 +70,6 @@
 .count-img{
 	width:450px;
 }
-
 .count-img img{
 	margin: 5px auto 15px auto;
 	max-width: 100%;
@@ -108,7 +78,6 @@
 .count-btn{
 	float:right
 }
-
 
 @media only screen and (max-width : 768px) {
 	.count-img{
@@ -121,15 +90,13 @@
 .event-text{
 	text-align: center;
 }
-.carousel .carousel-control,
-.carousel .carousel-caption { visibility: hidden; }
-.carousel:hover .carousel-control,
-.carousel:hover .carousel-caption{ visibility: visible; }
 </style>
 
-<script>
+<style src='../../node_modules/lightbox2/dist/css/lightbox.min.css'></style>
 
-import lightbox from 'ekko-lightbox'
+<script>
+import lightbox from '../../node_modules/lightbox2/dist/js/lightbox-plus-jquery.min.js'
+
 export default {
 	name: 'countdown',
 	props: ['ver'],
@@ -141,7 +108,6 @@ export default {
 	methods:{
 	create: function(){
 		$(".title-word").html("武聯-倒數文案")
-		$(document).undelegate('*[data-toggle="lightbox"]','click')
 
 		var self = this.$data
 		self.counts = []
@@ -162,10 +128,6 @@ export default {
 			})
 		})
 
-		$(document).delegate('*[data-toggle="lightbox"]','click', function(event) {
-			event.preventDefault();
-			$(this).ekkoLightbox();
-		})
 		window.scrollTo(0,0);// scroll to top when load
 	}},
 	created: function(){ // not very well methods for reused component
@@ -177,7 +139,6 @@ export default {
 		}
 	},
 	destroyed:function(){
-		$(document).undelegate('*[data-toggle="lightbox"]','click')
 	}
 }
 
