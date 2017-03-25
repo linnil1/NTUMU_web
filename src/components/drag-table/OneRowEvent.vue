@@ -35,10 +35,8 @@ export default {
 		height: {
 			type: Object,
 			default: ()=>({'height':'1.5em'})
-		}, },
-	data () { return {
-		eventdata: this.data
-	}},
+		}, 
+	},
 	methods: {
 		styleGet: function(evt){
 			return {
@@ -52,10 +50,12 @@ export default {
 	},
 	computed: {
 		eventSort: function(){
-			if(!this.eventdata.length)
+			// data(){return {eventdata=this.dat}} is not data-bind
+			var eventdata = JSON.parse(JSON.stringify(this.data))
+			if(!eventdata.length)
 				return []
 			// sorted from first to last
-			var sortedevent = this.eventdata //deepcopy
+			var sortedevent = eventdata //deepcopy
 			sortedevent.sort(function(a,b){
 				if(a.start != b.start)
 					return a.start > b.start

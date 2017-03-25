@@ -91,7 +91,6 @@ export default {
 		var jsondata = this.$store.state.clubsdata,
 			ts = this.ver
 		var events = []
-		var self = this.$data
 
 		// put data into weeks array
 		var clubs =[]
@@ -125,8 +124,8 @@ export default {
 					}
 				})
 			})
-			self.eventdata = events
 		})
+		self.eventdata = events
 		this.$nextTick( function(){
 			// center important data
 			var helper = $("#drag-table")

@@ -105,20 +105,6 @@ export default {
 		versionname : '版本',
 		versions : [],
 		title: "台大武術聯盟",
-		
-		nav_bar : [{
-			name: '攤位',
-			url: "/boothmap"
-		},{
-			name: '表演節目',
-			url: "/showtime"
-		},{
-			name: '倒數',
-			url: "/countdown"
-		},{ 
-			name: '課表',
-			url: "/course" 
-		}],
 	}},
 	created:function(){
 //		$(".title-word").html(this.title)
@@ -145,13 +131,41 @@ export default {
 		// bad methods to modify version
 		urlmodify: function(v){ 
 			var s = this.$route.path
-			return '/'+v+s.slice( s.indexOf('/',1))
+			var want = s.slice( s.indexOf('/',1)+1)
+
+			// not good methods
+			if( ['showtime','countdown','boothmap'].indexOf(want) >= 0 && !( want in this.$store.state.clubsdata[v] ) )
+				return '/'+v+"/club"
+			return '/'+v+'/'+want
 		}
 	},
 	computed: {
 		ts: function(){
 			return this.$store.state.ver
+		},
+		nav_bar: function(){
+			var option = [ {
+				name: '攤位',
+				url: "/boothmap"
+			},{
+				name: '表演節目',
+				url: "/showtime"
+			},{
+				name: '倒數',
+				url: "/countdown"
+			}]			
+			var clubdata = this.$store.state.clubsdata,
+				ts = this.$store.state.ver
+
+			var new_var = option.filter( function(opt){
+				return opt.url.slice(1) in clubdata[ts]} )
+			new_var.push({ 
+				name: '課表',
+				url: "/course" 
+			})
+			return new_var
 		}
+
 	}
 
 }
