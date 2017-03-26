@@ -33,21 +33,31 @@
 				</ul>
 
 				<!-- Version -->
-				<form class="navbar-form navbar-right">
-					<div class="form-group">
-						<span> {{versionname}} </span>
-						<select>
-							<!-- cannot use :key = "$route.path" -->
-							<option is="router-link" 
-							        v-for="ver in versions"
-							        :selected = "ver == ts"
-							        :to  ="urlmodify(ver)" 
-									tag="option">
-									{{ver}}
-							</option>
-					   </select>
-				   </div>
-				</form>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<a class="dropdown-toggle" v-on:click="verClick">
+							{{versionname}}: {{ts}}<b class="caret"></b></a>
+						<ul class="dropdown-menu ">
+							<li v-for="ver in versions">
+								<router-link :to="urlmodify(ver)">{{ver}}</router-link>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- version control for mobile -->
+		<div class="verbox"
+		     v-show="vershow"
+		     v-on:click= "vershow=false">
+			<div class="ver-in">
+				<router-link v-for="ver in versions"
+							 tag="div"
+							 :to="urlmodify(ver)">
+					<span class="glyphicon glyphicon-menu-right" v-if="ts==ver"></span>
+					{{ver}}
+				</router-link>
 			</div>
 		</div>
 	</nav>
@@ -94,6 +104,43 @@
 	}
 }
 
+.verbox {
+//	display: none;
+	/** Position and style */
+	position: fixed;
+	z-index: 999;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,0.8);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.ver-in{
+	width:80%;
+	max-width: 300px;
+	background: white;
+	border-radius:10px;
+}
+.ver-in div{
+	border-radius:10px;
+	border: 1px solid #c5c5c5;
+	text-align: center;
+	height: 3em;
+	color: #333333;
+	font-size: 2em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.ver-in div:hover{
+	background: #007fff;
+	color: #ffffff;
+	cursor: pointer;
+}
+
 </style>
 
 <script>
@@ -107,6 +154,7 @@ export default {
 		versionname : '版本',
 		versions : [],
 		title: "台大武術聯盟",
+		vershow: false,
 	}},
 	created:function(){
 //		$(".title-word").html(this.title)
@@ -124,7 +172,7 @@ export default {
 		// navbar collapse after click
 		$(document).on('click','.navbar-collapse.in',function(e) {
 			if( $(e.target).is('a')){
-				$(this).collapse('hide');
+				$(".navbar-collapse").collapse('hide');
 			}
 		});
 		$("body").css("padding-top","50px")
@@ -141,6 +189,10 @@ export default {
 				!( want in this.$store.state.clubsdata[v] ) )
 				return '/'+v+"/club"
 			return '/'+v+'/'+want
+		},
+		verClick: function(evt){
+			console.log(evt)
+			this.vershow = true
 		}
 	},
 	computed: {
