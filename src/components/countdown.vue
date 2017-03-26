@@ -13,19 +13,20 @@
 					<div class="countdown-all">
 						<div class="count-head">
 							<h2>{{count.title}}</h2>
-						<h4>{{count.chinese}}</h4>
-					</div>
-					<div class="count-body">
-						<div class="count-img">
-							<a v-bind:href="count.imgfullsrc"  
-							   v-bind:data-title="count.chinese"
-							   data-lightbox="image">
-								<img v-bind:src="count.imgsrc" class="img-responsive img-fluid">
-							</a>
+							<h4>{{count.chinese}}</h4>
 						</div>
-						<div class="count-data">
-							<p class="count-desp" v-html="count.desp"></p>
-							<router-link v-bind:to="'/'+ver+'/club/'+count.name" class="btn btn-default count-btn" href="#" role="button">詳細資訊</router-link>
+						<div class="count-body">
+							<div class="count-img">
+								<a v-bind:href="count.imgfullsrc"  
+								   v-bind:data-title="count.chinese"
+								   data-lightbox="image">
+									<img v-bind:src="count.imgsrc" class="img-responsive img-fluid">
+								</a>
+							</div>
+							<div class="count-data">
+								<p class="count-desp" v-html="count.desp"></p>
+								<router-link v-bind:to="'/'+ver+'/club/'+count.name" class="btn btn-default count-btn" href="#" role="button">詳細資訊</router-link>
+							</div>
 						</div>
 					</div>
 				</div>

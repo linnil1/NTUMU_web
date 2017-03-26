@@ -38,13 +38,15 @@
 						<span> {{versionname}} </span>
 						<select>
 							<!-- cannot use :key = "$route.path" -->
-							<router-link v-for="ver in versions"
-						                 :to  ="urlmodify(ver)"
-										 :selected = "ver == ts"
-							             tag  ="option">
-								{{ver}}</router-link>
-						</select>
-					</div>
+							<option is="router-link" 
+							        v-for="ver in versions"
+							        :selected = "ver == ts"
+							        :to  ="urlmodify(ver)" 
+									tag="option">
+									{{ver}}
+							</option>
+					   </select>
+				   </div>
 				</form>
 			</div>
 		</div>
@@ -134,7 +136,9 @@ export default {
 			var want = s.slice( s.indexOf('/',1)+1)
 
 			// not good methods
-			if( ['showtime','countdown','boothmap'].indexOf(want) >= 0 && !( want in this.$store.state.clubsdata[v] ) )
+			console.log(s)
+			if( ['showtime','countdown','boothmap'].indexOf(want) >= 0 && 
+				!( want in this.$store.state.clubsdata[v] ) )
 				return '/'+v+"/club"
 			return '/'+v+'/'+want
 		}

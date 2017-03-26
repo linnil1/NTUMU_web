@@ -52,6 +52,10 @@ export default {
 		eventSort: function(){
 			// data(){return {eventdata=this.dat}} is not data-bind
 			var eventdata = JSON.parse(JSON.stringify(this.data))
+			for(var i in eventdata){
+				eventdata[i].clickfunc = this.data[i].clickfunc || function(){}
+				eventdata[i].hoverfunc = this.data[i].hoverfunc || function(){}
+			}
 			if(!eventdata.length)
 				return []
 			// sorted from first to last
@@ -66,8 +70,6 @@ export default {
 			var queue=[]
 			for(var e in sortedevent){
 				var evt  = sortedevent[e]
-				evt.hoverfunc = evt.hoverfunc || function(){}
-				evt.clickfunc = evt.clickfunc || function(){}
 				var isput = false
 				for(var q in queue)
 					if(queue[q] <= evt.start){

@@ -32,6 +32,7 @@
 								   :width="table.width" 
 								   :cols="table.cols.length-1" 
 								   :data="rowFilter(i)" 
+					               :key ="rowFilter(i)"
 								   :height="colheight[i]"></one-row-event>
 				</div>
 			</td>

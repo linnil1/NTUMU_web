@@ -4,7 +4,7 @@
 			<div class="row" style=" background-color: #eee;">
 				<div class="col-sm-1"></div>
 				<div class="col-sm-10 card-container">
-					<router-link class="card-horizon" v-for="club in clubs" v-bind:to="'/'+ver+'/club/'+club.name" tag="div">
+					<router-link class="card-horizon" v-for="club in clubs" v-bind:to="'/'+ver+'/club/'+club.name" tag="div" :key="club">
 							<div class="card-img">
 								<img v-bind:src="club.logo_src" alt="club_logo">
 							</div>

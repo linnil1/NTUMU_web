@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<!-- use div beacuse it can't not use template -->
 		<navbar></navbar>
 		<router-view></router-view>
 	</div>

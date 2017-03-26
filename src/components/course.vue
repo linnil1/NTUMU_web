@@ -108,6 +108,7 @@ export default {
 					title: club[ts].chinese + '(' + cour.title + ')',
 					bgcolor: color[parseInt(club[ts].english[0],36)%color.length],
 					clickfunc: function(domevt){
+						console.log(domevt)
 						var dom = $(domevt.target)
 						if(!dom.data('bs.popover')){
 							dom.popover({
