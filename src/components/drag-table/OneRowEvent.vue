@@ -1,14 +1,16 @@
 <template>
-  <div class="background-events" 
+  <div class="background-events"
        :style="[height,{width:cols*width+1+'px'}]">
-    <div class="background-all" 
+    <div class="background-all"
          :style="height">
-      <div class="background-box" 
+      <div class="background-box"
            :style="{width:width+'px'}"
-           v-for="i in cols"></div>
+           v-for="i in cols"
+           :key="i"></div>
     </div>
-    <div class="event" 
+    <div class="event"
          v-for="evt in eventSort"
+         :key="evt"
          v-on:mouseover="evt.hoverfunc"
          v-on:click="evt.clickfunc"
          :style="styleGet(evt)">
@@ -30,7 +32,7 @@ export default {
     },
     data: {
       type: Array,
-      default: []
+      default: () => []
     },
     height: {
       type: Object,
@@ -46,6 +48,9 @@ export default {
         color: evt.color,
         'background-color': evt.bgcolor
       };
+    },
+    changeHeight: function (val) {
+      this.height.height = val * 1.5 + 'em';
     }
   },
   computed: {
@@ -81,7 +86,7 @@ export default {
         }
       }
       // hightest rank
-      this.height.height = queue.length * 1.5 + 'em';
+      this.changeHeight(queue.length);
       return sortedevent;
     }
   }

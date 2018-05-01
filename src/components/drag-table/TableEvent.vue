@@ -5,7 +5,8 @@
       <td class="hiddencol" style="position:relative">
         <div class="colsgrad"><!-- for grandient -->
           <div id="cols-move-id" class="coldivs">
-            <div v-for="(col,i) in table.cols" 
+            <div v-for="col in table.cols"
+               v-bind:key="col"
                class="coldiv"
                :style="{width:table.width+'px'}">
               <span class="coltitle">{{col}}</span>
@@ -18,9 +19,10 @@
       <td class="hiddenrow" style="position:relative">
         <div class="rowsgrad"><!-- for grandient -->
           <div id="rows-move-id" class="rowdivs">
-            <div v-for="(row,i) in table.rows" 
+            <div v-for="(row,i) in table.rows"
+               v-bind:key="row"
                class="rowdiv"
-               :style="colheight[i]"> 
+               :style="colheight[i]">
               <span class="rowtitle">{{row}}</span>
             </div>
           </div>
@@ -28,11 +30,11 @@
       </td>
       <td class="hiddencol hiddenrow drag-table-div" >
         <div id="drag-table">
-          <one-row-event v-for="(row,i) in table.rows" 
-                   :width="table.width" 
-                   :cols="table.cols.length-1" 
-                   :data="rowFilter(i)" 
-                         :key ="rowFilter(i)"
+          <one-row-event v-for="(row,i) in table.rows"
+                   :width="table.width"
+                   :cols="table.cols.length-1"
+                   :data="rowFilter(i)"
+                   :key ="rowFilter(i)"
                    :height="colheight[i]"></one-row-event>
         </div>
       </td>
@@ -100,7 +102,7 @@
     display: flex;
     justify-content: center;
     align-content: center;
-    flex-direction: column; 
+    flex-direction: column;
   white-space: nowrap;
 }
 #cols-move-id, #rows-move-id{
@@ -127,7 +129,7 @@ export default {
     },
     eventdata: {
       type: Array,
-      default: []
+      default: () => []
     }
   },
   data () {
@@ -175,4 +177,3 @@ export default {
   }
 };
 </script>
-

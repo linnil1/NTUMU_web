@@ -5,14 +5,13 @@
   </div>
 </template>
 
-
 <script>
-  import navbar from './navbar';
-  
-  export default {
-    name: 'app',
-    components: {
-      navbar
-    }
-  };
+import navbar from './navbar';
+
+export default {
+  name: 'app',
+  components: {
+    navbar
+  }
+};
 </script>

@@ -4,7 +4,11 @@
       <div class="row" style=" background-color: #eee;">
         <div class="col-sm-1"></div>
         <div class="col-sm-10 card-container">
-          <router-link class="card-horizon" v-for="club in clubs" v-bind:to="'/'+ver+'/club/'+club.name" tag="div" :key="club">
+          <router-link class="card-horizon"
+                       v-for="club in clubs"
+                       v-bind:to="'/'+ver+'/club/'+club.name"
+                       tag="div"
+                       v-bind:key="club.name">
               <div class="card-img">
                 <img v-bind:src="club.logo_src" alt="club_logo">
               </div>
@@ -49,12 +53,12 @@
   background-color: #fafafa;
   height: 100%;
   width: 30%;
+  padding : 5px;
   display : flex;
   justify-content:center; /* veritcal align */
 }
 .card-img img{
   margin: auto;
-  padding : 5px;
   max-width: 100%;
   max-height: 100%;
 }
@@ -66,7 +70,7 @@
   color: #222;
   display : flex;
   justify-content: center;
-  flex-direction: column; 
+  flex-direction: column;
 }
 .card-title{
   font-size : 1.2em;

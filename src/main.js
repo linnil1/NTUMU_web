@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-Vue.use(VueRouter);
+import App from './App';
 import Vuex from 'vuex';
+
+Vue.use(VueRouter);
 Vue.use(Vuex);
 
 var data = require('./assets/allclubs.json');
@@ -21,8 +23,8 @@ const store = new Vuex.Store({
 
 const router = new VueRouter({
 //  mode: 'history',
-  base: '/~b04611017',
-  routes: [ {
+//  base: '/~b04611017',
+  routes: [{
     path: '/',
     redirect: '/' + now + '/club' // why cannot ./105_1/
   }, {
@@ -31,27 +33,27 @@ const router = new VueRouter({
     children: [ {
       path: 'club',
       props: true,
-      component: require('./components/clublist.vue')
+      component: require('./components/clublist.vue').default
     }, {
       path: 'club/:clubname',
       props: true,
-      component: require('./components/club.vue')
+      component: require('./components/club.vue').default
     }, {
       path: 'countdown',
       props: true,
-      component: require('./components/countdown.vue')
+      component: require('./components/countdown.vue').default
     }, {
       path: 'course',
       props: true,
-      component: require('./components/course.vue')
+      component: require('./components/course.vue').default
     }, {
       path: 'boothmap',
       props: true,
-      component: require('./components/boothmap.vue')
+      component: require('./components/boothmap.vue').default
     }, {
       path: 'showtime',
       props: true,
-      component: require('./components/showtime.vue')
+      component: require('./components/showtime.vue').default
     }, {
       path: '*',
       redirect: 'club'
@@ -75,11 +77,11 @@ router.beforeEach(function (to, from, next) {
   next();
 });
 
-import App from './App';
 const app = new Vue({
   router,
   store,
   template: '<app/>',
   components: {App}
 }).$mount('#app');
+
 app;

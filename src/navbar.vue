@@ -15,17 +15,17 @@
       <div class="collapse navbar-collapse" id="nav-collapse">
         <ul class="nav navbar-nav"  >
           <!-- Narbar -->
-          <li v-for="nav in nav_bar">
+          <li v-for="nav in nav_bar" v-bind:key="nav.url">
             <router-link :to="'/'+ts+nav.url"
               >{{nav.name}}</router-link>
           </li>
           <!-- Club -->
           <li class="dropdown">
-            <router-link class="dropdown-toggle" 
+            <router-link class="dropdown-toggle"
                          :to="'/'+ts+'/club'">
               {{club}}<b class="caret"></b></router-link>
             <ul class="dropdown-menu grid">
-              <li v-for="club in clubs">
+              <li v-for="club in clubs" v-bind:key="club.url">
                 <router-link v-bind:to="'/'+ts+club.url">{{club.name}}</router-link>
               </li>
             </ul>
@@ -38,7 +38,7 @@
             <a class="dropdown-toggle" v-on:click="verClick">
               {{versionname}}: {{ts}}<b class="caret"></b></a>
             <ul class="dropdown-menu ">
-              <li v-for="ver in versions">
+              <li v-for="ver in versions" v-bind:key="ver">
                 <router-link :to="urlmodify(ver)">{{ver}}</router-link>
               </li>
             </ul>
@@ -52,7 +52,7 @@
          v-show="vershow"
          v-on:click= "vershow=false">
       <div class="ver-in">
-        <router-link v-for="ver in versions"
+        <router-link v-for="ver in versions" v-bind:key="ver"
                tag="div"
                :to="urlmodify(ver)">
           <span class="glyphicon glyphicon-menu-right" v-if="ts==ver"></span>
@@ -147,7 +147,7 @@
 
 export default {
   name: 'navbar',
-//  props: ['ver'],
+  // props: ['ver'],
   data () {
     return {
       club: '社團',
@@ -159,7 +159,7 @@ export default {
     };
   },
   created: function () {
-//    $(".title-word").html(this.title)
+    // $(".title-word").html(this.title)
     var jsondata = this.$store.state.clubsdata;
     var ts = this.ts;
     this.versions = jsondata.version;
@@ -223,9 +223,6 @@ export default {
       });
       return newvar;
     }
-
   }
-
 };
 </script>
-

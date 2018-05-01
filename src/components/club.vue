@@ -3,25 +3,25 @@
     <div class="row">
       <div class="col-sm-2">
         <div v-bind:style="sidebar_style" class="sidebar"  id="sidebar_id">
-          <img class="img-responsive" v-if="logo_src" v-bind:src="logo_src" alt="club_logo"> 
+          <img class="img-responsive" v-if="logo_src" v-bind:src="logo_src" alt="club_logo">
           <h1> {{chinese}} </h1>
           <!-- <p> 版本
             <select v-model="ts">
               <router-link v-for="ver in version"
-                           v-bind:to="'/'+ver+'/club/'+clubname" 
+                           v-bind:to="'/'+ver+'/club/'+clubname"
                            v-bind:value="ver"
                            tag="option">
-                {{ver}}</router-link> 
+                {{ver}}</router-link>
             </select>
           </p> -->
           <ul>
-            <li v-for="intro in main_intros">
+            <li v-for="intro in main_intros" v-bind:key="intro.id">
               <router-link v-bind:to="('#'+intro.id)" v-bind:class="intro.id == activeid ? 'active' : ''" >{{intro.name}}</router-link>
             </li>
             <li>
               <router-link to="#connect">聯絡資訊</router-link>
             </li>
-              
+
           </ul>
         </div>
       </div>
@@ -29,17 +29,17 @@
       <div class="col-sm-6">
         <!-- for phone -->
         <div class="smallscreen">
-          <img class="img-responsive" v-bind:src="logo_src" alt="club_logo" > 
+          <img class="img-responsive" v-bind:src="logo_src" alt="club_logo" >
           <h1 > {{chinese}} </h1>
           <h2 > {{english}} </h2>
         </div>
 
-        <div v-for="intro in main_intros" v-bind:id="intro.id">
+        <div v-for="intro in main_intros" v-bind:key="intro.id" v-bind:id="intro.id">
           <h2>{{intro.name}}
             <router-link v-bind:to="('#'+intro.id)" class="glyphicon glyphicon-tags" style="font-size:15px"></router-link>
           </h2>
           <span v-if="intro.id=='qa'">
-            <span v-for="qa in intro.content">
+            <span v-for="qa in intro.content" v-bind:key="qa.q">
               <div class="question"> {{qa.q}} </div>
               <div class="answer">   {{qa.a}} </div>
             </span >
@@ -62,13 +62,13 @@
           <h3 v-if="info.fb">FB</h3>
           <p v-if="info.fb"> <a v-bind:href="info.fb.link" target="_blank">{{info.fb.name}}</a> </p>
           <h3 v-if="welcomes">迎新</h3>
-          <div v-for="wel in welcomes">
+          <div v-for="wel in welcomes" v-bind:key="wel.time">
             <h4 v-if="wel.title"> {{wel.title}} </h4>
             <p> 時間: {{wel.time}} </p>
             <p> 地點: {{wel.place}} </p>
           </div>
           <h3 v-if="courses">上課</h3>
-          <div v-for="wel in courses">
+          <div v-for="wel in courses" v-bind:key="wel.time">
             <h4 v-if="wel.title"> {{wel.title}} </h4>
             <p> 時間: {{wel.time}} </p>
             <p> 地點: {{wel.place}} </p>
@@ -153,9 +153,9 @@ h2 a{
 .sidebar ul{
   line-height: 1.8em;
     list-style-type: none;
-  margin-left: 5px; 
-  overflow-x: hidden; 
-  overflow-y: auto; 
+  margin-left: 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding: 0;
 }
 .sidebar ul li a{

@@ -116,7 +116,7 @@ export default {
                   container: 'body',
                   placement: 'bottom',
                   trigger: 'none', // overwrite
-                // delay: {hide: 500},
+                  // delay: {hide: 500},
                   title: '<h5>' + club[ts].chinese + '</h5>',
                   content: '<span>' + cour.title + '<br>' + cour.place + '<br>' + cour.time + '</span>'
                 });

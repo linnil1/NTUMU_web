@@ -9,7 +9,7 @@
         </div>
 
         <!-- show all countdown desp -->
-        <div v-for="(count,index) in counts">
+        <div v-for="count in counts" v-bind:key="count.name + count.title">
           <div class="countdown-all">
             <div class="count-head">
               <h2>{{count.title}}</h2>
@@ -17,7 +17,7 @@
             </div>
             <div class="count-body">
               <div class="count-img">
-                <a v-bind:href="count.imgfullsrc"  
+                <a v-bind:href="count.imgfullsrc"
                    v-bind:data-title="count.chinese"
                    data-lightbox="image">
                   <img v-bind:src="count.imgsrc" class="img-responsive img-fluid">
