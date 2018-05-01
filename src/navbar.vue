@@ -10,7 +10,7 @@
         <router-link to="/" class="navbar-brand">
           <img src="static/img/105_1_logo.png"  height="50" alt="logo">
         </router-link>
-        <a class="title-word navbar-brand navbar-word">台大武術聯盟</a>
+        <a class="title-word navbar-brand navbar-word">{{$store.state.title}}</a>
       </div>
       <div class="collapse navbar-collapse" id="nav-collapse">
         <ul class="nav navbar-nav"  >
@@ -170,14 +170,25 @@ export default {
         url: '/club/' + club
       });
     });
-
+    document.body.style.paddingTop = '50px';
+  },
+  mounted: function () {
     // navbar collapse after click
+    console.log(document.querySelector('#nav-collapse'));
+    document.querySelector('#nav-collapse').addEventListener(
+      'click', function (e) {
+        if (this.classList.contains('in') && e.target.tagName.toLowerCase() === 'a') {
+          this.classList.toggle('in');
+        }
+        console.log(e);
+      });
+    /*
     $(document).on('click', '.navbar-collapse.in', function (e) {
       if ($(e.target).is('a')) {
         $('.navbar-collapse').collapse('hide');
       }
     });
-    $('body').css('padding-top', '50px');
+    */
   },
   methods: {
     // bad methods to modify version

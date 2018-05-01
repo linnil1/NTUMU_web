@@ -169,8 +169,8 @@ export default {
           ui.position.left = Math.max( // rightest border cannot see
             helper.clientWidth - helper.scrollWidth, ui.position.left);
           // move col and row
-          $('#cols-move-id').css('left', ui.position.left + 'px');
-          $('#rows-move-id').css('top', ui.position.top + 'px');
+          document.querySelector('#cols-move-id').style.left = ui.position.left + 'px';
+          document.querySelector('#rows-move-id').style.left = ui.position.top + 'px';
         }
       });
     });

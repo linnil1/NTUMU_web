@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     create: function () {
-      $('.title-word').html('武聯-倒數文案');
+      this.$store.commit('titleSet', '武聯-倒數文案');
 
       var self = this.$data;
       var jsondata = this.$store.state.clubsdata;

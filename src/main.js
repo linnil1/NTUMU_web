@@ -12,11 +12,16 @@ var now = data.latest;
 const store = new Vuex.Store({
   state: {
     clubsdata: data,
-    ver: now
+    ver: now,
+    title: '台大武術聯盟'
   },
   mutations: {
     verSet (state, ver) {
       state.ver = ver;
+    },
+    titleSet (state, title) {
+      state.title = title;
+      document.title = title;
     }
   }
 });

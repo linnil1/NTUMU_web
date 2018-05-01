@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     create: function () {
-      $('.title-word').html('武聯-攤位地圖');
+      this.$store.commit('titleSet', '武聯-攤位地圖');
       var self = this.$data;
       var jsondata = this.$store.state.clubsdata;
       var ts = this.ver;

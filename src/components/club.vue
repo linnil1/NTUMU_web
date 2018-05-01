@@ -237,16 +237,16 @@ export default {
       data.courses = club.course;
       data.welcomes = club.welcome;
       data.info = club.info;
-      data.main_intros = jQuery.extend(true, {}, club.intro); // deep copy
+      data.main_intros = JSON.parse(JSON.stringify(club.intro)); // deep copy
       data.logo_src = './static/img/clublogo/' + club.logo;
-      $('.title-word').html(data.chinese);
+      this.$store.commit('titleSet', data.chinese);
 
       // sidebar
       this.$nextTick(function () {
         this.sidebar_style = {
           position: 'fixed',
           top: document.getElementById('navbar').offsetHeight + 'px',
-          width: $('.col-sm-2').width() + 'px'
+          width: document.querySelector('.col-sm-2').offsetWidth * 0.9 + 'px'
         };
         document.addEventListener('scroll', this.updatescroll);
       });
@@ -276,10 +276,17 @@ export default {
     },
     scrollToId: function (hash) {
       if (hash) {
-        $('html, body').animate({
-          scrollTop: $(decodeURI(hash)).offset().top
-        }, 1000);
-      }
+        var pos = document.querySelector(decodeURI(hash)).offsetTop + 30;
+        var times = 24;
+        var count = times;
+        var scrollStep = (pos - window.scrollY) / times;
+        var scrollInterval = setInterval(function () {
+          if (count > 0) {
+            window.scrollBy(0, scrollStep);
+            --count;
+          } else clearInterval(scrollInterval);
+        }, 1000 / times);
+      };
     }
   },
   created: function () { // not very well methods for reused component

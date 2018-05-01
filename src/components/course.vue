@@ -88,7 +88,7 @@ export default {
         this.table.cols.push(i + ':00');
         this.table.cols.push('');
       }
-      $('.title-word').html('武聯-課表');
+      this.$store.commit('titleSet', '武聯-課表');
       var self = this.$data;
       var jsondata = this.$store.state.clubsdata;
       var ts = this.ver;
@@ -131,23 +131,27 @@ export default {
       // center important data
         var helper = $('#drag-table');
         var left = helper[0].clientWidth - helper[0].scrollWidth + 30;
-        helper.css('left', left);
-        $('#cols-move-id').css('left', left);
+        document.querySelector('#cols-move-id').style.left = left;
       });
       window.scrollTo(0, 0);// scroll to top when load
     }},
   created: function () { // not very well methods for reused component
-    $('.popover').hide();
     this.create();
+    document.querySelectorAll('.popover').forEach(function (e) {
+      e.style.display = 'none';
+    });
   },
   watch: {
     '$route' (to, from) {
-      $('.popover').hide();
-      this.create();
+      document.querySelectorAll('.popover').forEach(function (e) {
+        e.style.display = 'none';
+      });
     }
   },
   destroyed: function () {
-    $('.popover').hide();
+    document.querySelectorAll('.popover').forEach(function (e) {
+      e.style.display = 'none';
+    });
   }
 };
 </script>

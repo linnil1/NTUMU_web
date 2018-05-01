@@ -6,7 +6,7 @@
     </header>
 
     <section id="cd-timeline" class="cd-container">
-      <div class="cd-timeline-block" v-for="show in shows" v-bind:key="show.time">
+      <div class="cd-timeline-block" v-for="show in shows" v-bind:key="show.name + show.time">
         <div class="cd-timeline-img cd-picture">
           <img v-if="show.time!='pause'" v-bind:src="show.logo_src" alt="clublogo">
           <span v-else class="glyphicon glyphicon-pause" style="font-size:50px;color:red"/>
@@ -38,8 +38,7 @@ export default {
   },
   methods: {
     create: function () {
-      $('.title-word').html('武聯-表演時間');
-
+      this.$store.commit('titleSet', '武聯-表演時間');
       var self = this.$data;
       var jsondata = this.$store.state.clubsdata;
       var ts = this.ver;
