@@ -77,11 +77,9 @@ router.beforeEach(function (to, from, next) {
   next();
 });
 
-const app = new Vue({
+export default new Vue({
   router,
   store,
   template: '<app/>',
   components: {App}
 }).$mount('#app');
-
-app;

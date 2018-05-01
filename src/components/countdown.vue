@@ -96,7 +96,7 @@
 <style src='../../node_modules/lightbox2/dist/css/lightbox.min.css'></style>
 
 <script>
-import lightbox from '../../node_modules/lightbox2/dist/js/lightbox-plus-jquery.min.js';
+import '../../node_modules/lightbox2/dist/js/lightbox-plus-jquery.min.js';
 
 export default {
   name: 'countdown',
@@ -132,7 +132,6 @@ export default {
       });
 
       window.scrollTo(0, 0);// scroll to top when load
-      lightbox; // use it
     }},
   created: function () { // not very well methods for reused component
     this.create();
