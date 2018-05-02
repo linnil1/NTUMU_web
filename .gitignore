@@ -1,10 +1,9 @@
 *.swp
 static/
+data/*.csv
+data/*.json
 __pycache__
-ntu.ftp
-test*
-*.json
-*.csv
+src/assets/
 
 .DS_Store
 node_modules/
