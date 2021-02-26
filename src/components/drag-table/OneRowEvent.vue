@@ -1,13 +1,14 @@
 <template>
-  <div class="background-events"
-       :style="[height,{width:cols*width+1+'px'}]">
-    <div class="background-all"
-         :style="height">
-      <div class="background-box"
-           :style="{width:width+'px'}"
+  <div class="events-row">
+    <!-- Background shadow -->
+    <div class="background-row">
+      <div class="background-half-block"
+          :style="{width:width+'px'}"
            v-for="i in cols"
-           :key="i"></div>
+          :key="i"></div>
     </div>
+
+    <!-- Event in absolute position -->
     <div class="event"
          v-for="evt in eventSort"
          :key="evt"
@@ -30,14 +31,10 @@ export default {
       type: Number,
       default: 16
     },
-    data: {
+    events: {
       type: Array,
       default: () => []
     },
-    height: {
-      type: Object,
-      default: () => ({'height': '1.5em'})
-    }
   },
   methods: {
     styleGet: function (evt) {
@@ -50,16 +47,19 @@ export default {
       };
     },
     changeHeight: function (val) {
-      this.height.height = val * 1.5 + 'em';
+      console.log(val);
+      if (val != this.height)
+        this.$emit('update:height',  val);
     }
   },
   computed: {
     eventSort: function () {
+      console.log("eventSort");
       // data(){return {eventdata=this.dat}} is not data-bind
-      var eventdata = JSON.parse(JSON.stringify(this.data));
+      var eventdata = JSON.parse(JSON.stringify(this.events));
       for (var i in eventdata) {
-        eventdata[i].clickfunc = this.data[i].clickfunc || function () {};
-        eventdata[i].hoverfunc = this.data[i].hoverfunc || function () {};
+        eventdata[i].clickfunc = this.events[i].clickfunc || function () {};
+        eventdata[i].hoverfunc = this.events[i].hoverfunc || function () {};
       }
       if (!eventdata.length) { return []; }
       // sorted from first to last
@@ -93,25 +93,28 @@ export default {
 };
 </script>
 
+
 <style scoped>
-.background-box{
+.background-half-block{
   border-right: 1px solid #ddd;
   float: left;
   width: 60px;
   height: 100%;
 }
-.background-box:nth-child(odd){
+.background-half-block:nth-child(odd){
   border-right: 1px dotted #ddd;
+  height: 100%;
 }
-.background-all{
+.background-row{
   border: 1px solid #ddd;
   border-right: 0;
   position: relative;
   z-index: -5;
   overflow: hidden;
-  height: 3em;
+  height: 100%;
+  width: 100%;
 }
-.background-events{
+.events-row{
   position: relative;
   width: 100%;
 }
@@ -122,5 +125,9 @@ export default {
   text-align: center;
   font-size: 1em;
   overflow: hidden;
+}
+.event:hover{
+  opacity: 0.6;
+  cursor: cell;
 }
 </style>

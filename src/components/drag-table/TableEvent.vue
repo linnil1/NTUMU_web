@@ -1,119 +1,61 @@
 <template>
   <table>
     <tr>
-      <td class="hiddencol"></td>
-      <td class="hiddencol" style="position:relative">
-        <div class="colsgrad"><!-- for grandient -->
-          <div id="cols-move-id" class="coldivs">
+      <!-- top left -->
+      <td class="col-allow-hidden"></td>
+
+      <!-- top row = Time -->
+      <td class="col-allow-hidden" style="position:relative">
+        <div class="col-gradient"><!-- for grandient -->
+          <div id="timeline-block-id" class="timeline-block">
             <div v-for="col in table.cols"
                v-bind:key="col"
                class="coldiv"
                :style="{width:table.width+'px'}">
-              <span class="coltitle">{{col}}</span>
+              <span class="timeline-title">{{col}}</span>
             </div>
           </div>
         </div>
       </td>
     </tr>
+
+    <!-- For each row -->
     <tr>
-      <td class="hiddenrow" style="position:relative">
-        <div class="rowsgrad"><!-- for grandient -->
-          <div id="rows-move-id" class="rowdivs">
+      <!-- First column as Weekday name -->
+      <td class="row-allow-hidden" style="position:relative">
+        <div class="row-gradient"><!-- for grandient -->
+          <div id="weekname-block-id" class="weekname-block">
             <div v-for="(row,i) in table.rows"
                v-bind:key="row"
-               class="rowdiv"
-               :style="colheight[i]">
-              <span class="rowtitle">{{row}}</span>
+               class="timeline-title"
+               :style="{height: rowheight[i] * 1.5 + 'em'}">
+              <span class="weekname-title">{{row}}</span>
             </div>
           </div>
         </div>
       </td>
-      <td class="hiddencol hiddenrow drag-table-div" >
-        <div id="drag-table">
-          <one-row-event v-for="(row,i) in table.rows"
-                   :width="table.width"
-                   :cols="table.cols.length-1"
-                   :data="rowFilter(i)"
-                   :key ="rowFilter(i)"
-                   :height="colheight[i]"></one-row-event>
+
+      <!-- Events in the day -->
+      <td class="col-allow-hidden row-allow-hidden drag-table-div" >
+        <div>
+          <div id="drag-table"
+               :style="{width:table.width * (table.cols.length - 1) + 'px'}">
+            <one-row-event v-for="(row,i) in table.rows"
+                     :style="{height: rowheight[i] * 1.5 + 'em'}"
+                     :width="table.width"
+                     :cols="table.cols.length - 2"
+                     :events ="rowFilter(i)"
+                     :key ="rowFilter(i)"
+                     v-model:height="rowheight[i]"></one-row-event>
+          </div>
         </div>
       </td>
     </tr>
   </table>
 </template>
 
-<style scoped>
-.hiddencol{
-  overflow: hidden;
-  max-width: 200px;/* should be overwrite by important */
-}
-.hiddenrow{
-  overflow: hidden;
-  vertical-align: top;
-}
-.hiddenrow > div{ /* I don't know why */
-  max-height: 200px; /* should be overwrite by important */
-}
-.drag-table-div{
-  border:solid #aaa;
-  border-width:2px 0 0 2px;
-}
-.coltitle{
-}
-.rowtitle{
-}
-.coldivs{
-  white-space: nowrap;
-}
-.coldiv{
-  display: inline-block;
-  vertical-align: top;
-  overflow: hidden;
-  width: 60px;
-  padding-bottom: .5em;
-}
-.colsgrad:after, .rowsgrad:after {
-  width: 100%;
-  height: 100%;
-    position: absolute;
-    content: "";
-    top: 0;
-    left: 0;
-}
-.colsgrad:after{
-  background: linear-gradient(90deg,
-    rgba(255,255,255,.75) 0%,
-    rgba(255,255,255,0) 10%,
-    rgba(255,255,255,0) 90%,
-    rgba(255,255,255,.75) 100% );
-}
-.rowsgrad:after {
-  background: linear-gradient(180deg,
-    rgba(255,255,255,.75) 0%,
-    rgba(255,255,255,0) 10%,
-    rgba(255,255,255,0) 90%,
-    rgba(255,255,255,.75) 100% );
-}
-.rowdivs{
-}
-.rowdiv{
-  text-align: right;
-  padding-right: .5em;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    flex-direction: column;
-  white-space: nowrap;
-}
-#cols-move-id, #rows-move-id{
-  position: relative;
-}
-#drag-table{
-}
-</style>
 
 <script>
-
 import OneRowEvent from './OneRowEvent';
 
 export default {
@@ -134,16 +76,13 @@ export default {
   },
   data () {
     return {
-      colheight: [],
-      rowdata: []
+      rowheight: [],
     };
   },
   created: function () {
-    this.colheight = [];
-    this.rowdata = [];
+    this.rowheight = [];
     for (var i = 0; i < this.table.rows.length; ++i) {
-      this.colheight.push({'height': '1.5em'});
-      this.rowdata.push([]);
+      this.rowheight.push(1);
     }
   },
   components: {
@@ -152,11 +91,11 @@ export default {
   methods: {
     rowFilter: function (row) {
       return this.eventdata.filter((data) => data.row === row);
-    }
+    },
   },
   mounted: function () {
     this.$nextTick(function () {
-      $('#drag-table').draggable({
+      window.$('#drag-table').draggable({
         cursor: 'grab',
         drag: function (event, ui) {
           // console.log(ui.position)
@@ -164,16 +103,103 @@ export default {
           var helper = ui.helper[0];
           ui.position.top = Math.min(0, ui.position.top);
           ui.position.left = Math.min(0, ui.position.left);
+          // console.log(helper);
           ui.position.top = Math.max(
-            helper.clientHeight - helper.scrollHeight, ui.position.top);
+            helper.parentNode.clientHeight - helper.scrollHeight, ui.position.top);
           ui.position.left = Math.max( // rightest border cannot see
-            helper.clientWidth - helper.scrollWidth, ui.position.left);
+            helper.parentNode.clientWidth - helper.scrollWidth, ui.position.left);
+          // console.log('calc', ui.position);
           // move col and row
-          document.querySelector('#cols-move-id').style.left = ui.position.left + 'px';
-          document.querySelector('#rows-move-id').style.left = ui.position.top + 'px';
+          document.querySelector('#timeline-block-id').style.left = ui.position.left + 'px';
+          document.querySelector('#weekname-block-id').style.top  = ui.position.top  + 'px';
         }
       });
     });
   }
 };
 </script>
+
+
+<style scoped>
+.col-allow-hidden > div {
+  overflow-x: hidden;
+  max-width: 80vw;
+}
+.row-allow-hidden > div {
+  overflow-y: hidden;
+  vertical-align: top;
+  max-height: 80vh;
+}
+
+@media only screen and (max-width: 768px) {
+  .col-allow-hidden > div {
+    max-width:  calc( 100vw - 3.5em - 2px );
+  }
+  .row-allow-hidden > div {
+    max-height: calc( 100vh - 50px - 1.4em);
+  }
+}
+
+.timeline-block{
+  height: 1.3em;
+  white-space: nowrap;
+  position: relative;
+}
+.weekname-block{
+  white-space: nowrap;
+  position: relative;
+}
+
+.timeline-title{
+  text-align: right;
+  padding-right: .5em;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+  white-space: nowrap;
+}
+.weekname-title{
+}
+
+
+/*
+.col-gradient:after, .row-gradient:after {
+  width: 100%;
+  height: 100%;
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+}
+.col-gradient:after{
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.75) 0%,
+    rgba(255,255,255,0) 10%,
+    rgba(255,255,255,0) 90%,
+    rgba(255,255,255,.75) 100% );
+}
+.row-gradient:after {
+  background: linear-gradient(180deg,
+    rgba(255,255,255,.75) 0%,
+    rgba(255,255,255,0) 10%,
+    rgba(255,255,255,0) 90%,
+    rgba(255,255,255,.75) 100% );
+}
+*/
+
+.drag-table-div{
+  border:solid #aaa;
+  border-width:2px 0 0 2px;
+}
+.coldiv{
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+  width: 60px;
+  padding-bottom: .5em;
+}
+
+#drag-table{
+}
+</style>

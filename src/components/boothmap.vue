@@ -38,7 +38,8 @@ export default {
       var jsondata = this.$store.state.clubsdata;
       var ts = this.ver;
       var boothmap = jsondata[ts]['boothmap'];
-      const loader = new Loader('AIzaSyDlggHYFZpq69QFa2_F1vE4Clt5bYmAtLA');
+      const apikey = '';
+      const loader = new Loader(apikey);
       const google = await loader.load();
       self.map = new google.maps.Map(document.getElementById('gmap'), {
         center: {lat: boothmap.lat, lng: boothmap.lng},
