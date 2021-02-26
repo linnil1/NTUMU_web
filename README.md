@@ -26,12 +26,6 @@ python3 data/dataTojson.py
 
 all the format spec are written in dataTojson.py
 
-# build the static web
-
-I use 
-[vue-cli](https://github.com/vuejs/vue-cli) 
-[vue-router](https://github.com/vuejs/vue-router) to do that
-
 ## put your asset like below
 
 ```
@@ -55,15 +49,39 @@ You can use [https://tinypng.com/](https://tinypng.com/)
 
 Remember to put .ico in root
 
-## build it
+## Project Command line
+### Init
+```
+yarn global add @vue/cli
+vue create
+```
 
-init : ` npm install`
+### Setup
+```
+yarn install
+```
 
-build : ` npm run build `
+### Compiles and hot-reloads for development
+```
+yarn serve
+```
 
-You can also run ` npm run dev ` to see if it is ok
+### Compiles and minifies for production
 
-After build it, all files are in `dist/`
+```
+yarn build
+cp dist path_your_static_server
+```
 
-and upload to your server
+If not work(Vue-router is annoying), build development version.
+```
+yarn build -m develop
+```
 
+### Lints and fixes files
+```
+yarn lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

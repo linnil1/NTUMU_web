@@ -123,8 +123,8 @@ export default {
         var jdata = jsondata[count.name];
         self.counts.push({
           name: count.name,
-          imgsrc: './static/img/countdown/' + count.src,
-          imgfullsrc: './static/img/countdown/' + count.fullsrc,
+          imgsrc: '/static/img/countdown/' + count.src,
+          imgfullsrc: '/static/img/countdown/' + count.fullsrc,
           chinese: jdata.chinese,
           title: count.title,
           desp: count.desp
@@ -137,12 +137,10 @@ export default {
     this.create();
   },
   watch: {
-    '$route' (to, from) {
+    '$route' () {
       this.create();
     }
   },
-  destroyed: function () {
-  }
 };
 
 </script>

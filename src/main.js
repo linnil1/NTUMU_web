@@ -1,15 +1,11 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import App from './App';
-import Vuex from 'vuex';
-
-Vue.use(VueRouter);
-Vue.use(Vuex);
+import { createApp } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import { createStore } from 'vuex';
 
 var data = require('./assets/allclubs.json');
 var now = data.latest;
 
-const store = new Vuex.Store({
+const store = createStore({
   state: {
     clubsdata: data,
     ver: now,
@@ -26,9 +22,8 @@ const store = new Vuex.Store({
   }
 });
 
-const router = new VueRouter({
-//  mode: 'history',
-//  base: '/~b04611017',
+const router = createRouter({
+  history: createWebHistory(),
   routes: [{
     path: '/',
     redirect: '/' + now + '/club' // why cannot ./105_1/
@@ -38,33 +33,33 @@ const router = new VueRouter({
     children: [ {
       path: 'club',
       props: true,
-      component: require('./components/clublist.vue').default
+      component: import('./components/clublist.vue'),
     }, {
       path: 'club/:clubname',
       props: true,
-      component: require('./components/club.vue').default
+      component: import('./components/club.vue')
     }, {
       path: 'countdown',
       props: true,
-      component: require('./components/countdown.vue').default
+      component: import('./components/countdown.vue')
     }, {
       path: 'course',
       props: true,
-      component: require('./components/course.vue').default
+      component: import('./components/course.vue')
     }, {
       path: 'boothmap',
       props: true,
-      component: require('./components/boothmap.vue').default
+      component: import('./components/boothmap.vue')
     }, {
       path: 'showtime',
       props: true,
-      component: require('./components/showtime.vue').default
+      component: import('./components/showtime.vue')
     }, {
-      path: '*',
+      path: ':pathMatch(.*)',
       redirect: 'club'
     }]
   }, {
-    path: '*',
+    path: '/:pathMatch(.*)',
     redirect: (route) => {
       return '/' + now + route.path;
     }
@@ -82,9 +77,18 @@ router.beforeEach(function (to, from, next) {
   next();
 });
 
-export default new Vue({
-  router,
-  store,
+
+import App from './App.vue';
+
+const app = createApp({
+  // el: "#app",
+  // store,
+  // router,
   template: '<app/>',
-  components: {App}
-}).$mount('#app');
+  components: {App},
+  // render: h => h(App),
+});
+app.use(store);
+app.use(router);
+app.mount('#app');
+export default app;

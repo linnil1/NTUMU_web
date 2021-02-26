@@ -238,7 +238,7 @@ export default {
       data.welcomes = club.welcome;
       data.info = club.info;
       data.main_intros = JSON.parse(JSON.stringify(club.intro)); // deep copy
-      data.logo_src = './static/img/clublogo/' + club.logo;
+      data.logo_src = '/static/img/clublogo/' + club.logo;
       this.$store.commit('titleSet', data.chinese);
 
       // sidebar
@@ -286,19 +286,19 @@ export default {
             --count;
           } else clearInterval(scrollInterval);
         }, 1000 / times);
-      };
+      }
     }
   },
   created: function () { // not very well methods for reused component
     this.create();
   },
   watch: {
-    '$route' (to, from) {
+    '$route' () {
       document.removeEventListener('scroll', this.updatescroll);
       this.create();
     }
   },
-  destroyed: function () {
+  unmounted: function () {
     document.removeEventListener('scroll', this.updatescroll);
   }
 };

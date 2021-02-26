@@ -8,7 +8,7 @@
           <span class="icon-bar"></span>
         </button>
         <router-link to="/" class="navbar-brand">
-          <img src="static/img/105_1_logo.png"  height="50" alt="logo">
+          <img src="/static/img/105_1_logo.png"  height="50" alt="logo">
         </router-link>
         <a class="title-word navbar-brand navbar-word">{{$store.state.title}}</a>
       </div>
@@ -103,10 +103,8 @@
     overflow: hidden;
   }
 }
-
 .verbox {
-//  display: none;
-  /** Position and style */
+  /* Position and style */
   position: fixed;
   z-index: 999;
   width: 100%;
@@ -174,13 +172,13 @@ export default {
   },
   mounted: function () {
     // navbar collapse after click
-    console.log(document.querySelector('#nav-collapse'));
+    // console.log(document.querySelector('#nav-collapse'));
     document.querySelector('#nav-collapse').addEventListener(
       'click', function (e) {
         if (this.classList.contains('in') && e.target.tagName.toLowerCase() === 'a') {
           this.classList.toggle('in');
         }
-        console.log(e);
+        // console.log(e);
       });
     /*
     $(document).on('click', '.navbar-collapse.in', function (e) {
@@ -202,8 +200,8 @@ export default {
         !(want in this.$store.state.clubsdata[v])) { return '/' + v + '/club'; }
       return '/' + v + '/' + want;
     },
-    verClick: function (evt) {
-      console.log(evt);
+    verClick: function () {
+      // console.log(evt);
       this.vershow = true;
     }
   },

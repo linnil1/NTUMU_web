@@ -105,8 +105,8 @@
 </style>
 
 <script>
-
 import foot from './../foot';
+
 export default {
   name: 'clublist',
   props: ['ver'],
@@ -130,7 +130,7 @@ export default {
         clubs.push({
           chinese: jdata.chinese,
           name: clubname,
-          logo_src: './static/img/clublogo/' + jdata.logo,
+          logo_src: '/static/img/clublogo/' + jdata.logo,
           english: jdata.english
         });
 
@@ -142,7 +142,7 @@ export default {
     this.create();
   },
   watch: {
-    '$route' (to, from) {
+    '$route' () {
       this.create();
     }
   }
