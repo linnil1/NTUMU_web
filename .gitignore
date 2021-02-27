@@ -8,6 +8,7 @@ __pycache__
 src/assets/
 favicon.ico
 static/
+worker/worker/script.js
 
 
 # local env files

@@ -75,7 +75,7 @@ cp dist path_your_static_server
 
 If not work(Vue-router is annoying), build development version.
 ```
-yarn build -m develop
+yarn build --mode develop
 ```
 
 ### Lints and fixes files
@@ -85,3 +85,20 @@ yarn lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Publish to cloudflare
+
+Edit `wrangler.toml`
+```
+yarn global add @cloudflare/wrangler
+wrangler config   # Enter your api
+yarn build        # Build to dist/
+wrangler preview  # Testing
+wrangler publish
+```
+
+### For Vue SPA
+The vue-router with history mode on will failed by 404.
+
+To redirect the requests to index.html, add `worker/index.js` to solve,
+where the code is from https://gist.github.com/simevidas/d8ec51a51b05d4fabee6ddbe90c938ce
