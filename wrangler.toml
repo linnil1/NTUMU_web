@@ -1,0 +1,9 @@
+name = "ntu_martial_art"
+type = "javascript"
+route = "ntu-martial-art.linnil1.me/*"
+account_id = ""
+zone_id = ""
+
+[site]
+bucket = "dist"
+entry-point = "worker"

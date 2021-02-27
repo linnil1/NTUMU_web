@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createSSRApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router';
 import { createStore } from 'vuex';
 
@@ -80,7 +80,7 @@ router.beforeEach(function (to, from, next) {
 
 import App from './App.vue';
 
-const app = createApp({
+const app = createSSRApp({
   // el: "#app",
   // store,
   // router,
@@ -91,4 +91,5 @@ const app = createApp({
 app.use(store);
 app.use(router);
 app.mount('#app');
+
 export default app;
