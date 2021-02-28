@@ -102,3 +102,7 @@ The vue-router with history mode on will failed by 404.
 
 To redirect the requests to index.html, add `worker/index.js` to solve,
 where the code is from https://gist.github.com/simevidas/d8ec51a51b05d4fabee6ddbe90c938ce
+
+
+## LICENSE
+MIT
